@@ -1,0 +1,134 @@
+<?xml-stylesheet href="/parts/imgdesc.xsl" type="text/xsl" media="screen"?>
+<rdf:RDF
+  xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+  xmlns:rdfs='http://www.w3.org/2000/01/rdf-schema#'
+  xmlns:dc='http://purl.org/dc/elements/1.1/'
+  xmlns='http://xmlns.com/foaf/0.1/'
+  xmlns:image='http://jibbering.com/vocabs/image/#'
+ >
+
+ <Person rdf:about="http://purl.org/net/who/kanzaki#masahide">
+  <name>Masahide Kanzaki</name>
+  <mbox_sha1sum>e8198dba34ab7d749320a88c5e0835656c1b3d4a</mbox_sha1sum>
+  <rdfs:seeAlso rdf:resource="http://www.kanzaki.com/info/webwho.rdf"/>
+  <depiction rdf:resource="http://www.kanzaki.com/works/2003/imagedesc/1114-yakitoriya.jpg"/>
+  <knows>
+   <Person rdf:nodeID="p1">
+    <name>Masahiro Hamasaki</name>
+    <mbox_sha1sum>41ec607b1a56c26f131cb465ea86f31d75f38026</mbox_sha1sum>
+    <depiction rdf:resource="http://www.kanzaki.com/works/2003/imagedesc/1114-yakitoriya.jpg"/>
+   </Person>
+  </knows>
+  <knows>
+   <Person rdf:nodeID="p2">
+    <name>Martin Duerst</name>
+    <mbox_sha1sum>d0b9675a92a23c9e8bbd31c711b6804d06d7cdde</mbox_sha1sum>
+    <depiction rdf:resource="http://www.kanzaki.com/works/2003/imagedesc/1114-yakitoriya.jpg"/>
+   </Person>
+  </knows>
+  <knows>
+   <Person rdf:nodeID="p3">
+    <name>Nobuhisa Shiraishi</name>
+    <mbox_sha1sum>07a043cad043cc32908194dbbf5c0d7b80b6dfb7</mbox_sha1sum>
+    <depiction rdf:resource="http://www.kanzaki.com/works/2003/imagedesc/1114-yakitoriya.jpg"/>
+   </Person>
+  </knows>
+  <knows>
+   <Person rdf:nodeID="p4">
+    <name>Danny J Weitzner</name>
+    <mbox_sha1sum>032c319f439f63efba54f4fa51bfb3a3fafedfbe</mbox_sha1sum>
+    <depiction rdf:resource="http://www.kanzaki.com/works/2003/imagedesc/1114-yakitoriya.jpg"/>
+   </Person>
+  </knows>
+  <knows>
+   <Person rdf:nodeID="p5">
+    <name>Dan Brickley</name>
+    <mbox_sha1sum>5d93aee42382209192ba76105164bd0c64d7f1c9</mbox_sha1sum>
+    <depiction rdf:resource="http://www.kanzaki.com/works/2003/imagedesc/1114-yakitoriya.jpg"/>
+   </Person>
+  </knows>
+ </Person>
+
+ <Image rdf:about='http://www.kanzaki.com/works/2003/imagedesc/1114-yakitoriya.jpg'>
+  <dc:title>At a yakitoriya after W3C Day</dc:title>
+  <dc:description>We went to a small yakitoriya to have some drinks and yakitori, after the W3C Day 2003 in Tokyo</dc:description>
+  <dc:creator>A staff at the yakitoriya restaurant</dc:creator>
+  <image:width>448</image:width>
+  <image:height>336</image:height>
+  <image:hasPart>
+   <image:Rectangle>
+    <image:points>277,120 352,280</image:points>
+    <dc:title>Masahiro Hamasaki</dc:title>
+    <image:depicts>
+     <Person rdf:nodeID="p1">
+      <dc:description>A young SW researcher</dc:description>
+     </Person>
+    </image:depicts>
+   </image:Rectangle>
+  </image:hasPart>
+  <image:hasPart>
+   <image:Rectangle>
+    <image:points>345,23 443,200</image:points>
+    <dc:title>Martin Duerst</dc:title>
+    <image:depicts>
+     <Person rdf:nodeID="p2">
+      <dc:description>The i18n specialist at W3C</dc:description>
+     </Person>
+    </image:depicts>
+   </image:Rectangle>
+  </image:hasPart>
+  <image:hasPart>
+   <image:Rectangle>
+    <image:points>49,76 142,260</image:points>
+    <dc:title>Nobuhisa Shiraishi</dc:title>
+    <image:depicts>
+     <Person rdf:nodeID="p3">
+      <dc:description>The W3C fellow from NEC</dc:description>
+     </Person>
+    </image:depicts>
+   </image:Rectangle>
+  </image:hasPart>
+  <image:hasPart>
+   <image:Rectangle>
+    <image:points>159,57 216,196</image:points>
+    <dc:title>Danny J Weitzner</dc:title>
+    <image:depicts>
+     <Person rdf:nodeID="p4">
+      <dc:description>W3C Technology and Society Domain Leader</dc:description>
+     </Person>
+    </image:depicts>
+   </image:Rectangle>
+  </image:hasPart>
+  <image:hasPart>
+   <image:Rectangle>
+    <image:points>211,63 259,197</image:points>
+    <dc:title>Dan Brickley</dc:title>
+    <image:depicts>
+     <Person rdf:nodeID="p5">
+      <dc:description>W3C RDF Interest Group chair</dc:description>
+     </Person>
+    </image:depicts>
+   </image:Rectangle>
+  </image:hasPart>
+  <image:hasPart>
+   <image:Rectangle>
+    <image:points>259,85 300,140</image:points>
+    <dc:title>Masahide Kanzaki</dc:title>
+    <image:depicts>
+     <Person rdf:about="http://purl.org/net/who/kanzaki#masahide">
+      <dc:description>A bass player. Also a teacher on Semantic Web.</dc:description>
+     </Person>
+    </image:depicts>
+   </image:Rectangle>
+  </image:hasPart>
+  <image:hasPart>
+   <image:Rectangle>
+    <image:points>252,195 281,228</image:points>
+    <dc:title>A5401CA</dc:title>
+    <dc:description>Masaka has a handy phone equipped with digital camera and GPS. Small but powerful.</dc:description>
+   </image:Rectangle>
+  </image:hasPart>
+ </Image>
+
+
+</rdf:RDF>
