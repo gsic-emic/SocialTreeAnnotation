@@ -35,10 +35,10 @@ ex:TreePart a owl:Class , rdfs:Class ;
   rdfs:comment "Part of a tree that it is shown in the image"@en , "Parte del árbol que se muestra en la imagen"@es ;
   rdfs:isDefinedBy ex: . #no sé si es necesario.
 
-ex:Leave a owl:Class , rdfs:Class ;
+ex:Leaf a owl:Class , rdfs:Class ;
   rdfs:subClassOf ex:TreePart ;
-  rdfs:label "Leave"@en , "Hoja"@es ;
-  rdfs:comment "Leave"@en , "Hoja de árbol"@es ;
+  rdfs:label "Leaf"@en , "Hoja"@es ;
+  rdfs:comment "Leaf"@en , "Hoja de árbol"@es ;
   rdfs:isDefinedBy ex: .
 
 ex:Fruit a owl:Class , rdfs:Class ;
@@ -71,13 +71,45 @@ ex:GeneralView a owl:Class , rdfs:Class ;
   rdfs:comment "General view"@en , "Vista general"@es ;
   rdfs:isDefinedBy ex: .
 
+ex:Annotation a owl:Class, rdfs:Class ;
+  rdfs:label "Annotation"@en , "Anotación"@es ;
+  rdfs:comment "Tree's annotation"@en , "Anotación de un árbol"@es ;
+  rdfs:isDefinedBy ex: .
+
+#Clase User ¿necesaria?
+#ex:User a owl:Class, rdfs:Class ;
+#  rdfs:label "User"@en , "Usuario"@es ;
+#  rdfs:comment ""@en , ""@es ;
+#  rdfs:isDefinedBy ex: .
+
 #################################################################
 #    Object Properties
 #################################################################
 ex:hasPart a owl:ObjectProperty , rdf:Property ;
   rdfs:label "has part"@en , "tiene parte"@es ;
-  rdfs:comment "part of the tree"@en , "parte del árbol"@es ;
+  rdfs:comment "part of a tree"@en , "parte de un árbol"@es ;
   rdfs:domain ex:Tree ;
   rdfs:range ex:TreePart ;
   rdfs:isDefinedBy ex: .
 
+ex:hasAnnotation a owl:ObjectProperty , rdf:Property ;
+  rdfs:label "has annotation"@en , "tiene anotación"@es ;
+  rdfs:comment "annotation of a tree"@en , "anotación de un árbol"@es ;
+  rdfs:domain ex:Tree ;
+  rdfs:range ex:Annotation ;
+  rdfs:isDefinedBy ex: .
+
+ex:hasTreeSpecieAnnotated a owl:ObjectProperty , rdf:Property ;
+  rdfs:subPropertyOf ifn:hasTreeSpecies ;
+  rdfs:label "has species"@en , "tiene especie"@es ;
+  rdfs:comment "species of a tree"@en , "especie de un árbol"@es ;
+  rdfs:domain ex:Tree ;
+  rdfs:range ifn:TreeSpecies ;
+  rdfs:isDefinedBy ex: .
+
+ex:hasImage a owl:ObjectProperty , rdf:Property ;
+  rdfs:label "has image"@en , "tiene imagen"@es ;
+  rdfs:comment "image of a tree or a part of it"@en , "imagen de un árbol o de una parte"@es ;
+  rdfs:domain ex:Annotation ;
+  rdfs:range foaf:Image ;
+  rdfs:isDefinedBy ex: .
