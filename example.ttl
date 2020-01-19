@@ -1,0 +1,96 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix exif: <http://www.w3.org/2003/12/exif/ns#> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/>
+@prefix ex: <http://example.com/ontology/> .
+@prefix image: <http://jibbering.com/vocabs/image/#> .
+
+#<file:///home/cmst/db/hoja.jpg>
+<https://www.example.com/images/image01>
+    a foaf:Image ;
+    dc:type "image" ;
+    dc:title  "Hoja de manzano" ;
+    dc:subject "leaf" ;
+    dc:date "2019-12-08T18:18:01"^^xsd:date ; #DUDA: ¿cambiar por dc:created, fecha creación del recurso?
+    dc:description "La imagen muestra varias hojas de un árbol frutal de tipo manzano" ;
+    dc:creator <https://www.example.com/members/user0000> ; # DUDA: ¿mantener?
+    dc:format "image/jpeg";
+    exif:imageLength "474" ; # píxeles en horizontal
+    exif:imageWidth "396" ;  # píxeles en vertical
+    geo:lat 42.261251 ;#DUDA: ¿Ubicación también en la imagen, o solo en la anotación?
+    geo:long -2.879998 ;
+    #La imagen muestra una hoja
+    foaf:depicts ex:Leaf .
+
+
+<file:///home/cmst/db/tronco.jpg>
+    a foaf:Image ;
+    dc:type "image" ;
+    dc:title  "Tronco de manzano" ;
+    dc:subject "trunck" ;
+    dc:date "2019-12-08T18:19:01"^^xsd:date ;
+    dc:description "La imagen muestra un tronco de un árbol frutal de tipo manzano" ;
+    dc:creator <https://www.example.com/members/user0000> ;
+    dc:format "image/jpeg";
+    exif:imageLength "428" ; # píxeles horizontal
+    exif:imageWidth "604" ;  # píxeles vertical
+    geo:lat 42.261251 ;
+    geo:long -2.879998 ;
+    foaf:depicts ex:Trunck .
+
+<file:///home/cmst/db/fruto_hojas.jpg>
+    a foaf:Image ;
+    dc:type "image" ;
+    dc:title  "Manzano" ;
+    dc:subject "apples" ; #topic of the resource
+    dc:date "2019-12-09T17:19:01"^^xsd:date ;
+    dc:description "La imagen muestra árbol frutal de tipo manzano" ;
+    dc:creator <https://www.example.com/members/user0001> ;
+    dc:format "image/jpeg";
+    exif:imageLength "600" ; # píxeles horizontal
+    exif:imageWidth "450" ;  # píxeles vertical
+    geo:lat 42.261251 ;
+    geo:long -2.879998 ;
+    image:hasPart <https://example.com/image/image0003/part1> ;
+    image:hasPart <https://example.com/image/image0003/part2> .
+
+
+# Defino 2 partes identificadas en la foto fruto_hojas.jpg:
+<https://example.com/image/image0003/part1> a  image:Rectangle ;
+        image:depicts ex:Fruit ; 
+        image:points "92,186 156,257" ;
+        dc:title "Apple" .
+
+<https://example.com/image/image0003/part2> a image:Rectangle ;
+        image:depicts ex:Leaf ; 
+        image:points "135,382 171,432" ;
+        dc:title "Leaf" .
+
+
+# Defino un árbol ¡DUDAS!
+<https://example.com/tree/tree01> a ex:Tree ;
+                                  ex:hasAnnotation <https://example.com/annotation/annotationTree01_user000_1> ;
+                                  ex:hasAnnotation <https://example.com/annotation/annotationTree01_user001_1> .
+#Falta definir la especie y la posición del árbol (las que se consolidan)
+#¿Poner también la fecha en la que se consolida la anotación "correcta"?
+
+
+#Anotaciones de ejemplo:
+<https://example.com/annotation/annotationTree01_user000_1> 
+    a ex:Annotation ;
+    dc:creator <https://www.example.com/members/user0000> ; #DUDA: ¿Creador aquí y en la imagen?
+    # ex:hasTreeSpecieAnnotated <https://www.example.com/species/specie2> ;#DUDA: poner la especie
+    ex:hasImage <https://www.example.com/images/image01> ;
+    geo:lat 42.261251 ;
+    geo:long -2.879998 ;
+    dc:created "2020-01-19T19:19:01"^^xsd:date ;#fecha creación de la anotación
+
+<https://example.com/annotation/annotationTree01_user001_1> 
+    a ex:Annotation ;
+    dc:creator <https://www.example.com/members/user0001> ; 
+    # ex:hasTreeSpecieAnnotated <https://www.example.com/species/specie1> ;#DUDA
+    ex:hasImage <https://www.example.com/images/image01> ;
+    geo:lat 42.261255 ;
+    geo:long -2.879990 ;
+    dc:created "2020-01-18T22:10:57"^^xsd:date ;
