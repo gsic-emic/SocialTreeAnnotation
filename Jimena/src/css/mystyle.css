@@ -1,0 +1,14 @@
+/* Estilos del mapa */
+#mapid { height: 180px; }
+
+/* Tipografía de los títulos*/
+@font-face {
+    font-family: 'Inconsolata', monospace;
+    font-family: 'Anton', sans-serif;
+    font-family: 'Poiret One', cursive;
+  }
+
+.titulo h1 {
+    font-family: 'Inconsolata', monospace;
+    font-size: 10px;
+}

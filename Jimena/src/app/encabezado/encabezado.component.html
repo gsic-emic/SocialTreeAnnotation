@@ -1,0 +1,24 @@
+<!-- ENCABEZADO DE LA APP-->
+<div class="bg-success text-white py-3 p-4 d-flex flex-row justify-content-between">
+        <h1><i class="fas fa-tree"></i> Social Tree Anotation</h1>
+        <div >
+            <a [routerLink]="['/inicio_sesion']"><i class="fas fa-user"></i> Iniciar Sesión</a>
+        </div>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+        <li class="nav-item active" routerLinkActive="active" >
+          <a class="nav-link" [routerLink]="['/']">Inicio <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" >
+          <a class="nav-link" [routerLink]="['/']"></a>
+        </li>
+      </ul>
+    </div>
+  </nav>
