@@ -1,5 +1,5 @@
 #Me invento el namespace para la ontología propia que voy a crear
-@prefix ex: <http://example.com/ontology/> .
+@prefix sta: <http://timber.gsic.uva.es/sta/ontology/> . #Sta => Social Tree App
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -7,109 +7,179 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix ifn: <http://crossforest.eu/ifn/ontology/> .
 @prefix vann: <http://purl.org/vocab/vann/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
 
 #Defino la ontología propia como rdf:type Ontology. Es decir, es miembro de la clase de owl Ontología
-ex: a owl:Ontology ;
+sta: a owl:Ontology ;
     rdfs:label "Social forest app Ontology"@en , "Ontología de la aplicación forestal social"@es ;
     rdfs:comment "Ontology to publish data of the Social Forest inventory"@en , "Ontología para publicar datos del Inventario Forestal Social" ;
     owl:versionInfo 0.1 ;
     dc:creator <https://www.gsic.uva.es/members/cmayo> , <https://www.gsic.uva.es/members/jimena> ; #Etc...
     dc:date "2019-10-12"^^xsd:date ;
-    owl:imports ex: , ifn: ; #Si hubiera que importar ontologías...
+    owl:imports sta: , ifn: ; #Si hubiera que importar ontologías...
     vann:preferredNamespacePrefix "ex" . #The preferred namespace prefix to use when using terms from this vocabulary in an XML document.
 
 #################################################################
 #    Classes
 #################################################################
 
-#Defino una clase árbol propia que ¿es subclase de ifn:Tree?
-ex:Tree a owl:Class , rdfs:Class ;
+sta:Tree a owl:Class , rdfs:Class ;
   rdfs:subClassOf ifn:Tree ;
   rdfs:label "Tree"@en , "Árbol"@es ;
   rdfs:comment "Woody perennial plant with an elongated stem supporting branches"@en , "Planta vivaz (que vive más de dos años, de tallo leñoso, que se ramifica a cierta altura del suelo"@es ; 
-  rdfs:isDefinedBy ex: . #no sé si es necesario.
+  rdfs:isDefinedBy sta: . #no sé si es necesario.
 
-ex:TreePart a owl:Class , rdfs:Class ;
+sta:TreePart a owl:Class , rdfs:Class ;
   rdfs:label "Tree part"@en , "Parte del árbol"@es ;
   rdfs:comment "Part of a tree that it is shown in the image"@en , "Parte del árbol que se muestra en la imagen"@es ;
-  rdfs:isDefinedBy ex: . #no sé si es necesario.
+  rdfs:isDefinedBy sta: . #no sé si es necesario.
 
-ex:Leaf a owl:Class , rdfs:Class ;
-  rdfs:subClassOf ex:TreePart ;
+sta:Leaf a owl:Class , rdfs:Class ;
+  rdfs:subClassOf sta:TreePart ;
   rdfs:label "Leaf"@en , "Hoja"@es ;
   rdfs:comment "Leaf"@en , "Hoja de árbol"@es ;
-  rdfs:isDefinedBy ex: .
+  rdfs:isDefinedBy sta: .
 
-ex:Fruit a owl:Class , rdfs:Class ;
-  rdfs:subClassOf ex:TreePart ;
+sta:Fruit a owl:Class , rdfs:Class ;
+  rdfs:subClassOf sta:TreePart ;
   rdfs:label "Fruit"@en , "Fruto"@es ;
   rdfs:comment "Fruit which grows on a tree"@en , "Fruto que crece en un árbol"@es ;
-  rdfs:isDefinedBy ex: .
+  rdfs:isDefinedBy sta: .
 
-ex:Trunk a owl:Class , rdfs:Class ;
-  rdfs:subClassOf ex:TreePart ;
+sta:Trunk a owl:Class , rdfs:Class ;
+  rdfs:subClassOf sta:TreePart ;
   rdfs:label "Trunk"@en , "Tronco"@es ;
   rdfs:comment ""@en , ""@es ;
-  rdfs:isDefinedBy ex: .
+  rdfs:isDefinedBy sta: .
 
-ex:Branch a owl:Class , rdfs:Class ;
-  rdfs:subClassOf ex:TreePart ;
+sta:Branch a owl:Class , rdfs:Class ;
+  rdfs:subClassOf sta:TreePart ;
   rdfs:label "Branch"@en , "Rama"@es ;
   rdfs:comment ""@en , ""@es ;
-  rdfs:isDefinedBy ex: .
+  rdfs:isDefinedBy sta: .
 
-ex:Crown a owl:Class , rdfs:Class ;
-  rdfs:subClassOf ex:TreePart ;
+sta:Crown a owl:Class , rdfs:Class ;
+  rdfs:subClassOf sta:TreePart ;
   rdfs:label "Crown"@en , "Copa"@es ;
   rdfs:comment ""@en , ""@es ;
-  rdfs:isDefinedBy ex: .
+  rdfs:isDefinedBy sta: .
 
-ex:GeneralView a owl:Class , rdfs:Class ;
-  rdfs:subClassOf ex:TreePart ;
+sta:GeneralView a owl:Class , rdfs:Class ;
+  rdfs:subClassOf sta:TreePart ;
   rdfs:label "General"@en , "General"@es ;
   rdfs:comment "General view"@en , "Vista general"@es ;
-  rdfs:isDefinedBy ex: .
+  rdfs:isDefinedBy sta: .
 
-ex:Annotation a owl:Class, rdfs:Class ;
+sta:Flower a owl:Class , rdfs:Class ;
+  rdfs:subClassOf sta:TreePart ;
+  rdfs:label "Flower"@en , "Flor"@es ;
+  rdfs:comment ""@en , ""@es ;
+  rdfs:isDefinedBy sta: . 
+
+sta:OtherPart a owl:Class , rdfs:Class ;
+  rdfs:subClassOf sta:TreePart ;
+  rdfs:label "Other plart"@en , "Otra parte"@es ;
+  rdfs:comment ""@en , ""@es ;
+  rdfs:isDefinedBy sta: . 
+
+sta:Image a owl:Class , rdfs:Class ;
+  rdfs:subClassOf foaf:Image ;
+  rdfs:label "Image"@en , "Imagen"@es ;
+  rdfs:comment "Tree's image"@en , "Imagen de un árbol"@es ;
+  rdfs:isDefinedBy sta: .
+
+sta:Annotation a owl:Class, rdfs:Class ;
   rdfs:label "Annotation"@en , "Anotación"@es ;
   rdfs:comment "Tree's annotation"@en , "Anotación de un árbol"@es ;
-  rdfs:isDefinedBy ex: .
+  rdfs:isDefinedBy sta: .
+
+sta:SpeciesAnnotation a owl:Class, rdfs:Class ;
+  rdfs:subClassOf sta:Annotation ;
+  rdfs:label "Species annotation"@en , "Anotación de especie"@es ;
+  rdfs:comment "Annotation about a tree species"@en , "Anotación sobre la especie de un árbol"@es ;
+  rdfs:isDefinedBy sta: .
+
+sta:PositionAnnotation a owl:Class, rdfs:Class ;
+  rdfs:subClassOf sta:Annotation ;
+  rdfs:label "Position annotation"@en , "Anotación de posición"@es ;
+  rdfs:comment "Annotation about a tree position"@en , "Anotación sobre la posición de un árbol"@es ;
+  rdfs:isDefinedBy sta: .
+
+sta:ImageAnnotation a owl:Class, rdfs:Class ;
+  rdfs:subClassOf sta:Annotation ;
+  rdfs:label "Image annotation"@en , "Anotación de imagen"@es ;
+  rdfs:comment "Annotation about a tree image"@en , "Anotación sobre la imagen de un árbol"@es ;
+  rdfs:isDefinedBy sta: .
+
+sta:AcceptedAnnotation a owl:Class, rdfs:Class ;
+  rdfs:subClassOf sta:Annotation ;
+  rdfs:label "Asserted annotation"@en , "Anotación afirmada"@es ;
+  rdfs:comment "Annotation accepted about a tree"@en , "Anotación aceptada sobre un árbol"@es ;
+  rdfs:isDefinedBy sta: .
+
+
+# MIRAR COMO DEFINIR TIPOS DE USUARIOS Y GRUPOS
 
 #Clase User ¿necesaria?
-#ex:User a owl:Class, rdfs:Class ;
+#sta:User a owl:Class, rdfs:Class ;
 #  rdfs:label "User"@en , "Usuario"@es ;
 #  rdfs:comment ""@en , ""@es ;
-#  rdfs:isDefinedBy ex: .
+#  rdfs:isDefinedBy sta: .
 
 #################################################################
 #    Object Properties
 #################################################################
-ex:hasPart a owl:ObjectProperty , rdf:Property ;
+sta:hasPart a owl:ObjectProperty , rdf:Property ;
   rdfs:label "has part"@en , "tiene parte"@es ;
   rdfs:comment "part of a tree"@en , "parte de un árbol"@es ;
-  rdfs:domain ex:Tree ;
-  rdfs:range ex:TreePart ;
-  rdfs:isDefinedBy ex: .
+  rdfs:domain sta:Tree ;
+  rdfs:range sta:TreePart ;
+  rdfs:isDefinedBy sta: .
 
-ex:hasAnnotation a owl:ObjectProperty , rdf:Property ;
+sta:hasAnnotation a owl:ObjectProperty , rdf:Property ;
   rdfs:label "has annotation"@en , "tiene anotación"@es ;
   rdfs:comment "annotation of a tree"@en , "anotación de un árbol"@es ;
-  rdfs:domain ex:Tree ;
-  rdfs:range ex:Annotation ;
-  rdfs:isDefinedBy ex: .
+  rdfs:domain sta:Tree ;
+  rdfs:range sta:Annotation ;
+  rdfs:isDefinedBy sta: .
 
-ex:hasTreeSpecieAnnotated a owl:ObjectProperty , rdf:Property ;
-  rdfs:subPropertyOf ifn:hasTreeSpecies ;
-  rdfs:label "has species"@en , "tiene especie"@es ;
-  rdfs:comment "species of a tree"@en , "especie de un árbol"@es ;
-  rdfs:domain ex:Tree ;
-  rdfs:range ifn:TreeSpecies ;
-  rdfs:isDefinedBy ex: .
+sta:hasSpeciesAnnotation a owl:ObjectProperty , rdf:Property ;
+  rdfs:subPropertyOf sta:hasAnnotation ;
+  rdfs:label "has species annotation"@en , "tiene anotación de especie"@es ;
+  rdfs:comment "annotation of species"@en , "anotación de una especie"@es ;
+  rdfs:domain sta:Tree ;
+  rdfs:range sta:SpeciesAnnotation ;
+  rdfs:isDefinedBy sta: .
 
-ex:hasImage a owl:ObjectProperty , rdf:Property ;
+sta:hasPositionAnnotation a owl:ObjectProperty , rdf:Property ;
+  rdfs:subPropertyOf sta:hasAnnotation ;
+  rdfs:label "has position annotation"@en , "tiene anotación de posición"@es ;
+  rdfs:comment "annotation of a tree position"@en , "anotación de una posición de un árbol"@es ;
+  rdfs:domain sta:Tree ;
+  rdfs:range sta:PositionAnnotation ;
+  rdfs:isDefinedBy sta: .
+
+sta:hasImageAnnotation a owl:ObjectProperty , rdf:Property ;
+  rdfs:subPropertyOf sta:hasAnnotation ;
+  rdfs:label "has image annotation"@en , "tiene anotación de imagen"@es ;
+  rdfs:comment "annotation which includes a image"@en , "anotación que incluye una imagen"@es ;
+  rdfs:domain sta:Tree ;
+  rdfs:range sta:ImageAnnotation ;
+  rdfs:isDefinedBy sta: .
+
+sta:hasImage a owl:ObjectProperty , rdf:Property ;
   rdfs:label "has image"@en , "tiene imagen"@es ;
   rdfs:comment "image of a tree or a part of it"@en , "imagen de un árbol o de una parte"@es ;
-  rdfs:domain ex:Annotation ;
-  rdfs:range foaf:Image ;
-  rdfs:isDefinedBy ex: .
+  rdfs:domain sta:ImageAnnotation ;
+  rdfs:range sta:Image ;
+  rdfs:isDefinedBy sta: .
+
+#Propiedad más general que hasSepecies
+sta:hasTaxon a owl:ObjectProperty , rdf:Property ;
+  rdfs:subPropertyOf ifn:hasSpecies ;
+  rdfs:label "has taxon"@en , "tiene taxón"@es ;
+  rdfs:comment ""@en , ""@es ;
+  rdfs:domain sta:SpeciesAnnotation ;
+  rdfs:range ifn:Taxon ;
+  rdfs:isDefinedBy sta: .
