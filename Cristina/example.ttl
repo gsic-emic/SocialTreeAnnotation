@@ -2,95 +2,121 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix exif: <http://www.w3.org/2003/12/exif/ns#> .
 @prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/>
-@prefix ex: <http://example.com/ontology/> .
-@prefix image: <http://jibbering.com/vocabs/image/#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix sta: <http://timber.gsic.uva.es/sta/ontology/> . #Sta => Social Tree App
+@prefix image: <http://jibbering.com/vocabs/image/#> . 
+@prefix ifn: <http://crossforest.eu/ifn/ontology/> .
 
-#<file:///home/cmst/db/hoja.jpg>
-<https://www.example.com/images/image01>
-    a foaf:Image ;
+<http://timber.gsic.uva.es/trees/tree001/annotations/annotation001/images/image001>
+    a sta:Image ;
     dc:type "image" ;
     dc:title  "Hoja de manzano" ;
     dc:subject "leaf" ;
-    dc:date "2019-12-08T18:18:01"^^xsd:date ; #DUDA: ¿cambiar por dc:created, fecha creación del recurso?
+    dc:date "2019-12-08T18:18:01"^^xsd:date ; 
     dc:description "La imagen muestra varias hojas de un árbol frutal de tipo manzano" ;
-    dc:creator <https://www.example.com/members/user0000> ; # DUDA: ¿mantener?
+    # Es innecesario (el mismo que la anotación)
+    #dc:creator <https://www.example.com/members/user0000> ; 
     dc:format "image/jpeg";
     exif:imageLength "474" ; # píxeles en horizontal
     exif:imageWidth "396" ;  # píxeles en vertical
-    geo:lat 42.261251 ;#DUDA: ¿Ubicación también en la imagen, o solo en la anotación?
+    geo:lat 42.261251 ;#Ubicación de la imagen (si la tiene)
     geo:long -2.879998 ;
     #La imagen muestra una hoja
-    foaf:depicts ex:Leaf .
+    foaf:depicts sta:Leaf .
 
-
-<file:///home/cmst/db/tronco.jpg>
-    a foaf:Image ;
+<http://timber.gsic.uva.es/trees/tree001/annotations/annotation002/images/image002>
+    a sta:Image ;
     dc:type "image" ;
     dc:title  "Tronco de manzano" ;
     dc:subject "trunck" ;
     dc:date "2019-12-08T18:19:01"^^xsd:date ;
     dc:description "La imagen muestra un tronco de un árbol frutal de tipo manzano" ;
-    dc:creator <https://www.example.com/members/user0000> ;
     dc:format "image/jpeg";
     exif:imageLength "428" ; # píxeles horizontal
     exif:imageWidth "604" ;  # píxeles vertical
     geo:lat 42.261251 ;
     geo:long -2.879998 ;
-    foaf:depicts ex:Trunck .
+    foaf:depicts sta:Trunck .
 
-<file:///home/cmst/db/fruto_hojas.jpg>
-    a foaf:Image ;
+<http://timber.gsic.uva.es/trees/tree001/annotations/annotation003/images/image003>
+    a sta:Image ;
     dc:type "image" ;
     dc:title  "Manzano" ;
     dc:subject "apples" ; #topic of the resource
     dc:date "2019-12-09T17:19:01"^^xsd:date ;
     dc:description "La imagen muestra árbol frutal de tipo manzano" ;
-    dc:creator <https://www.example.com/members/user0001> ;
     dc:format "image/jpeg";
     exif:imageLength "600" ; # píxeles horizontal
     exif:imageWidth "450" ;  # píxeles vertical
     geo:lat 42.261251 ;
     geo:long -2.879998 ;
-    image:hasPart <https://example.com/image/image0003/part1> ;
-    image:hasPart <https://example.com/image/image0003/part2> .
-
+    image:hasPart <http://timber.gsic.uva.es/trees/tree001/annotations/annotation003/images/image003/parts/part001> ;
+    image:hasPart <http://timber.gsic.uva.es/trees/tree001/annotations/annotation003/images/image003/parts/part002> .
 
 # Defino 2 partes identificadas en la foto fruto_hojas.jpg:
-<https://example.com/image/image0003/part1> a  image:Rectangle ;
-        image:depicts ex:Fruit ; 
+<http://timber.gsic.uva.es/trees/tree001/annotations/annotation003/images/image003/parts/part001> 
+        a  image:Rectangle ;
+        image:depicts sta:Fruit ; 
         image:points "92,186 156,257" ;
         dc:title "Apple" .
 
-<https://example.com/image/image0003/part2> a image:Rectangle ;
-        image:depicts ex:Leaf ; 
+<http://timber.gsic.uva.es/trees/tree001/annotations/annotation003/images/image003/parts/part002>
+        a image:Rectangle ;
+        image:depicts sta:Leaf ; 
         image:points "135,382 171,432" ;
         dc:title "Leaf" .
 
+# Defino un árbol 
+<http://timber.gsic.uva.es/trees/tree001> a sta:Tree ;
+                                  dc:creator <http://timber.gsic.uva.es/users/user001> ; # Creador del árbol (lo da de alta en el sistema)
+                                  sta:hasImageAnnotation
+                                  <http://timber.gsic.uva.es/trees/tree001/annotations/annotation001> ;
+                                  sta:hasImageAnnotation
+                                  <http://timber.gsic.uva.es/trees/tree001/annotations/annotation002> ;
+                                  sta:hasImageAnnotation
+                                  <http://timber.gsic.uva.es/trees/tree001/annotations/annotation003> ; 
+                                  sta:hasPositionAnnotation <http://timber.gsic.uva.es/trees/tree001/annotations/annotation004> ;
+                                  sta:hasSpeciesAnnotation <http://timber.gsic.uva.es/trees/tree001/annotations/annotation005> ; 
+                                  sta:hasPositionAnnotation <http://timber.gsic.uva.es/trees/tree001/annotations/annotation006> .
 
-# Defino un árbol ¡DUDAS!
-<https://example.com/tree/tree01> a ex:Tree ;
-                                  ex:hasAnnotation <https://example.com/annotation/annotationTree01_user000_1> ;
-                                  ex:hasAnnotation <https://example.com/annotation/annotationTree01_user001_1> .
 #Falta definir la especie y la posición del árbol (las que se consolidan)
 #¿Poner también la fecha en la que se consolida la anotación "correcta"?
 
-
 #Anotaciones de ejemplo:
-<https://example.com/annotation/annotationTree01_user000_1> 
-    a ex:Annotation ;
-    dc:creator <https://www.example.com/members/user0000> ; #DUDA: ¿Creador aquí y en la imagen?
-    # ex:hasTreeSpecieAnnotated <https://www.example.com/species/specie2> ;#DUDA: poner la especie
-    ex:hasImage <https://www.example.com/images/image01> ;
+<http://timber.gsic.uva.es/trees/tree001/annotations/annotation001/>
+    a sta:ImageAnnotation ;
+    dc:creator <http://timber.gsic.uva.es/users/user001> ;
+    sta:hasImage <http://timber.gsic.uva.es/trees/tree001/annotations/annotation001/images/image001> ;
+    dc:created "2020-01-19T19:19:01"^^xsd:date .
+
+<http://timber.gsic.uva.es/trees/tree001/annotations/annotation002>
+    a sta:ImageAnnotation ;
+    dc:creator <http://timber.gsic.uva.es/users/user001>  ; 
+    sta:hasImage <http://timber.gsic.uva.es/trees/tree001/annotations/annotation001/images/image002> ;
+    dc:created "2020-01-18T22:10:57"^^xsd:date .
+
+<http://timber.gsic.uva.es/trees/tree001/annotations/annotation003>
+    a sta:ImageAnnotation ;
+    dc:creator <http://timber.gsic.uva.es/users/user002>  ; 
+    sta:hasImage <http://timber.gsic.uva.es/trees/tree001/annotations/annotation001/images/image002> ;
+    dc:created "2020-01-18T22:10:57"^^xsd:date .
+
+<http://timber.gsic.uva.es/trees/tree001/annotations/annotation004>
+    a sta:PositionAnnotation ;
+    dc:creator <http://timber.gsic.uva.es/users/user001> ;
     geo:lat 42.261251 ;
     geo:long -2.879998 ;
-    dc:created "2020-01-19T19:19:01"^^xsd:date ;#fecha creación de la anotación
+    dc:created "2020-01-19T19:19:01"^^xsd:date .
 
-<https://example.com/annotation/annotationTree01_user001_1> 
-    a ex:Annotation ;
-    dc:creator <https://www.example.com/members/user0001> ; 
-    # ex:hasTreeSpecieAnnotated <https://www.example.com/species/specie1> ;#DUDA
-    ex:hasImage <https://www.example.com/images/image01> ;
+<http://timber.gsic.uva.es/trees/tree001/annotations/annotation005>
+    a sta:SpeciesAnnotation , sta:AssertedAnnotation ;
+    dc:creator <http://timber.gsic.uva.es/users/user001> ;
+    sta:hasTaxon <http://crossforest.eu/ifn/ontology/Species28> ; #Aquí va un taxón (más general que especie), el rango de la prop es ifn:Taxon
+    dc:created "2020-02-03T19:42:01"^^xsd:date .
+
+<http://timber.gsic.uva.es/trees/tree001/annotations/annotation006>
+    a sta:PositionAnnotation , sta:AssertedAnnotation ;
+    dc:creator <http://timber.gsic.uva.es/users/user002> ; 
     geo:lat 42.261255 ;
     geo:long -2.879990 ;
-    dc:created "2020-01-18T22:10:57"^^xsd:date ;
+    dc:created "2020-01-18T22:10:57"^^xsd:date .
