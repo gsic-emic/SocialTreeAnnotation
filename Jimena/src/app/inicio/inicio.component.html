@@ -1,0 +1,92 @@
+
+<div class="btn-group" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-success" (click)="mapa=true"><i class="fas fa-location-arrow"></i> Mapa</button>
+    <button type="button" class="btn btn-outline-success" (click)="mapa=false"><i class="fas fa-list-ul"></i> Lista</button>
+</div>
+
+<!-- Divido el flujo del programa en dos, para poder ver la página de inicio con el mapa o con la lista-->
+<!-- La variable mapa está inicializada a true, en el momento que se pinche a lista, cambia a false y se muestra la lista-->
+
+<!--Código para que se muestre el mapa-->
+<p class="text-info" *ngIf="mapa; else mostrarLista"><br></p>
+    
+
+<!--Código para que se muestren las anotaciones en formato de lista-->
+
+<!-- HACER ESTO CON LA DIRECTIVA ngFor!!!!! Con ngFor recorro todos los elementos almacenados en la variable arboles[] -->
+<ng-template #mostrarLista>
+    <div class="d-flex flex-row justify-content-between" id="lista_anotaciones"> <!--Tengo que poner un punto de ruptura para que se muestren una debajo de otra en dispositivos móviles-->
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img src="./../assets/images/pino1.png" class="card-img" alt="imagen de un pino">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h1 class="card-title">Pino</h1>
+              <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> Jimena Andrade</small></h5>
+              <p class="card-text"> <i class="fas fa-map-marker-alt"></i> Campo Grande, Valladolid, 47007</p>
+              <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creado hace 3 horas</small></p>
+              <a href="#" class="btn btn-success"><i class="far fa-chart-bar"></i> Ver más</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img src="./../assets/images/abeto1.png" class="card-img" alt="imagen de un abeto">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+                <h1 class="card-title">Abeto</h1>
+                <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> Jimena Andrade</small></h5>
+                <p class="card-text"> <i class="fas fa-map-marker-alt"></i> Campo Grande, Valladolid, 47007</p>
+                <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creado hace 1 día</small></p>
+                <a href="#" class="btn btn-success"><i class="far fa-chart-bar"></i> Ver más</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-row justify-content-between" id="lista_anotaciones">
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img src="./../assets/images/abeto1.png" class="card-img" alt="imagen de un abeto">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+                <h1 class="card-title">Abeto</h1>
+                <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> Jimena Andrade</small></h5>
+                <p class="card-text"> <i class="fas fa-map-marker-alt"></i> Campo Grande, Valladolid, 47007</p>
+                <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creado hace 3 días</small></p>
+                <a href="#" class="btn btn-success"><i class="far fa-chart-bar"></i> Ver más</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img src="./../assets/images/pino1.png" class="card-img" alt="imagen de un abeto">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+                <h1 class="card-title">Pino</h1>
+                <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> Jimena Andrade</small></h5>
+                <p class="card-text"> <i class="fas fa-map-marker-alt"></i> Campo Grande, Valladolid, 47007</p>
+                <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creado hace 3 horas</small></p>
+                <a href="#" class="btn btn-success"><i class="far fa-chart-bar"></i> Ver más</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+</ng-template>
+
