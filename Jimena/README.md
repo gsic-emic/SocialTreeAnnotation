@@ -1,10 +1,13 @@
-# Jimena
+# Jimena Andrade Hoz. Universidad de Valladolid
+
+Importante tener instalado previamente NodeJS (v6.9 +) y NPM (v3.x +) para ejecutar la aplicación 
+-> `npm install -g @angular/cli`
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.1.
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve --open` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
