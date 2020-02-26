@@ -1,0 +1,29 @@
+<!-- Código para mostrar la información almacenada de un árbol concreto-->
+<div class=" d-flex flex-row justify-content-between">
+    <a [routerLink]="['/']"><i class="fas fa-angle-left"></i></a>
+    <div class="alert alert-warning" role="alert">
+    Para poder colaborar en las anotaciones necesitas estar <a [routerLink]="['/inicio_sesion']" class="alert-link">registrado</a>. 
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+              <img src="./../assets/images/pino1.png" class="card-img" alt="imagen de un pino">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> Jimena Andrade</small></h5>
+                <h1 class="card-title"><br><i class="fab fa-pagelines"></i> Especie: Pino</h1>
+                
+                <p class="card-text"><br><i class="fas fa-map-marker-alt"></i> Campo Grande, Valladolid, 47007</p> <span class="badge badge-success">Ver en el mapa</span>
+
+                <h3 class="card-title"><br><i class="fas fa-align-left"></i> Otros datos de interés:</h3>
+                <p class="card-text"><i class="fas fa-leaf"></i> Tipo de hoja:</p>
+                <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creado hace 3 horas</small></p>
+                
+              </div>
+
+    </div>
+  </div>

@@ -9,11 +9,13 @@ import { FooterComponent } from './footer/footer.component';
 import { InicioComponent } from './inicio/inicio.component';
 import { IniciarSesionComponent } from './iniciar-sesion/iniciar-sesion.component';
 import { MapaComponent } from './mapa/mapa.component';
+import { InfoAnotacionComponent } from './info-anotacion/info-anotacion.component';
 
 const routes: Routes = [
   { path: 'inicio_sesion', component: IniciarSesionComponent },
+  { path: 'info_anotacion', component: InfoAnotacionComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' }, /*ruta por defecto*/
-  { path: '', component: InicioComponent, pathMatch: 'full'  }
+  { path: '', component: InicioComponent, pathMatch: 'full'  },
 ];
 
 @NgModule({
@@ -23,7 +25,8 @@ const routes: Routes = [
     FooterComponent,
     InicioComponent,
     IniciarSesionComponent,
-    MapaComponent
+    MapaComponent,
+    InfoAnotacionComponent
   ],
   imports: [
     BrowserModule,
