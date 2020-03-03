@@ -1,0 +1,20 @@
+{
+  "name": "nodejs-service-timber",
+  "version": "1.0.0",
+  "description": "Servicio con API REST para consultas y actualizaciones del almacén de triplas",
+  "author": "Cristina Mayo cmayo@gsic.uva.es",
+  "license": "ISC",
+  "main": "app.js",
+  "keywords": [
+    "nodejs",
+    "express"
+  ],
+  "dependencies": {
+    "express": "^4.17.1",
+    "virtuoso-sparql-client": "^0.2.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
