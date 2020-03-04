@@ -69,6 +69,7 @@ var TimberApp = function () {
 	};
 
 	self.initServer = function () {
+		
 		self.app = express();
 
 		self.app.get('/', function (req, res) {	
