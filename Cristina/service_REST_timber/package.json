@@ -11,10 +11,15 @@
   ],
   "dependencies": {
     "express": "^4.17.1",
+    "mustache": "^4.0.0",
+    "underscore": "^1.9.2",
     "virtuoso-sparql-client": "^0.2.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  },
   "scripts": {
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

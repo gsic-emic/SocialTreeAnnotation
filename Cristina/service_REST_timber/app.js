@@ -1,91 +1,77 @@
 #!/bin/env node
 
+//Modo estricto
+'use strict'
+
 // Carga módulos express y cliente sparql virtuoso
 const express = require('express');
-const { Client } = require('virtuoso-sparql-client');
+//const {Client}  = require('virtuoso-sparql-client');
+
+const bodyParser = require('body-parser');
 
 //Carga ficheros javascript
-var ontouris = require('./onturis.js');
-
-//Puerto donde escucha la aplicación 
-const PORT = 8888;
-
-//Definición de la URI del SPARQL y el grafo
-const endpoint = "http://timber.gsic.uva.es:8890/sparql/";
-const defaultGraph = "http://timber.gsic.uva.es";
+var ontouris = require('./config/onturis');
+const config = require('./config/config');
+const helpers = require('./helpers/helpers');
+const api = require('./config/routes');
+const queryInterface = require('./helpers/queryInterface');
+const index = require('./index');
 
 //Definición de la aplicación
 var TimberApp = function () {
 	//Scope
 	var self = this;
-
-	/* ================================================================ */
-	/* Helper functions. */
-	/* ================================================================ */
-
-	/** 
-	* terminator === the termination handler 
-	* Terminate server on receipt of the specified signal. 
-	* @param {string} sig Signal to terminate on. 
-	*/
-	self.terminator = function (sig) {
-		if (typeof sig === "string") {
-			console.log('%s: Received %s - terminating sample app ...',
-				Date(Date.now()), sig);
-			process.exit(1);
-		}
-		console.log('%s: Node server stopped.', Date(Date.now()));
-	};
-
-	/** 
-    * Setup termination handlers (for exit and a list of signals). 
-    */
-	self.setupTerminationHandlers = function () {
-		// Process on exit and signals. 
-		process.on('exit', function () { self.terminator(); });
-
-		// Removed 'SIGPIPE' from the list - bugz 852598. 
-		['SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGILL', 'SIGTRAP', 'SIGABRT',
-			'SIGBUS', 'SIGFPE', 'SIGUSR1', 'SIGSEGV', 'SIGUSR2', 'SIGTERM'
-		].forEach(function (element, index, array) {
-			process.on(element, function () { self.terminator(element); });
-		});
-	};
-
+	var sparqlClient= {};
 	/* ================================================================ */
 	/* App server functions (main app logic here). */
 	/* ================================================================ */
 	self.initialize = function () {
-		self.setupTerminationHandlers();
-		myApp.initSPARQL();
+		helpers.setupTerminationHandlers();
+		sparqlClient = index.initSPARQL();
 		myApp.initServer();
 	};
 	self.start = function () {
 		// Start the app on the specific interface (and port). 
-		self.app.listen(PORT, function () {
+		self.app.listen(config.port, () => {
 			console.log('%s: Node server started on %d ...',
-				Date(Date.now()), PORT);
+				Date(Date.now()), config.port);
 		});
 	};
-
 	self.initServer = function () {
-		
 		self.app = express();
+		/**
+		 * Middlewares 
+		 */
+		self.app.use(bodyParser.json());// Para crear objeto body en la petición y admitir métodos HTTP con Content-Type json
+		self.app.use('/api', api);
 
-		self.app.get('/', function (req, res) {	
-			/* Object.entries(ontouris).forEach(
-				([key, value]) => console.log(key +": " + value)
-			);  */
-			res.send('Timber REST API');
+		self.app.get('/', (req, res) => {
+ 	
+			//HAY QUE HACER QUERY TIPO PROMESA YA QUE ES ASÍNCRONO
+			queryInterface.getData("test",{},sparqlClient).then((data) => {
+				console.log("Conexión con endpoint OK");
+				res.status(200).send(data.results.bindings);
+			})
+			.catch((err) => {
+				console.log("Error en conexión con endpoint");
+				if(err.statusCode!= null && err.statusCode!=undefined ){
+					res.status(err.statusCode).send({message: err});
+				}
+				else{
+					res.status(500).send({message: err});
+				}
+			}); 
 		});
-		
-		self.app.get('/test', (req, res) => {
+		/*self.app.get('/test/:testId', (req, res) => {	
+			res.send({ message: `Hola ${req.params.testId}` });
+		});*/
+		self.app.get('/test', (req, res) => { 
 			var data_return = [];
 			var variables = ["s", "p", "o"];
 			var query = 'SELECT ?' + variables[0] + ' ?' + variables[1] + ' ?' + variables[2] + ' WHERE { ?' + variables[0] + ' ?' + variables[1] + ' ?' + variables[2] + ' .} LIMIT 5';
 
-			self.sparqlClient.query(query)
-				.then((data) => {
+			sparqlClient.query(query)
+				.then((data) => { 
 					data.results.bindings.forEach(element => {
 						//console.log(element[variables[0]]);
 						data_return.push(element);
@@ -96,17 +82,18 @@ var TimberApp = function () {
 				.catch((err) => {
 					console.log(err);
 				});
-		});
+		});	
 	};
-	self.initSPARQL = function () {
-		self.sparqlClient = new Client(endpoint);
+	/*self.initSPARQL = function () {
+		self.sparqlClient = new Client(config.endpoint);
 		self.sparqlClient.setOptions("application/json");
-		self.sparqlClient.setQueryGraph(defaultGraph);
-	};
+		self.sparqlClient.setQueryGraph(config.defaultGraph);
+	};*/
 };
 
 //Main
 var myApp = new TimberApp();
+//myApp.initSPARQL();
 myApp.initialize();
 myApp.start();
 
