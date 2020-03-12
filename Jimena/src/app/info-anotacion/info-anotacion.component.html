@@ -1,4 +1,5 @@
 <!-- Código para mostrar la información almacenada de un árbol concreto-->
+<app-menu></app-menu>
 <div class=" d-flex flex-row justify-content-between">
     <a [routerLink]="['/']"><i class="fas fa-angle-left"></i></a>
     <div class="alert alert-warning" role="alert">
@@ -6,7 +7,7 @@
     </div>
 </div>
 
-<div class="card">
+<div class="card p-3 mb-4">
     <div class="card-body">
         <div class="row no-gutters">
             <div class="col-md-4">
@@ -22,8 +23,17 @@
                 <h3 class="card-title"><br><i class="fas fa-align-left"></i> Otros datos de interés:</h3>
                 <p class="card-text"><i class="fas fa-leaf"></i> Tipo de hoja:</p>
                 <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creado hace 3 horas</small></p>
-                
+                <button type="button" class="btn btn-success" (click)="mostrar_estadisticas=true"><i class="far fa-chart-bar"></i> Ver estadísticas de la anotación</button>
               </div>
-
+              <div *ngIf="mostrar_estadisticas;"> 
+                <h3 class="card-title"><br><i class="far fa-chart-bar"></i> Ranking de usuarios:</h3>
+                <p class="text-danger">Aquí irán gráficas y comentarios de otros usuarios sobre la anotacion</p>
+                <br><br><br><br>
+                <p class="card-text"><i class="fas fa-medal"></i> 3 expertos validaron esta anotación</p>
+                <p class="card-text"><i class="fas fa-medal"></i> 7 principiantes validaron esta anotación</p>
+              </div>
+             </div>
+          <br>
+        </div>
     </div>
-  </div>
+</div>
