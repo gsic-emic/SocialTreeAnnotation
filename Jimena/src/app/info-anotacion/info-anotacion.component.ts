@@ -12,4 +12,7 @@ export class InfoAnotacionComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  /* Variables utilizadas en el html*/
+  mostrar_estadisticas: boolean = false;
+
 }

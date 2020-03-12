@@ -1,16 +1,32 @@
-<form>
-    <div class="form-group">
-      <label for="exampleInputEmail1">USUARIO</label>
-      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-      <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+
+  <app-menu></app-menu>
+  <div class="d-flex flex-wrap justify-content-around">
+    <div class="p-3 m-3">
+      <h1> INICIA SESIÓN </h1>
+      <form>
+        <div class="form-group">
+          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Correo electrónico">
+          <small id="emailHelp" class="form-text text-muted">¿Has olvidado tu identificación?</small>
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Contraseña">
+        </div>
+        <div class="form-group form-check">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-success" [routerLink]="['/principal']">Entrar <i class="fas fa-long-arrow-alt-right"></i></button>
+      </form>
     </div>
-    <div class="form-group">
-      <label for="exampleInputPassword1">CONTRASEÑA</label>
-      <input type="password" class="form-control" id="exampleInputPassword1">
+    
+
+    <div class="p-3 m-3">
+      <h1> CREAR UNA CUENTA </h1>
+      <p><i class="fas fa-check"></i> Podrás acceder a todos los árboles registrados</p>
+      <p><i class="fas fa-check"></i> Añade árboles nuevos de manera rápida </p>
+      <p><i class="fas fa-check"></i> Accede a tu historial de anotaciones</p>
+      <p><i class="fas fa-check"></i> Interactúa y colabora con otros usuarios para ayudarnos a crecer</p>
+      <button type="submit" class="btn btn-primary btn-success" [routerLink]="['/registro']">Unirse <i class="fas fa-long-arrow-alt-right"></i></button>
     </div>
-    <div class="form-group form-check">
-      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-      <label class="form-check-label" for="exampleCheck1">Check me out</label>
-    </div>
-    <button type="submit" class="btn btn-primary">Entrar</button>
-  </form>
+  </div>
+    

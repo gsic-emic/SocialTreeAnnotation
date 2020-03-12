@@ -10,9 +10,14 @@ import { InicioComponent } from './inicio/inicio.component';
 import { IniciarSesionComponent } from './iniciar-sesion/iniciar-sesion.component';
 import { MapaComponent } from './mapa/mapa.component';
 import { InfoAnotacionComponent } from './info-anotacion/info-anotacion.component';
+import { RegistroComponent } from './registro/registro.component';
+import { MenuComponent } from './menu/menu.component';
+import { PrincipalComponent } from './principal/principal.component';
 
-const routes: Routes = [
+const routes: Routes = [ 
   { path: 'inicio_sesion', component: IniciarSesionComponent },
+  { path: 'registro', component: RegistroComponent },
+  { path: 'principal', component: PrincipalComponent },
   { path: 'info_anotacion', component: InfoAnotacionComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' }, /*ruta por defecto*/
   { path: '', component: InicioComponent, pathMatch: 'full'  },
@@ -26,7 +31,10 @@ const routes: Routes = [
     InicioComponent,
     IniciarSesionComponent,
     MapaComponent,
-    InfoAnotacionComponent
+    InfoAnotacionComponent,
+    RegistroComponent,
+    MenuComponent,
+    PrincipalComponent
   ],
   imports: [
     BrowserModule,
