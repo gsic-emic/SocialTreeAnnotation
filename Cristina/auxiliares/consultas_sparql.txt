@@ -1,0 +1,9 @@
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+SELECT ?tree 
+WHERE { 
+    ?tree <http://timber.gsic.uva.es/sta/ontology/hasPositionAnnotation> ?annot .
+    ?annot a <http://timber.gsic.uva.es/sta/ontology/AssertedAnnotation> ;
+           geo:lat ?lat ; 
+           geo:long ?long . 
+    FILTER(?lat >= 40.4 && ?lat <= 60.5 && ?long >= -3 && ?long <= -2) 
+}
