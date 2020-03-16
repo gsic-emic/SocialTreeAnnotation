@@ -19,7 +19,7 @@
     dc:format "image/jpeg";
     exif:imageLength "474" ; # píxeles en horizontal
     exif:imageWidth "396" ;  # píxeles en vertical
-    geo:lat 42.261251 ;#Ubicación de la imagen (si la tiene)
+    geo:lat 42.261251 ;#Ubicación imagen (si la tiene) xsd:decimal por defecto
     geo:long -2.879998 ;
     #La imagen muestra una hoja
     foaf:depicts sta:Leaf .
