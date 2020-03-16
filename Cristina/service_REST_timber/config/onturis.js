@@ -17,7 +17,7 @@ var onturis = {
     speciesAnnotation: 'http://timber.gsic.uva.es/sta/ontology/SpeciesAnnotation',
     positionAnnotation: 'http://timber.gsic.uva.es/sta/ontology/PositionAnnotation',
     imageAnnotation: 'http://timber.gsic.uva.es/sta/ontology/ImageAnnotation',
-    acceptedAnnotation: 'http://timber.gsic.uva.es/sta/ontology/AcceptedAnnotation',
+    assertedAnnotation: 'http://timber.gsic.uva.es/sta/ontology/AssertedAnnotation', //modificar a asserted annotation y resubir ontology
 
 	//PROPIEDADES
 	prHasImage: 'http://timber.gsic.uva.es/sta/ontology/hasImage',
