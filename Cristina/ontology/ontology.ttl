@@ -112,7 +112,7 @@ sta:ImageAnnotation a owl:Class, rdfs:Class ;
   rdfs:comment "Annotation about a tree image"@en , "Anotación sobre la imagen de un árbol"@es ;
   rdfs:isDefinedBy sta: .
 
-sta:AcceptedAnnotation a owl:Class, rdfs:Class ;
+sta:AssertedAnnotation a owl:Class, rdfs:Class ;
   rdfs:subClassOf sta:Annotation ;
   rdfs:label "Asserted annotation"@en , "Anotación afirmada"@es ;
   rdfs:comment "Annotation accepted about a tree"@en , "Anotación aceptada sobre un árbol"@es ;
