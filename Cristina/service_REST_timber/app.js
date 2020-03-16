@@ -14,14 +14,13 @@ var ontouris = require('./config/onturis');
 const config = require('./config/config');
 const helpers = require('./helpers/helpers');
 const api = require('./config/routes');
-const queryInterface = require('./helpers/queryInterface');
 const index = require('./index');
 
 //Definición de la aplicación
 var TimberApp = function () {
 	//Scope
 	var self = this;
-	var sparqlClient= {};
+	global.sparqlClient= {};
 	/* ================================================================ */
 	/* App server functions (main app logic here). */
 	/* ================================================================ */
@@ -31,7 +30,7 @@ var TimberApp = function () {
 		myApp.initServer();
 	};
 	self.start = function () {
-		// Start the app on the specific interface (and port). 
+		// Start the app on the specific interface (and port).  
 		self.app.listen(config.port, () => {
 			console.log('%s: Node server started on %d ...',
 				Date(Date.now()), config.port);
@@ -45,14 +44,15 @@ var TimberApp = function () {
 		self.app.use(bodyParser.json());// Para crear objeto body en la petición y admitir métodos HTTP con Content-Type json
 		self.app.use('/api', api);
 
-		self.app.get('/', (req, res) => {
- 	
-			//HAY QUE HACER QUERY TIPO PROMESA YA QUE ES ASÍNCRONO
+		//BORRAR 
+
+		/*self.app.get('/', (req, res) => {
+			//Devuelve una promise, se usa then(), catch() para consumir la promesa
 			queryInterface.getData("test",{},sparqlClient).then((data) => {
 				console.log("Conexión con endpoint OK");
 				res.status(200).send(data.results.bindings);
 			})
-			.catch((err) => {
+			.catch((err) => { 
 				console.log("Error en conexión con endpoint");
 				if(err.statusCode!= null && err.statusCode!=undefined ){
 					res.status(err.statusCode).send({message: err});
@@ -60,12 +60,12 @@ var TimberApp = function () {
 				else{
 					res.status(500).send({message: err});
 				}
-			}); 
+			});
 		});
 		/*self.app.get('/test/:testId', (req, res) => {	
 			res.send({ message: `Hola ${req.params.testId}` });
 		});*/
-		self.app.get('/test', (req, res) => { 
+		/*self.app.get('/test', (req, res) => { 
 			var data_return = [];
 			var variables = ["s", "p", "o"];
 			var query = 'SELECT ?' + variables[0] + ' ?' + variables[1] + ' ?' + variables[2] + ' WHERE { ?' + variables[0] + ' ?' + variables[1] + ' ?' + variables[2] + ' .} LIMIT 5';
@@ -82,7 +82,7 @@ var TimberApp = function () {
 				.catch((err) => {
 					console.log(err);
 				});
-		});	
+		});*/
 	};
 	/*self.initSPARQL = function () {
 		self.sparqlClient = new Client(config.endpoint);
