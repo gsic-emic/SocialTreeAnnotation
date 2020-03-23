@@ -1,0 +1,34 @@
+<app-menu-usuarios></app-menu-usuarios>
+<div class="container">
+    <a [routerLink]="['/principal']"><i class="fas fa-angle-left"></i></a>
+    <div class="titulo">NUEVA ANOTACIÓN</div>
+    <form class="formulario">
+        <div class="aclaracion">1. Campos obligatorios</div>
+        <div class="nueva">
+            <div class="foto">
+                <div class="cuadrado">
+                    Añadir foto
+                    <br><i class="fas fa-camera"></i>
+                </div>
+            </div>
+            <div class="ubicacion">
+                <label class="entrada"><i class="fas fa-map-marker-alt"></i> Ubicación</label>
+                <br><input type="text">   <button type="submit" class="btn btn-success"> Mi ubicación</button>
+            </div>
+        </div>
+
+        <div class="aclaracion">2. Más información</div>
+        <div class="nueva">
+            <div class="form-group">
+                <label class="entrada"><i class="fab fa-pagelines"></i> Especie:</label>
+                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Introduzca la especie">
+            </div>
+            <div class="form-group">
+                <label class="entrada"><i class="fas fa-leaf"></i> Tipo de hoja:</label>
+                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Introduzca tipo de hoja">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Siguiente</button>  <!-- aquí se irá a confirm-->
+    </form>
+
+</div>

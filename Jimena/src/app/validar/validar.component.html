@@ -1,0 +1,60 @@
+<app-menu-usuarios></app-menu-usuarios>
+<div class=" d-flex flex-row justify-content-between">
+    <a [routerLink]="['/busqueda']"><i class="fas fa-angle-left"></i></a>
+    <div class="alert alert-warning" role="alert">
+    Seleccione los datos que considere correctos marcando las ca
+    </div>
+</div>
+
+<form>
+<div class="card p-3 mb-4">
+    <div class="card-body">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="todo">
+            <label class="form-check-label" for="defaultCheck1">
+              Validar todo
+            </label>
+          </div>
+        <div class="row no-gutters">
+            <div class="col-md-4">
+              <img src="./../assets/images/pino1.png" class="card-img" alt="imagen de un pino">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> Jimena Andrade <br></small></h5>
+                <br>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="imagen">
+                    <label class="form-check-label" for="defaultCheck1">
+                        <i class="fas fa-image"></i> Imagen
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="especie">
+                    <label class="form-check-label" for="defaultCheck1">
+                        <i class="fab fa-pagelines"></i> Especie: Pino
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="ubicacion">
+                    <label class="form-check-label" for="defaultCheck1">
+                        <i class="fas fa-map-marker-alt"></i> Campo Grande, Valladolid, 47007
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="hoja">
+                    <label class="form-check-label" for="defaultCheck1">
+                        <i class="fas fa-leaf"></i> Tipo de hoja:
+                    </label>
+                </div>
+              </div>
+              <div class="boton-validar">
+                <button type="submit" class="btn btn-success">Confirmar</button>
+                </div>
+             </div>
+          <br>
+        </div>
+    </div>
+</div>
+</form>
+

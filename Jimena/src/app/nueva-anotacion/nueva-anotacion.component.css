@@ -1,0 +1,40 @@
+a{
+    color: black;
+}
+.container{
+    display: block;
+    margin-bottom: 30px;
+}
+.formulario{
+    text-align: center;
+    margin-bottom: 60px;
+}
+.titulo{
+    font-size: 4vw;
+    text-align: center;
+}
+.aclaracion{
+    font-size: 2.5vw;
+}
+.nueva{
+    background: rgba(37, 34, 214, 0.15);
+    width: 97%;
+    margin: 10px;
+    padding: 2vh 4vw;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-around;
+}
+.cuadrado{
+    padding:5vw;
+    margin: 2vw;
+    border: solid 3px rgb(8, 78, 31);
+    color: forestgreen;
+    font-size: 2vw;
+    text-align: center;
+}
+.entrada{
+    font-size: 2vw;
+}
+.ubicacion{
+}
