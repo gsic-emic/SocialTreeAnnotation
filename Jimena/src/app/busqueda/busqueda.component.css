@@ -1,0 +1,19 @@
+
+.titulo{
+    font-size: 4vw;
+    text-align: center;
+}
+.contenedor_filtros{
+    display: block;
+    margin: 3px;
+    padding: 3px;
+}
+.btn-group{
+    margin: 2px;
+}
+.botones{
+    display: flex;
+    margin-left: 2px;
+    margin-right: 2px;
+    justify-content: space-around;
+}

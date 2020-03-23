@@ -9,7 +9,6 @@ declare let L;
 })
 export class MapaComponent implements OnInit {
 
-
   constructor() { }
 
   ngOnInit(): void { /*se ejecuta en cuanto angular tenga listo el componente*/
