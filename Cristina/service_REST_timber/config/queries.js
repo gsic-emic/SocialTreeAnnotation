@@ -26,18 +26,70 @@ var queriesArray = [];
 queriesArray.push({
     'name': 'test',
     'query': 'SELECT * \n \
-WHERE { \n \
-	?s ?p ?o .\n \
-} LIMIT 1'
+              WHERE { \n \
+                   ?s ?p ?o .\n \
+              } LIMIT 1'
 });
 
-// árboles en unas posiciones
+// Pensar si puedo hacer querys genéricas para no tener que ir construyendo una a una...
+
+//Árboles en un área dada por 4 puntos
+queriesArray.push({
+    'name': 'treesinAreaAssert',
+    'query':    'SELECT ?tree \n \
+                WHERE { \n \
+                    ?tree <' + onturis.prHasPositionAnnotation + '> ?annot .\n \
+                    ?annot a <' + onturis.assertedAnnotation + '> ;\n \
+                           geo:lat ?lat ; \n \
+                           geo:long ?long . \n \
+                    FILTER(?lat >= {{latsouth}} && ?lat <= {{latnorth}} \
+                    && ?long >= {{longsouth}} && ?long <= {{longnorth}}) \n \
+                }'
+});
 queriesArray.push({
     'name': 'treesinArea',
-    'query': 'SELECT DISTINCT ?tree ?lat ?lng \n \
-WHERE { \n \
-	?tree a <'+ onturis.tree + '> ; \n \
-}'
+    'query':    'SELECT ?tree \n \
+                WHERE { \n \
+                    ?tree <' + onturis.prHasPositionAnnotation + '> ?annot .\n \
+                    ?annot geo:lat ?lat ; \n \
+                        geo:long ?long . \n \
+                    FILTER(?lat >= {{latsouth}} && ?lat <= {{latnorth}} \
+                    && ?long >= {{longsouth}} && ?long <= {{longnorth}}) \n \
+                }'
+});
+
+//Todos los árboles del sistema (recupero uri, posición y especie).
+//PROBLEMA: si no tiene anotación acepatada no devuelve nada... REVISAR/PEnsar como hacerlo...
+// con optional se puede pero no es eficiente... mirar cómo está en el crossforest
+queriesArray.push({
+    'name': 'trees',
+    'query':    'SELECT ?tree ?lat ?long ?species \n \
+                WHERE { \n \
+                    ?tree {{annotationType}} ?annot .\n \
+                    ?annot a <' + onturis.assertedAnnotation + '> .\n \
+                }'
+});
+
+//Recuperar todos los árboles y sus anotaciones
+queriesArray.push({
+    'name': 'treesAndAnnotations',
+    'query': 'SELECT ?tree ?annot \n \
+            WHERE { \n \
+                ?p rdfs:subPropertyOf+ sta:hasAnnotation . \n \
+                ?tree ?p ?annot . \n \
+            }'
+});
+
+/**
+ * Generales
+ */
+
+// Individuos de una clase => utilizo construct en vez de select para poder devolver los datos en json-ld (como la dbpedia)
+queriesArray.push({'name': 'indivs',
+	'query': 'CONSTRUCT \n \
+            WHERE { \n \
+                ?uri a <{{{cluri}}}> . \n \
+            }'
 });
 
 module.exports = {
