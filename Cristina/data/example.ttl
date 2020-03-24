@@ -66,57 +66,10 @@
         image:points "135,382 171,432" ;
         dc:title "Leaf" .
 
-# Defino un árbol 
-<http://timber.gsic.uva.es/trees/tree001> a sta:Tree ;
-                                  dc:creator <http://timber.gsic.uva.es/users/user001> ; # Creador del árbol (lo da de alta en el sistema)
-                                  sta:hasImageAnnotation
-                                  <http://timber.gsic.uva.es/trees/tree001/annotations/annotation001> ;
-                                  sta:hasImageAnnotation
-                                  <http://timber.gsic.uva.es/trees/tree001/annotations/annotation002> ;
-                                  sta:hasImageAnnotation
-                                  <http://timber.gsic.uva.es/trees/tree001/annotations/annotation003> ; 
-                                  sta:hasPositionAnnotation <http://timber.gsic.uva.es/trees/tree001/annotations/annotation004> ;
-                                  sta:hasSpeciesAnnotation <http://timber.gsic.uva.es/trees/tree001/annotations/annotation005> ; 
-                                  sta:hasPositionAnnotation <http://timber.gsic.uva.es/trees/tree001/annotations/annotation006> .
-
 #Falta definir la especie y la posición del árbol (las que se consolidan)
 #¿Poner también la fecha en la que se consolida la anotación "correcta"?
 
-#Anotaciones de ejemplo:
-<http://timber.gsic.uva.es/trees/tree001/annotations/annotation001/>
-    a sta:ImageAnnotation ;
-    dc:creator <http://timber.gsic.uva.es/users/user001> ;
-    sta:hasImage <http://timber.gsic.uva.es/trees/tree001/annotations/annotation001/images/image001> ;
-    dc:created "2020-01-19T19:19:01"^^xsd:date .
 
-<http://timber.gsic.uva.es/trees/tree001/annotations/annotation002>
-    a sta:ImageAnnotation ;
-    dc:creator <http://timber.gsic.uva.es/users/user001>  ; 
-    sta:hasImage <http://timber.gsic.uva.es/trees/tree001/annotations/annotation001/images/image002> ;
-    dc:created "2020-01-18T22:10:57"^^xsd:date .
-
-<http://timber.gsic.uva.es/trees/tree001/annotations/annotation003>
-    a sta:ImageAnnotation ;
-    dc:creator <http://timber.gsic.uva.es/users/user002>  ; 
-    sta:hasImage <http://timber.gsic.uva.es/trees/tree001/annotations/annotation001/images/image002> ;
-    dc:created "2020-01-18T22:10:57"^^xsd:date .
-
-<http://timber.gsic.uva.es/trees/tree001/annotations/annotation004>
-    a sta:PositionAnnotation ;
-    dc:creator <http://timber.gsic.uva.es/users/user001> ;
-    geo:lat 42.261251 ;
-    geo:long -2.879998 ;
-    dc:created "2020-01-19T19:19:01"^^xsd:date .
-
-<http://timber.gsic.uva.es/trees/tree001/annotations/annotation005>
-    a sta:SpeciesAnnotation , sta:AssertedAnnotation ;
-    dc:creator <http://timber.gsic.uva.es/users/user001> ;
-    sta:hasTaxon <http://crossforest.eu/ifn/ontology/Species28> ; #Aquí va un taxón (más general que especie), el rango de la prop es ifn:Taxon
-    dc:created "2020-02-03T19:42:01"^^xsd:date .
-
-<http://timber.gsic.uva.es/trees/tree001/annotations/annotation006>
-    a sta:PositionAnnotation , sta:AssertedAnnotation ;
-    dc:creator <http://timber.gsic.uva.es/users/user002> ; 
-    geo:lat 42.261255 ;
-    geo:long -2.879990 ;
-    dc:created "2020-01-18T22:10:57"^^xsd:date .
+#Los formatos de uris usados ¿ tipo REST no tipo web semántica?... DEFINIRLOS!!
+# tipo web semántica: http://timber.gsic.uva.es/data/annotation/de6f1
+# tipo rest: http://timber.gsic.uva.es/annotations/de6f1
