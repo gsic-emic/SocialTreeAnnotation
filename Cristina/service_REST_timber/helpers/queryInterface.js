@@ -2,9 +2,7 @@ const Mustache = require('mustache');
 const _ = require('underscore');
 const queries = require('../config/queries');
 
-function getData(queryname, arg, sparqlClient, callback, failfunc) {
-	var data_return = [];
-
+function getData(queryname, arg, sparqlClient) {
 	// get query object
 	var qo = _.find(queries.queriesArray, function (el) { return el.name === queryname; });
 	// substitute parameters with mustache
@@ -12,22 +10,10 @@ function getData(queryname, arg, sparqlClient, callback, failfunc) {
 	// process prefixes
 	query = processPrefixes(query);
 	// log query
-	console.debug(query); 
-	// query!
-	return sparqlClient.query(query);/*.then((data) => {
-			//console.log(data);
-			data.results.bindings.forEach(element => {
-				data_return.push(element);
-			});
-			//console.log(data_return); 
-			return data_return; 
-		})
-		.catch((err) => {
-			//console.log(err);
-			return err;
-		}); */
+	console.log(query); 
+	// query! //Devuelvo una promesa
+	return sparqlClient.query(query);
 }
-
 
 function processPrefixes(query) {
 	// inicializo cadena de prefijos
