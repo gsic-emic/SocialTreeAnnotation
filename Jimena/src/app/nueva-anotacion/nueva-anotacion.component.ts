@@ -12,4 +12,22 @@ export class NuevaAnotacionComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  getLocation() {
+    var mostrar = "Se ha pulsado el botón";
+    var x = document.getElementById("localizacion");
+    x.innerHTML = mostrar;
+    /*if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(this.showPosition);
+    } else {
+      x.innerHTML = "Geolocation is not supported by this browser.";
+    }*/
+  }
+
+  showPosition(position) {
+    var cadena = "Latitude: " + position.coords.latitude + "Longitude: " + position.coords.longitude;
+    console.log(cadena);
+    /*var x = document.getElementById("localizacion");
+    x.innerHTML = "Latitude: " + position.coords.latitude +
+    "<br>Longitude: " + position.coords.longitude;*/
+  }
 }

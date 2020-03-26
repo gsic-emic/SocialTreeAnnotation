@@ -11,9 +11,11 @@
                     <br><i class="fas fa-camera"></i>
                 </div>
             </div>
-            <div class="ubicacion">
+            <div class="ubicacion" >
                 <label class="entrada"><i class="fas fa-map-marker-alt"></i> Ubicación</label>
-                <br><input type="text">   <button type="submit" class="btn btn-success"> Mi ubicación</button>
+                <!--<app-mapa></app-mapa>-->
+                <br><input type="text"> <br>  
+                <button (click)="getLocation()" class="btn btn-success"> Mi ubicación</button>
             </div>
         </div>
 
@@ -28,7 +30,7 @@
                 <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Introduzca tipo de hoja">
             </div>
         </div>
-        <button type="submit" class="btn btn-success">Siguiente</button>  <!-- aquí se irá a confirm-->
+        <button type="submit" class="btn btn-success">Siguiente</button>   <!--aquí se irá a confirm-->
     </form>
 
 </div>

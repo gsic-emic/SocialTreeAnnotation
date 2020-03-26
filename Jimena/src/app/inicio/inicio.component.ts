@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ArbolService } from '../arbol.service'
+import { Arbol } from '../arbol';
 
 @Component({
   selector: 'app-inicio',
@@ -7,21 +9,32 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InicioComponent implements OnInit {
 
-  constructor() { }
+  constructor(private arbolService: ArbolService) { }
 
   ngOnInit(): void {
-
-  }
+    this.getArboles();
+ }
 
   /* Variables utilizadas en el html */
   mapa: boolean = true;
+  arboles: Arbol[]; /* Array que contiene los árboles que hay almacenados en el sistema */
+  submitted = false;
+  arbol_selected: Arbol;
 
-  /* Array para mostrar la lista de árboles con la directiva ngFor */
-  arboles: Array<any> = [
-    {especie: "Pino", creador:"Jimena", ubicacion:"Campo Grande, Valladolid, 47007", imagen:"./../assets/images/pino1.png", creacion:"3 horas"},
-    {especie: "Abeto", creador:"Jimena", ubicacion:"Campo Grande, Valladolid, 47007", imagen:"./../assets/images/abeto1.png", creacion:"5 horas"},
-    {especie: "Pino", creador:"Jimena", ubicacion:"Campo Grande, Valladolid, 47007", imagen:"./../assets/images/pino1.png", creacion:"3 horas"},
 
-  ]
+  /* Método para recuperar los árboles del servicio */
+  getArboles(): void {
+    this.arboles = this.arbolService.getArboles();
+  }
+
+  obtenerIdSelecionado(id: string){
+    //console.log(id);
+    this.arbol_selected = this.arboles[id];
+  }
+
+  onSubmit() { 
+    this.submitted = true; 
+  }
+
 
 }

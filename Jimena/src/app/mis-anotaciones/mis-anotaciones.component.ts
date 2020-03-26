@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ArbolService } from '../arbol.service'
+import { Arbol } from '../arbol';
 
 @Component({
   selector: 'app-mis-anotaciones',
@@ -7,17 +9,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MisAnotacionesComponent implements OnInit {
 
-  constructor() { }
+  arboles: Arbol[];
+  misArboles: Arbol[]; /* Array que contiene los árboles que hay almacenados en el sistema */
+  existen: Boolean = true;
+  usuario: String = "Jimena";
+  num: Number = 0;
+
+  constructor(private arbolService: ArbolService) { }
 
   ngOnInit(): void {
+    
+    //this.getMisArboles();
+    
+    if (!this.misArboles){
+      this.existen = false;
+    }
+    console.log("Existen " + this.num);
   }
 
-   /* Array para mostrar la lista de árboles con la directiva ngFor */
-   arboles: Array<any> = [
-    {especie: "Pino", creador:"Jimena", ubicacion:"Campo Grande, Valladolid, 47007", imagen:"./../assets/images/pino1.png", creacion:"3 horas"},
-    {especie: "Abeto", creador:"Jimena", ubicacion:"Campo Grande, Valladolid, 47007", imagen:"./../assets/images/abeto1.png", creacion:"5 horas"},
-    {especie: "Pino", creador:"Jimena", ubicacion:"Campo Grande, Valladolid, 47007", imagen:"./../assets/images/pino1.png", creacion:"3 horas"},
-
-  ]
+  /* REVISAR ESTA FUNCIÓN... CREO QUE ES TEMA DE LA FUNCIÓN DECLARADA EN EL SERVICIO*/
+  getMisArboles(): void {
+    this.misArboles = this.arbolService.getUserTrees(this.usuario);
+  }
+  
 
 }
