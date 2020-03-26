@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Arbol } from '../arbol';
 
 declare let L;
 
@@ -9,26 +10,23 @@ declare let L;
 })
 export class MapaComponent implements OnInit {
 
+  @Input() arboles: Arbol[]; // Los árboles a mostrar llegan como parámetro de entrada desde la lista completa
+
   constructor() { }
 
   ngOnInit(): void { /*se ejecuta en cuanto angular tenga listo el componente*/
     /* Creación del objeto mapa y su capa de diseño */
-    var mymap = this.crearMapa(40.463, -3.749, 5.5); /* mapa centrado en españa */
+    var mymap = this.crearMapa(40.463, -3.749, 7); /* mapa centrado en españa */
     var layer = this.crearLayer_gray();
     layer.addTo(mymap);
 
-    /*Marcadores en Valladolid 
-    var marker = this.addMarker(41.646665, -4.729642);
-    marker.addTo(mymap);
-    var area = this.addCircleGreen(41.646665, -4.729642);
-    area.addTo(mymap); */
+    
 
-    /* Marcador personalizado */
+    /* Añado los marcadores de los árboles registrados */
     var treeIcon = this.crearIcono();
-    L.marker([41.646665, -4.729642], {icon: treeIcon}).addTo(mymap);
-    L.marker([41.7, -3.729642], {icon: treeIcon}).addTo(mymap);
-    L.marker([42.352, -3.729642], {icon: treeIcon}).addTo(mymap);
-
+    for (var i = 0; i <= this.arboles.length; i++) {
+      L.marker([this.arboles[i].lat, this.arboles[i].long], {icon: treeIcon}).addTo(mymap).bindPopup("Especie:" + this.arboles[i].especie);
+   }
 
   }
 
@@ -64,9 +62,9 @@ export class MapaComponent implements OnInit {
       shadowUrl: './../assets/icons/sombra.png',
       iconSize:     [50, 50], // size of the icon
       shadowSize:   [50, 64], // size of the shadow
-      //iconAnchor:   [4, 50],  // point of the icon which will correspond to marker's location
-      //shadowAnchor: [4, 62],  // the same for the shadow
-      //popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+      iconAnchor:   [4, 50],  // point of the icon which will correspond to marker's location
+      shadowAnchor: [4, 62],  // the same for the shadow
+      popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
   });
   return treeIcon;
 }

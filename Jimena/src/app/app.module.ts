@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { HttpClientModule }    from '@angular/common/http';  //importo funcionalidades de httpCLient
+import { FormsModule }   from '@angular/forms'; // facilita la interacción con formularios
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,6 +25,8 @@ import { ComunidadComponent } from './comunidad/comunidad.component';
 import { ValidarComponent } from './validar/validar.component';
 import { ConfirmAnotComponent } from './confirm-anot/confirm-anot.component';
 import { RegistroAnotComponent } from './registro-anot/registro-anot.component';
+import { MensajesComponent } from './mensajes/mensajes.component';
+import { ArbolComponent } from './arbol/arbol.component';
 
 const routes: Routes = [ 
   { path: 'inicio_sesion', component: IniciarSesionComponent },
@@ -63,10 +67,14 @@ const routes: Routes = [
     ComunidadComponent,
     ValidarComponent,
     ConfirmAnotComponent,
-    RegistroAnotComponent
+    RegistroAnotComponent,
+    MensajesComponent,
+    ArbolComponent
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
+    FormsModule,
     AppRoutingModule,
     RouterModule.forRoot(routes)
   ],

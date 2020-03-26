@@ -1,4 +1,5 @@
 <app-menu-usuarios></app-menu-usuarios>
+<div [hidden]="submitted">
 <div class="titulo">BÚSQUEDA</div>
 <!-- Filtros aplicables a la búsqueda -->
 <div class="contenedor_filtros">
@@ -70,7 +71,7 @@
 <!--AQUI PODRÍA PONER UN SPINNER CON BOOSTRAP!!!!!!!-->
 
 <div class="d-flex flex-wrap p-2 m-1">
-    <div class="card mb-3" style="max-width: 540px;" *ngFor="let arbol of arboles;">
+    <div class="card mb-3" style="max-width: 540px;" *ngFor="let arbol of arboles; index as i">
       <div class="row no-gutters">
         <div class="col-md-4">
           <img src="{{arbol.imagen}}" class="card-img" alt="imagen de un pino">
@@ -80,10 +81,12 @@
             <h1 class="card-title">{{arbol.especie}}</h1>
             <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{arbol.creador}}</small></h5>
             <p class="card-text"> <i class="fas fa-map-marker-alt"></i> {{arbol.ubicacion}}</p>
-            <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creado hace {{arbol.creacion}}</small></p>
+            <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> {{arbol.fecha}}</small></p>
             <div class="botones">
-                <a [routerLink]="['/mi_info']" class="btn btn-success"><i class="far fa-chart-bar"></i> Ver más</a>
-                <a [routerLink]="['/validar']" class="btn btn-warning"><i class="far fa-check-circle"></i> Validar</a>
+                <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
+                        <button type="submit" class="btn btn-success" (click)="obtenerIdSelecionado(i)" [disabled]="!listaForm.form.valid"><i class="far fa-chart-bar"></i> Ver más</button>
+                        <button type="submit" class="btn btn-warning" (click)=" obtenerIdSelecionado_validar(i)" [disabled]="!listaForm.form.valid"><i class="far fa-check-circle"></i> Validar</button>
+                </form>
             </div>
           </div>
         </div>
@@ -91,3 +94,14 @@
     </div>
   </div>
   <br>
+</div>
+
+<div [hidden]="!submitted">
+    <button class="btn btn-outline-success" (click)="submitted=false" (click)="validar=false"><i class="fas fa-angle-left"></i></button>
+    <div *ngIf="validar; else detalles">
+        <app-validar [arbol]="arbol_selected"></app-validar>
+    </div>
+    <ng-template #detalles>
+        <app-info-anotacion [arbol]="arbol_selected"></app-info-anotacion>
+    </ng-template>
+</div>

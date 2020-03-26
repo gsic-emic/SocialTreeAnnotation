@@ -1,8 +1,7 @@
-<app-menu-usuarios></app-menu-usuarios>
+
 <div class=" d-flex flex-row justify-content-between">
-    <a [routerLink]="['/busqueda']"><i class="fas fa-angle-left"></i></a>
     <div class="alert alert-warning" role="alert">
-    Seleccione los datos que considere correctos marcando las ca
+    Seleccione los datos que considere correctos marcando las casillas
     </div>
 </div>
 
@@ -17,11 +16,11 @@
           </div>
         <div class="row no-gutters">
             <div class="col-md-4">
-              <img src="./../assets/images/pino1.png" class="card-img" alt="imagen de un pino">
+              <img src="{{arbol.imagen}}" class="card-img" alt="imagen de un pino">
             </div>
             <div class="col-md-8">
               <div class="card-body">
-                <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> Jimena Andrade <br></small></h5>
+                <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{arbol.creador}} <br></small></h5>
                 <br>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="imagen">
@@ -32,13 +31,13 @@
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="especie">
                     <label class="form-check-label" for="defaultCheck1">
-                        <i class="fab fa-pagelines"></i> Especie: Pino
+                        <i class="fab fa-pagelines"></i> Especie: {{arbol.especie}}
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="ubicacion">
                     <label class="form-check-label" for="defaultCheck1">
-                        <i class="fas fa-map-marker-alt"></i> Campo Grande, Valladolid, 47007
+                        <i class="fas fa-map-marker-alt"></i> {{arbol.ubicacion}}
                     </label>
                 </div>
                 <div class="form-check">

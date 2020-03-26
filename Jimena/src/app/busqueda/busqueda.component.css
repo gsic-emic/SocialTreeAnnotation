@@ -12,8 +12,7 @@
     margin: 2px;
 }
 .botones{
-    display: flex;
-    margin-left: 2px;
-    margin-right: 2px;
+    display: flex ;
+    flex-flow: column nowrap;
     justify-content: space-around;
 }
