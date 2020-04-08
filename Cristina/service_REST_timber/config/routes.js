@@ -1,6 +1,7 @@
 'use strict'
 
 const express = require('express');
+const queryInterface = require('../helpers/queryInterface');
 const userController = require('../controllers/userController');
 const treeController = require('../controllers/treeController');
 const annotationController = require('../controllers/annotationController');
@@ -10,19 +11,32 @@ const api = express.Router();
 
 var urls = {
     root: '/',
-    users: '/users',
-    user: '/users/:userId',
-    trees: '/trees',
-    tree: '/trees/:treeId',
-    annotations: '/annotations',
-    annotation: '/annotations/:annotationId',
-    images: '/images',
-    image: '/images/:imagesId'
+    users: '/user',
+    user: '/user/:userId',
+    trees: '/sta/data/tree',
+    tree: '/sta/data/tree/:treeId',
+    annotations: '/sta/data/annotation',
+    annotation: 'sta/data/annotation/:annotationId',
+    images: '/sta/data/image',
+    image: '/sta/data/image/:imagesId'
 };
 
 //Root
 api.get(urls.root, (req, res) => {
-    res.status(200).send(urls);
+    queryInterface.getData("test", {}, sparqlClient)
+        .then(() => {
+            res.status(200).send(urls);
+        })
+        .catch((err) => {
+            console.log("Error en conexión con endpoint");
+            console.log(err.statusCode)
+            if (err.statusCode != null && err.statusCode != undefined) {
+                res.status(err.statusCode).send({ message: err });
+            }
+            else {
+                res.status(500).send({ message: err });
+            }
+        });
 });
 
 //Usuarios
@@ -34,8 +48,8 @@ api.delete('/users/:userId', auth, userController.deleteUser)*/
 //Árboles
 api.get(urls.trees, treeController.getTrees);
 //api.post(urls.trees, treeController.createTree);
-/*api.get(urls.tree, treeController.getTree);
-api.put(urls.tree, treeController.updateTree);
+api.get(urls.tree, treeController.getTree);
+/*api.put(urls.tree, treeController.updateTree);
 api.delete(urls.tree, treeController.deleteTree); 
 */
 
