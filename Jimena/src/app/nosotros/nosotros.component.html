@@ -1,0 +1,35 @@
+<app-menu></app-menu>
+<p>Prueba de comunicación con la API REST</p>
+
+<form #apiForm="ngForm">
+    <button type="button" class="btn btn-success m-2" (click)="getInfoAPI()"> Obtener estructura de la API</button>
+    <button type="button" class="btn btn-success m-2" (click)="getInfoAPI()"> Obtener datos arbol (id: 001)</button>
+</form>
+
+<div [hidden]="!pulsado">
+    <div class="spinner-border text-success" role="status" *ngIf="!terminado; else mostrarResultado">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <ng-template #mostrarResultado>
+    <div class="mostrar_consulta" *ngIf="dataAPI_exito; else mostrarError">
+        <div class="alert alert-success" role="alert">
+            La consulta se ha realizado con éxito
+        </div>
+        <!--Distingo si se consulta por la estructura o por el árbol-->
+        <div *ngIf="consultaAPI; else consultaTree">
+            <p>Resultado de la consulta: <br> {{dataAPI}}</p>
+        </div>
+        <ng-template #consultaTree>
+            <p>Resultado de la consulta: <br> {{dataTree}}</p>
+        </ng-template>
+        
+    </div>
+    <ng-template #mostrarError>
+        <div class="alert alert-danger" role="alert">
+            Ha habido un error al conectarse con la API
+        </div>
+        <button type="button" class="btn btn-warning" (click)="reintentar()"> Reintentar</button>
+    </ng-template>
+    </ng-template>
+</div>
+<!-- -->
