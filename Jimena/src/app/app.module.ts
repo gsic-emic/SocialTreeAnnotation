@@ -27,12 +27,16 @@ import { ConfirmAnotComponent } from './confirm-anot/confirm-anot.component';
 import { RegistroAnotComponent } from './registro-anot/registro-anot.component';
 import { MensajesComponent } from './mensajes/mensajes.component';
 import { ArbolComponent } from './arbol/arbol.component';
+import { NosotrosComponent } from './nosotros/nosotros.component';
+import { ContactoComponent } from './contacto/contacto.component';
 
 const routes: Routes = [ 
   { path: 'inicio_sesion', component: IniciarSesionComponent },
   { path: 'reg-anot', component: RegistroAnotComponent },
   { path: 'confirm', component: ConfirmAnotComponent },
-  { path: 'nueva_anotacion', component: NuevaAnotacionComponent },
+  { path: 'contacto', component: ContactoComponent },
+  { path: 'nosotros', component: NosotrosComponent },
+  { path: 'nuevaAnot', component: NuevaAnotacionComponent },
   { path: 'validar', component: ValidarComponent },
   { path: 'comunidad', component: ComunidadComponent },
   { path: 'mi_info', component: MiAnotInfoComponent },
@@ -69,7 +73,9 @@ const routes: Routes = [
     ConfirmAnotComponent,
     RegistroAnotComponent,
     MensajesComponent,
-    ArbolComponent
+    ArbolComponent,
+    NosotrosComponent,
+    ContactoComponent
   ],
   imports: [
     BrowserModule,
