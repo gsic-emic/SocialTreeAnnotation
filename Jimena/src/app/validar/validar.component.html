@@ -1,59 +1,47 @@
-
-<div class=" d-flex flex-row justify-content-between">
-    <div class="alert alert-warning" role="alert">
-    Seleccione los datos que considere correctos marcando las casillas
-    </div>
-</div>
-
-<form>
-<div class="card p-3 mb-4">
-    <div class="card-body">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="todo">
-            <label class="form-check-label" for="defaultCheck1">
-              Validar todo
-            </label>
-          </div>
-        <div class="row no-gutters">
-            <div class="col-md-4">
-              <img src="{{arbol.imagen}}" class="card-img" alt="imagen de un pino">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{arbol.creador}} <br></small></h5>
-                <br>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="imagen">
-                    <label class="form-check-label" for="defaultCheck1">
-                        <i class="fas fa-image"></i> Imagen
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="especie">
-                    <label class="form-check-label" for="defaultCheck1">
-                        <i class="fab fa-pagelines"></i> Especie: {{arbol.especie}}
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="ubicacion">
-                    <label class="form-check-label" for="defaultCheck1">
-                        <i class="fas fa-map-marker-alt"></i> {{arbol.ubicacion}}
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="hoja">
-                    <label class="form-check-label" for="defaultCheck1">
-                        <i class="fas fa-leaf"></i> Tipo de hoja:
-                    </label>
-                </div>
-              </div>
-              <div class="boton-validar">
-                <button type="submit" class="btn btn-success">Confirmar</button>
-                </div>
-             </div>
-          <br>
+<div class="container">
+    <h1>VALIDAR ANOTACIÓN</h1>
+    <div class=" d-flex flex-row justify-content-between">
+        <div class="alert alert-warning" role="alert">
+            Seleccione los datos que considere correctos marcando las casillas en cada apartado
         </div>
     </div>
-</div>
-</form>
+    <div class="formulario">
+        <form class="form" (ngSubmit)="onSubmit()" #ValidationForm="ngForm">
+        <div class="parte_imagen">
+            <div class="nueva">
+                <label class="entrada"><i class="fas fa-image"></i> Imagen</label><br>
+                <div class="imagen">
+                    <img  src="{{arbol.imagen}}" class="card-img" alt="imagen de un {{arbol.especie}}">
+                </div>
+            </div>
+        </div>
+        <div class="resto">
+            <div class="nueva">
+                <label class="entrada"><i class="fas fa-map-marker-alt"></i> Ubicación</label><br>
+                <input type="radio" id="ubicacion"> {{arbol.lat}}, {{arbol.long}}<br>
+                <input type="radio" id="ubicacion"> {{arbol.lat}}, -5.8<br>
+            </div>
+            <div class="nueva">
+                <label class="entrada"><i class="fab fa-pagelines"></i> Especie </label><br>
+                <input type="radio" id="especie"> {{arbol.especie}}<br>
+                <input type="radio" id="especie2"> Ni idea<br>
+            </div>
+            <div class="nueva">
+                <label class="entrada"><i class="fas fa-leaf"></i> Tipo de hoja </label><br>
+                <input type="radio" id="especie"> Acicular<br>
+                <input type="radio" id="especie2"> Ni idea<br>
+            </div>
+        </div>
 
+        <div class="botones">
+            <div class="boton">
+                <button type="button" class="btn btn-warning" (click)="borrar_datos()">Borrar selección</button>
+            </div>
+            <div class="boton">
+                <button type="submit" class="btn btn-success"> Confirmar </button>   
+            </div>
+        </div>
+        </form>
+    </div>
+    
+</div>

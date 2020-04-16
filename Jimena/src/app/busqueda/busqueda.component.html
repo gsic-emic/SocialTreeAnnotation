@@ -82,19 +82,26 @@
             <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{arbol.creador}}</small></h5>
             <p class="card-text"> <i class="fas fa-map-marker-alt"></i> {{arbol.ubicacion}}</p>
             <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> {{arbol.fecha}}</small></p>
-            <div class="botones">
-                <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
-                        <button type="submit" class="btn btn-success" (click)="obtenerIdSelecionado(i)" [disabled]="!listaForm.form.valid"><i class="far fa-chart-bar"></i> Ver más</button>
-                        <button type="submit" class="btn btn-warning" (click)=" obtenerIdSelecionado_validar(i)" [disabled]="!listaForm.form.valid"><i class="far fa-check-circle"></i> Validar</button>
-                </form>
+            <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
+                <div class="botones">
+                    <div class="boton">
+                        <button type="submit" class="btn btn-primary" (click)="obtenerIdSelecionado(i)"><i class="far fa-chart-bar"></i> Ver más</button>
+                    </div>
+                    <div class="boton">
+                        <button type="submit" class="btn btn-warning" (click)=" obtenerIdSelecionado_validar(i)"><i class="far fa-check-circle"></i> Validar</button>
+                    </div>
+                    <div class="boton">
+                        <button type="submit" class="btn btn-success"><i class="fas fa-edit"></i> Nueva anotación</button>
+                    </div>
+                </div>
+            </form>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <br>
 </div>
+
 
 <div [hidden]="!submitted">
     <button class="btn btn-outline-success" (click)="submitted=false" (click)="validar=false"><i class="fas fa-angle-left"></i></button>

@@ -1,3 +1,47 @@
-.boton-validar{
-    margin: 8px;
+.container{
+    display: block;
+    margin-bottom: 50px;
+}
+h1{
+    font-size: 4vw;
+    text-align: center;
+}
+.formulario{
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+}
+.nueva{
+    background: rgba(37, 34, 214, 0.15);
+    margin: 10px;
+    padding: 4vh 6vw;
+    border-radius: 5px;
+}
+.parte_imagen{
+    margin: 10px;
+}
+.resto{
+    margin-top: 10px;
+}
+.entrada{
+    font-size: 3vw;
+}
+.imagen{
+    margin: 5px;
+}
+img{
+    height: auto;
+    width: 30vw;
+}
+.botones{
+    display: flex;
+    flex-flow: nowrap;
+    text-align: center;
+    justify-content: center;
+}
+.boton{
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 50px;
+    margin-left: 20px;
 }

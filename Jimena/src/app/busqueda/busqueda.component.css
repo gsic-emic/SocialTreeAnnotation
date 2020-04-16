@@ -12,7 +12,12 @@
     margin: 2px;
 }
 .botones{
-    display: flex ;
-    flex-flow: column nowrap;
-    justify-content: space-around;
+    display: flex;
+    flex-flow: nowrap;
+    text-align: center;
+    justify-content: center;
+}
+.boton{
+    text-align: center;
+    margin: 5px;
 }
