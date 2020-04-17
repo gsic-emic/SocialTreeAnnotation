@@ -15,7 +15,7 @@ var queryPrefixes = {
     //'mfe': 'http://crossforest.eu/mfe/ontology/',
     //'spo': 'http://crossforest.eu/position/ontology/',
     //'epsg': 'http://epsg.w3id.org/ontology/',
-    //'sta': 'http://timber.gsic.uva.es/sta/ontology/',
+    'sta': 'http://timber.gsic.uva.es/sta/ontology/',
     //'example': 'http://crossforest.eu/sta/data/example/'
 };
 
@@ -35,27 +35,37 @@ queriesArray.push({
 
 //Árboles en un área dada por 4 puntos
 queriesArray.push({
-    'name': 'treesinAreaAssert',
-    'query':    'SELECT ?tree \n \
-                WHERE { \n \
-                    ?tree <' + onturis.prHasPositionAnnotation + '> ?annot .\n \
-                    ?annot a <' + onturis.assertedAnnotation + '> ;\n \
-                           geo:lat ?lat ; \n \
-                           geo:long ?long . \n \
-                    FILTER(?lat >= {{latsouth}} && ?lat <= {{latnorth}} \
-                    && ?long >= {{longsouth}} && ?long <= {{longnorth}}) \n \
-                }'
+    'name': 'treesinArea_pos',
+    'query':    'CONSTRUCT { \n \
+                    ?tree geo:lat ?lat ; \n \
+                          geo:long ?long . \n \
+                }  \n \
+                WHERE {  \n \
+                    ?tree a <' + onturis.tree + '> ;  \n \
+                          ?has ?annotation . \n \
+                    ?has rdfs:subPropertyOf* <' + onturis.prHasPrimaryAnnotation + '> .  \n \
+                    ?annotation geo:lat ?lat ; \n \
+                                geo:long ?long . \n \
+                    FILTER(xsd:decimal(?lat) >= xsd:decimal({{latsouth}}) && xsd:decimal(?lat) <= xsd:decimal({{latnorth}}) \
+                        && xsd:decimal(?long) >= xsd:decimal({{longsouth}}) && xsd:decimal(?long) <= xsd:decimal({{longnorth}})) \n \
+            } \n \
+            ORDER BY (?tree) \n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}' 
 });
 queriesArray.push({
-    'name': 'treesinArea',
-    'query':    'SELECT ?tree \n \
-                WHERE { \n \
-                    ?tree <' + onturis.prHasPositionAnnotation + '> ?annot .\n \
-                    ?annot geo:lat ?lat ; \n \
-                        geo:long ?long . \n \
-                    FILTER(?lat >= {{latsouth}} && ?lat <= {{latnorth}} \
-                    && ?long >= {{longsouth}} && ?long <= {{longnorth}}) \n \
-                }'
+    'name': 'treesinArea_species',
+    'query':    'CONSTRUCT { \n \
+                    ?tree <' + onturis.prHasTaxon + '> ?taxon . \n \
+                }  \n \
+                WHERE {  \n \
+                    ?tree a <' + onturis.tree + '> ;  \n \
+                          ?has ?annotation . \n \
+                    ?has rdfs:subPropertyOf* <' + onturis.prHasPrimaryAnnotation + '> .  \n \
+                    ?annotation <' + onturis.prHasTaxon + '> ?taxon . \n \
+                    FILTER(?tree IN ( {{{treesArea}}} )) \n \
+            } \n \
+            ORDER BY (?tree)' 
 });
 
 //Todos los árboles del sistema (recupero uri, posición y especie).
@@ -80,6 +90,40 @@ queriesArray.push({
             }'
 });
 
+queriesArray.push({'name': 'allTrees_pos',
+	'query': 'CONSTRUCT { \n \
+                ?tree geo:lat ?lat ; \n \
+                geo:long ?long . \n \
+              }  \n \
+              WHERE {  \n \
+                 ?tree a <' + onturis.tree + '> ;  \n \
+                       ?has ?annotation . \n \
+                 ?has rdfs:subPropertyOf* <' + onturis.prHasPrimaryAnnotation + '> .  \n \
+                 ?annotation geo:lat ?lat ; \n \
+                             geo:long ?long . \n \
+              } \n \
+              ORDER BY (?tree) \n \
+              LIMIT {{limit}} \n \
+              OFFSET {{offset}}'      
+});
+
+queriesArray.push({'name': 'allTrees_species',
+	'query': 'CONSTRUCT { \n \
+                ?tree <' + onturis.prHasTaxon + '> ?taxon . \n \
+              }  \n \
+              WHERE {  \n \
+                 ?tree a sta:Tree ;  \n \
+                 <' + onturis.prHasPrimarySpecies +'> | <' + onturis.prHasAssertedSpecies +'> ?annotation . \n \
+                 ?annotation <' + onturis.prHasTaxon + '> ?taxon . \n \
+                 VALUES ?tree { {{{treesArea}}} } \n \
+              } \n \
+              ORDER BY (?tree)'      
+});
+/*?has ?annotation . \n \
+                ?has rdfs:subPropertyOf* <' + onturis.prHasPrimaryAnnotation + '> .  \n \
+*/
+
+
 /**
  * Generales
  */
@@ -91,6 +135,15 @@ queriesArray.push({'name': 'indivs',
                 ?uri a <{{{cluri}}}> . \n \
             }'
 });
+
+queriesArray.push({'name': 'details',
+	'query': 'SELECT * \n \
+            WHERE { \n \
+                ?s ?p ?o . \n \
+                VALUES ?s { <{{{uri}}}> }. \n \
+            }'
+});
+
 
 module.exports = {
     queriesArray,
