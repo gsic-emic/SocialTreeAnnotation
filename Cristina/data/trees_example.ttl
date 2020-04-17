@@ -1,0 +1,25 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sta: <http://timber.gsic.uva.es/sta/ontology/> . #Sta => Social Tree App
+
+<http://timber.gsic.uva.es/sta/data/tree/001> a sta:Tree ;
+                                  dc:creator <http://timber.gsic.uva.es/users/user001> ; # Creador del árbol (lo da de alta en el sistema)
+                                  sta:hasImageAnnotation
+                                  <http://timber.gsic.uva.es/sta/data/annotation/001> ;
+                                  sta:hasImageAnnotation
+                                  <http://timber.gsic.uva.es/sta/data/annotation/002> ;
+                                  sta:hasImageAnnotation
+                                  <http://timber.gsic.uva.es/sta/data/annotation/003> ; 
+                                  sta:hasPositionAnnotation <http://timber.gsic.uva.es/sta/data/annotation/004> ;
+                                  sta:hasPrimarySpecies <http://timber.gsic.uva.es/sta/data/annotation/005> ; 
+                                  sta:hasAssertedPosition <http://timber.gsic.uva.es/sta/data/annotation/006> .
+<http://timber.gsic.uva.es/sta/data/tree/f4275> a sta:Tree ;
+                                dc:creator <http://timber.gsic.uva.es/users/bfec1> ; # Creador del árbol (lo da de alta en el sistema)
+                                sta:hasImageAnnotation
+                                <http://timber.gsic.uva.es/sta/data/annotation/de6f1> ;
+                                sta:hasPositionAnnotation <http://timber.gsic.uva.es/sta/data/annotation/57372> ;
+                                sta:hasSpeciesAnnotation <http://timber.gsic.uva.es/sta/data/annotation/c97fb> ; 
+                                sta:hasPrimaryPosition <http://timber.gsic.uva.es/sta/data/annotation/167be> .
+<http://timber.gsic.uva.es/sta/data/tree/aaaaa> a sta:Tree ;
+                                dc:creator <http://timber.gsic.uva.es/users/bfec1> ; # Creador del árbol (lo da de alta en el sistema)
+                                sta:hasPrimaryPosition <http://timber.gsic.uva.es/sta/data/annotation/1414s> .
