@@ -1,0 +1,15 @@
+################################################################################
+                                    DEBUG VSCODE
+################################################################################
+Se puede depurar el código del servicio rest en vscode. Para ello desde el fichero principal (en este caso app.js) ir a Run (barra lateral izq) > Run and Debug (habiendo definido previamente algún endpoint).
+
+################################################################################
+                                    GENERADOR DE UUIDs
+################################################################################
+
+const { uuid } = require('uuidv4');
+var id ="";
+var lenghtId = 5;
+id = uuid();
+console.log(id.substring(id.length - lengthId)); 
+

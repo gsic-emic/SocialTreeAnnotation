@@ -1,0 +1,62 @@
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+SELECT ?tree 
+WHERE { 
+    ?tree <http://timber.gsic.uva.es/sta/ontology/hasPositionAnnotation> ?annot .
+    ?annot a <http://timber.gsic.uva.es/sta/ontology/AssertedAnnotation> ;
+           geo:lat ?lat ; 
+           geo:long ?long . 
+    FILTER(?lat >= 40.4 && ?lat <= 60.5 && ?long >= -3 && ?long <= -2) 
+}
+###########################################################################################################
+
+prefix ifn: <http://crossforest.eu/ifn/ontology/> 
+
+select ?tree
+where {
+?tree a/rdfs:subClassOf* ifn:Tree .
+} LIMIT 100
+###########################################################################################################
+prefix ifn: <http://crossforest.eu/ifn/ontology/> 
+prefix sta: <http://timber.gsic.uva.es/sta/ontology/>
+
+construct {
+?tree a sta:Tree .}
+where {
+?tree a/rdfs:subClassOf* ifn:Tree .
+} LIMIT 100
+###########################################################################################################
+CONTAR RESULTADOS
+
+prefix ifn: <http://crossforest.eu/ifn/ontology/> 
+SELECT (COUNT(*) as ?Triples) 
+WHERE
+{
+  ?s a/rdfs:subClassOf* ifn:Tree .
+}
+
+###########################################################################################################
+prefix sta: <http://timber.gsic.uva.es/sta/ontology/>
+
+CONSTRUCT {
+?tree geo:lat ?lat ;
+      geo:long ?long .
+}
+WHERE {
+?has rdfs:subPropertyOf* sta:hasPrimaryAnnotation .
+?tree ?has ?annotation .
+?annotation geo:lat ?lat;
+     geo:long ?long .
+}
+
+###########################################################################################################
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sta: <http://timber.gsic.uva.es/sta/ontology/>
+SELECT *
+WHERE {  
+      ?has rdfs:subPropertyOf* sta:hasPrimaryAnnotation .  
+      ?annotation sta:hasTaxon ?taxon . 
+      ?tree ?has ?annotation ; a sta:Tree .
+      BIND(URI(?tree) as ?tree)
+ VALUES ?tree { <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-1> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-10> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-11> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-12> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-13> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-14> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-2> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-3> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-4> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-5> } 
+}
