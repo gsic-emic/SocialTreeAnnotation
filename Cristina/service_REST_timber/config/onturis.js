@@ -17,7 +17,12 @@ var onturis = {
     speciesAnnotation: 'http://timber.gsic.uva.es/sta/ontology/SpeciesAnnotation',
     positionAnnotation: 'http://timber.gsic.uva.es/sta/ontology/PositionAnnotation',
     imageAnnotation: 'http://timber.gsic.uva.es/sta/ontology/ImageAnnotation',
-    assertedAnnotation: 'http://timber.gsic.uva.es/sta/ontology/AssertedAnnotation', //modificar a asserted annotation y resubir ontology
+	assertedAnnotation: 'http://timber.gsic.uva.es/sta/ontology/AssertedAnnotation', 
+	primaryAnnotation: 'http://timber.gsic.uva.es/sta/ontology/PrimaryAnnotation',
+	primaryPosition: 'http://timber.gsic.uva.es/sta/ontology/PrimaryPosition',
+	primarySpecies: 'http://timber.gsic.uva.es/sta/ontology/PrimarySpecies',
+	assertedPosition: 'http://timber.gsic.uva.es/sta/ontology/AssertedPosition',
+	assertedSpecies: 'http://timber.gsic.uva.es/sta/ontology/AssertedSpecies',
 
 	//PROPIEDADES
 	prHasImage: 'http://timber.gsic.uva.es/sta/ontology/hasImage',
@@ -29,6 +34,15 @@ var onturis = {
 	prHasSpeciesAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasSpeciesAnnotation',
 	prHasPositionAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasPositionAnnotation',
 	prHasImageAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasImageAnnotation',
+	prHasPrimaryAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasPrimaryAnnotation',
+	prHasPrimaryPosition: 'http://timber.gsic.uva.es/sta/ontology/hasPrimaryPosition',
+	prHasPrimarySpecies: 'http://timber.gsic.uva.es/sta/ontology/hasPrimarySpecies',
+	prHasAssertedAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasAssertedAnnotation',
+	prHasAssertedSpecies: 'http://timber.gsic.uva.es/sta/ontology/hasAssertedSpecies',
+
+	geo_lat: "http://www.w3.org/2003/01/geo/wgs84_pos#lat",
+	geo_long: "http://www.w3.org/2003/01/geo/wgs84_pos#long",
+
 };
 
 module.exports = onturis;

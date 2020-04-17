@@ -13,12 +13,12 @@ var urls = {
     root: '/',
     users: '/user',
     user: '/user/:userId',
-    trees: '/sta/data/tree',
-    tree: '/sta/data/tree/:treeId',
-    annotations: '/sta/data/annotation',
-    annotation: 'sta/data/annotation/:annotationId',
-    images: '/sta/data/image',
-    image: '/sta/data/image/:imagesId'
+    trees: '/data/tree',
+    tree: '/data/tree/:treeId',
+    annotations: '/data/annotation',
+    annotation: '/data/annotation/:annotationId',
+    images: '/data/image',
+    image: '/data/image/:imagesId'
 };
 
 //Root
