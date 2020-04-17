@@ -15,25 +15,24 @@ sta: a owl:Ontology ;
     rdfs:label "Social forest app Ontology"@en , "Ontología de la aplicación forestal social"@es ;
     rdfs:comment "Ontology to publish data of the Social Forest inventory"@en , "Ontología para publicar datos del Inventario Forestal Social" ;
     owl:versionInfo 0.1 ;
-    dc:creator <https://www.gsic.uva.es/members/cmayo> , <https://www.gsic.uva.es/members/jimena> ; #Etc...
+    dc:creator <https://www.gsic.uva.es/members/cmayo> ; #Etc...
     dc:date "2019-10-12"^^xsd:date ;
     owl:imports sta: , ifn: ; #Si hubiera que importar ontologías...
-    vann:preferredNamespacePrefix "ex" . #The preferred namespace prefix to use when using terms from this vocabulary in an XML document.
+    vann:preferredNamespacePrefix "sta" . #The preferred namespace prefix to use when using terms from this vocabulary in an XML document.
 
 #################################################################
 #    Classes
 #################################################################
 
 sta:Tree a owl:Class , rdfs:Class ;
-  rdfs:subClassOf ifn:Tree ;
   rdfs:label "Tree"@en , "Árbol"@es ;
   rdfs:comment "Woody perennial plant with an elongated stem supporting branches"@en , "Planta vivaz (que vive más de dos años, de tallo leñoso, que se ramifica a cierta altura del suelo"@es ; 
-  rdfs:isDefinedBy sta: . #no sé si es necesario.
+  rdfs:isDefinedBy sta: . 
 
 sta:TreePart a owl:Class , rdfs:Class ;
   rdfs:label "Tree part"@en , "Parte del árbol"@es ;
   rdfs:comment "Part of a tree that it is shown in the image"@en , "Parte del árbol que se muestra en la imagen"@es ;
-  rdfs:isDefinedBy sta: . #no sé si es necesario.
+  rdfs:isDefinedBy sta: . 
 
 sta:Leaf a owl:Class , rdfs:Class ;
   rdfs:subClassOf sta:TreePart ;
@@ -112,12 +111,42 @@ sta:ImageAnnotation a owl:Class, rdfs:Class ;
   rdfs:comment "Annotation about a tree image"@en , "Anotación sobre la imagen de un árbol"@es ;
   rdfs:isDefinedBy sta: .
 
-sta:AssertedAnnotation a owl:Class, rdfs:Class ;
+#La anotación primaria es la más votada en un momento dado (los datos que se consideran "válidos")
+sta:PrimaryAnnotation a owl:Class, rdfs:Class ;
   rdfs:subClassOf sta:Annotation ;
-  rdfs:label "Asserted annotation"@en , "Anotación afirmada"@es ;
-  rdfs:comment "Annotation accepted about a tree"@en , "Anotación aceptada sobre un árbol"@es ;
+  rdfs:label "Primary annotation"@en , "Anotación primaria"@es ;
+  rdfs:comment "Primary annotation about a tree"@en , "Anotación primaria sobre un árbol"@es ;
   rdfs:isDefinedBy sta: .
 
+sta:PrimaryPosition a owl:Class, rdfs:Class ;
+  rdfs:subClassOf sta:PrimaryAnnotation ;
+  rdfs:label "Primary position"@en , "Posición primaria"@es ;
+  rdfs:comment "Primary position annotation about a tree"@en , "Anotación primaria de posición sobre un árbol"@es ;
+  rdfs:isDefinedBy sta: .
+
+sta:PrimarySpecies a owl:Class, rdfs:Class ;
+  rdfs:subClassOf sta:PrimaryAnnotation ;
+  rdfs:label "Primary species"@en , "Especie primaria"@es ;
+  rdfs:comment "Primary species annotation about a tree"@en , "Anotación primaria de especie sobre un árbol"@es ;
+  rdfs:isDefinedBy sta: .
+
+sta:AssertedAnnotation a owl:Class, rdfs:Class ;
+  rdfs:subClassOf sta:PrimaryAnnotation ;
+  rdfs:label "Asserted annotation"@en , "Anotación afirmada"@es ;
+  rdfs:comment "Annotation asserted by experts about a tree"@en , "Anotación afirmada por expertos sobre un árbol"@es ;
+  rdfs:isDefinedBy sta: .
+
+sta:AssertedPosition a owl:Class, rdfs:Class ;
+  rdfs:subClassOf sta:AssertedAnnotation ;
+  rdfs:label "Asserted position"@en , "Posición afirmada"@es ;
+  rdfs:comment "Annotation asserted by experts about a tree positiob"@en , "Anotación afirmada por expertos sobre una posición de un árbol"@es ;
+  rdfs:isDefinedBy sta: .
+
+sta:AssertedSpecies a owl:Class, rdfs:Class ;
+  rdfs:subClassOf sta:AssertedAnnotation ;
+  rdfs:label "Asserted species"@en , "Especie afirmada"@es ;
+  rdfs:comment "Annotation asserted by experts about a tree species"@en , "Anotación afirmada por expertos sobre una especie de un árbol"@es ;
+  rdfs:isDefinedBy sta: .
 
 # MIRAR COMO DEFINIR TIPOS DE USUARIOS Y GRUPOS
 
@@ -175,11 +204,59 @@ sta:hasImage a owl:ObjectProperty , rdf:Property ;
   rdfs:range sta:Image ;
   rdfs:isDefinedBy sta: .
 
-#Propiedad más general que hasSepecies
+#Propiedad más general que especie (no es subpropiedad del ifn:hasTaxon porque tiene distinto dominio)
 sta:hasTaxon a owl:ObjectProperty , rdf:Property ;
-  rdfs:subPropertyOf ifn:hasSpecies ;
   rdfs:label "has taxon"@en , "tiene taxón"@es ;
   rdfs:comment ""@en , ""@es ;
   rdfs:domain sta:SpeciesAnnotation ;
   rdfs:range ifn:Taxon ;
+  rdfs:isDefinedBy sta: .
+
+sta:hasPrimaryAnnotation a owl:ObjectProperty , rdf:Property ;
+  rdfs:subPropertyOf sta:hasAnnotation ;
+  rdfs:label "has primary annotation"@en , "tiene anotación primaria"@es ;
+  rdfs:comment "primary annotation of a tree"@en , "anotación primaria de un árbol"@es ;
+  rdfs:domain sta:Tree ;
+  rdfs:range sta:PrimaryAnnotation ;
+  rdfs:isDefinedBy sta: .
+
+# Propiedad proxy, es la posición que se considera buena para un árbol en cada momento
+sta:hasPrimaryPosition a owl:ObjectProperty , rdf:Property ;
+  rdfs:subPropertyOf sta:hasPrimaryAnnotation ;
+  rdfs:label "has primary position annotation"@en , "tiene anotación primaria de posición"@es ;
+  rdfs:comment "primary annotation of a tree position"@en , "anotación primaria de una posición de un árbol"@es ;
+  rdfs:domain sta:Tree ;
+  rdfs:range sta:PrimaryPosition ;
+  rdfs:isDefinedBy sta: .
+
+sta:hasPrimarySpecies a owl:ObjectProperty , rdf:Property ;
+  rdfs:subPropertyOf sta:hasPrimaryAnnotation ;
+  rdfs:label "has primary species annotation"@en , "tiene anotación primaria de especie"@es ;
+  rdfs:comment "primary annotation of a tree species"@en , "anotación primaria de una epecie de un árbol"@es ;
+  rdfs:domain sta:Tree ;
+  rdfs:range sta:PrimarySpecies ;
+  rdfs:isDefinedBy sta: .
+
+sta:hasAssertedAnnotation a owl:ObjectProperty , rdf:Property ;
+  rdfs:subPropertyOf sta:hasPrimaryAnnotation ;
+  rdfs:label "has asserted annotation"@en , "tiene anotación afirmada"@es ;
+  rdfs:comment "annotation asserted by experts of a tree"@en , "anotación afirmada por expertos de un árbol"@es ;
+  rdfs:domain sta:Tree ;
+  rdfs:range sta:AssertedAnnotation ;
+  rdfs:isDefinedBy sta: .
+
+sta:hasAssertedPosition a owl:ObjectProperty , rdf:Property ;
+  rdfs:subPropertyOf sta:hasAssertedAnnotation ;
+  rdfs:label "has asserted position"@en , "tiene posición afirmada"@es ;
+  rdfs:comment "annotation asserted by experts of a tree position"@en , "anotación afirmada por expertos de una posición un árbol"@es ;
+  rdfs:domain sta:Tree ;
+  rdfs:range sta:AssertedPosition ;
+  rdfs:isDefinedBy sta: .
+
+sta:hasAssertedSpecies a owl:ObjectProperty , rdf:Property ;
+  rdfs:subPropertyOf sta:hasAssertedAnnotation ;
+  rdfs:label "has asserted species"@en , "tiene especie afirmada"@es ;
+  rdfs:comment "annotation asserted by experts of a tree species"@en , "anotación afirmada por expertos de una especie de un árbol"@es ;
+  rdfs:domain sta:Tree ;
+  rdfs:range sta:AssertedSpecies ;
   rdfs:isDefinedBy sta: .
