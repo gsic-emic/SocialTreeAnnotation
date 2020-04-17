@@ -71,5 +71,5 @@
 
 
 #Los formatos de uris usados ¿ tipo REST no tipo web semántica?... DEFINIRLOS!!
-# tipo web semántica: http://timber.gsic.uva.es/data/annotation/de6f1
+# tipo web semántica: http://timber.gsic.uva.es/sta/data/annotation/de6f1
 # tipo rest: http://timber.gsic.uva.es/annotations/de6f1

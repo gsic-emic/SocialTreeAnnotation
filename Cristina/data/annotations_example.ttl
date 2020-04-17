@@ -3,67 +3,74 @@
 @prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix sta: <http://timber.gsic.uva.es/sta/ontology/> . #Sta => Social Tree App
 
-#Anotaciones de ejemplo:
-<http://timber.gsic.uva.es/trees/tree001/annotations/annotation001>
+#Anotaciones de ejemplo (LAS URLS DE USUARIOS NO ESTÁN EN FORMATO WEB SEMÁNTICA)!!
+<http://timber.gsic.uva.es/sta/data/annotation/001>
     a sta:ImageAnnotation ;
     dc:creator <http://timber.gsic.uva.es/users/user001> ;
-    sta:hasImage <http://timber.gsic.uva.es/trees/tree001/annotations/annotation001/images/image001> ;
+    sta:hasImage <http://timber.gsic.uva.es/sta/data/image/001> ;
     dc:created "2020-01-19T19:19:01"^^xsd:date .
 
-<http://timber.gsic.uva.es/trees/tree001/annotations/annotation002>
+<http://timber.gsic.uva.es/sta/data/annotation/002>
     a sta:ImageAnnotation ;
     dc:creator <http://timber.gsic.uva.es/users/user001>  ; 
-    sta:hasImage <http://timber.gsic.uva.es/trees/tree001/annotations/annotation001/images/image002> ;
+    sta:hasImage <http://timber.gsic.uva.es/sta/data/image/002> ;
     dc:created "2020-01-18T22:10:57"^^xsd:date .
 
-<http://timber.gsic.uva.es/trees/tree001/annotations/annotation003>
+<http://timber.gsic.uva.es/sta/data/annotation/003>
     a sta:ImageAnnotation ;
     dc:creator <http://timber.gsic.uva.es/users/user002>  ; 
-    sta:hasImage <http://timber.gsic.uva.es/trees/tree001/annotations/annotation001/images/image002> ;
+    sta:hasImage <http://timber.gsic.uva.es/sta/data/image/003> ;
     dc:created "2020-01-18T22:10:57"^^xsd:date .
 
-<http://timber.gsic.uva.es/trees/tree001/annotations/annotation004>
+<http://timber.gsic.uva.es/sta/data/annotation/004>
     a sta:PositionAnnotation ;
     dc:creator <http://timber.gsic.uva.es/users/user001> ;
     geo:lat 42.261251 ;
     geo:long -2.879998 ;
     dc:created "2020-01-19T19:19:01"^^xsd:date .
 
-<http://timber.gsic.uva.es/trees/tree001/annotations/annotation005>
-    a sta:SpeciesAnnotation , sta:AssertedAnnotation ;
+<http://timber.gsic.uva.es/sta/data/annotation/005>
+    a sta:SpeciesAnnotation , sta:PrimarySpecies ;
     dc:creator <http://timber.gsic.uva.es/users/user001> ;
     sta:hasTaxon <http://crossforest.eu/ifn/ontology/Species28> ; #Aquí va un taxón (más general que especie), el rango de la prop es ifn:Taxon
     dc:created "2020-02-03T19:42:01"^^xsd:date .
 
-<http://timber.gsic.uva.es/trees/tree001/annotations/annotation006>
-    a sta:PositionAnnotation , sta:AssertedAnnotation ;
+<http://timber.gsic.uva.es/sta/data/annotation/006>
+    a sta:PositionAnnotation , sta:AssertedPosition ;
     dc:creator <http://timber.gsic.uva.es/users/user002> ; 
-    geo:lat 42.261255 ;
+    geo:lat 43.261255 ;
     geo:long -2.879990 ;
     dc:created "2020-01-18T22:10:57"^^xsd:date .
 
-<http://timber.gsic.uva.es/data/annotation/de6f1> 
+<http://timber.gsic.uva.es/sta/data/annotation/de6f1> 
     a sta:ImageAnnotation ;
     dc:creator <http://timber.gsic.uva.es/users/user001>  ; 
-    sta:hasImage <http://timber.gsic.uva.es/trees/tree001/annotations/annotation001/images/image002> ;
+    sta:hasImage <<http://timber.gsic.uva.es/sta/data/image/45efs> ;
     dc:created "2020-03-24T11:10:57"^^xsd:date .
 
-<http://timber.gsic.uva.es/data/annotation/57372> 
+<http://timber.gsic.uva.es/sta/data/annotation/57372> 
     a sta:PositionAnnotation ;
     dc:creator <http://timber.gsic.uva.es/users/user002> ; 
     geo:lat 41.6613528 ;
     geo:long -4.7054848 ;
     dc:created "2020-03-24T11:12:57"^^xsd:date .
 
-<http://timber.gsic.uva.es/data/annotations/c97fb> 
-    a sta:SpeciesAnnotation , sta:AssertedAnnotation ;
+<http://timber.gsic.uva.es/sta/data/annotation/c97fb> 
+    a sta:SpeciesAnnotation ;
     dc:creator <http://timber.gsic.uva.es/users/user001> ;
     sta:hasTaxon <http://crossforest.eu/ifn/ontology/Species29> ; #Aquí va un taxón (más general que especie), el rango de la prop es ifn:Taxon
     dc:created "2020-03-24T11:32:57"^^xsd:date .
 
-<http://timber.gsic.uva.es/annotations/167be> 
-     a sta:PositionAnnotation ;
+<http://timber.gsic.uva.es/sta/data/annotation/167be> 
+     a sta:PositionAnnotation , sta:PrimaryPosition ;
     dc:creator <http://timber.gsic.uva.es/users/user001> ; 
     geo:lat 41.645657 ;
     geo:long -4.7304652 ;
     dc:created "2020-03-24T12:12:57"^^xsd:date .
+
+<http://timber.gsic.uva.es/sta/data/annotation/1414s> 
+     a sta:PositionAnnotation , sta:PrimaryPosition ;
+    dc:creator <http://timber.gsic.uva.es/users/user001> ; 
+    geo:lat 0 ;
+    geo:long 0 ;
+    dc:created "2020-04-16T10:12:57"^^xsd:date .
