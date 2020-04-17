@@ -42,7 +42,7 @@ var TimberApp = function () {
 		 * Middlewares 
 		 */
 		self.app.use(bodyParser.json());// Para crear objeto body en la petición y admitir métodos HTTP con Content-Type json
-		self.app.use('/api', api);
+		self.app.use('/sta', api);
 
 		//BORRAR 
 
@@ -57,11 +57,11 @@ var TimberApp = function () {
 				if(err.statusCode!= null && err.statusCode!=undefined ){
 					res.status(err.statusCode).send({message: err});
 				}
-				else{
+				else{ 
 					res.status(500).send({message: err});
 				}
 			});
-		});
+		}); 
 		/*self.app.get('/test/:testId', (req, res) => {	
 			res.send({ message: `Hola ${req.params.testId}` });
 		});*/
