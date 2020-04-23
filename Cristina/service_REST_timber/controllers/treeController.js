@@ -53,7 +53,7 @@ function getTrees(req, res) {
                         trees[tree] = {}
                         trees[tree].lat = data[tree][onturis.geo_lat][0].value;
                         trees[tree].long = data[tree][onturis.geo_long][0].value;
-                        trees[stpage][tree].creator = data[tree][onturis.dc_creator][0].value;
+                        trees[tree].creator = data[tree][onturis.dc_creator][0].value;
                     })
                     console.log(trees)
                     res.status(200).send({ trees, nextPage });
