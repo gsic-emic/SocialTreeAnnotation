@@ -38,10 +38,12 @@ queriesArray.push({
     'name': 'treesinArea_pos',
     'query':    'CONSTRUCT { \n \
                     ?tree geo:lat ?lat ; \n \
-                          geo:long ?long . \n \
+                          geo:long ?long ; \n \
+                          dc:creator ?creator . \n \
                 }  \n \
                 WHERE {  \n \
                     ?tree a <' + onturis.tree + '> ;  \n \
+                          dc:creator ?creator ; \n \
                           ?has ?annotation . \n \
                     ?has rdfs:subPropertyOf* <' + onturis.prHasPrimaryAnnotation + '> .  \n \
                     ?annotation geo:lat ?lat ; \n \
@@ -93,10 +95,12 @@ queriesArray.push({
 queriesArray.push({'name': 'allTrees_pos',
 	'query': 'CONSTRUCT { \n \
                 ?tree geo:lat ?lat ; \n \
-                geo:long ?long . \n \
+                geo:long ?long ; \n \
+                dc:creator ?creator . \n \
               }  \n \
               WHERE {  \n \
                  ?tree a <' + onturis.tree + '> ;  \n \
+                        dc:creator ?creator ; \n \
                        ?has ?annotation . \n \
                  ?has rdfs:subPropertyOf* <' + onturis.prHasPrimaryAnnotation + '> .  \n \
                  ?annotation geo:lat ?lat ; \n \

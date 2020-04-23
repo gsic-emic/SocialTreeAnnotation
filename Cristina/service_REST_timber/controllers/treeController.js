@@ -53,6 +53,7 @@ function getTrees(req, res) {
                         trees[tree] = {}
                         trees[tree].lat = data[tree][onturis.geo_lat][0].value;
                         trees[tree].long = data[tree][onturis.geo_long][0].value;
+                        trees[stpage][tree].creator = data[tree][onturis.dc_creator][0].value;
                     })
                     console.log(trees)
                     res.status(200).send({ trees, nextPage });
@@ -95,6 +96,7 @@ function getTrees(req, res) {
                         trees[stpage][tree] = {}
                         trees[stpage][tree].lat = data[tree][onturis.geo_lat][0].value;
                         trees[stpage][tree].long = data[tree][onturis.geo_long][0].value;
+                        trees[stpage][tree].creator = data[tree][onturis.dc_creator][0].value;
                     });
 
                     //Formatear las uris de los árboles del sistema para consultar la especie. Puede que haya árboles sin especie (no es un campo obligatorio al crear un árbol)
@@ -126,11 +128,8 @@ function getTrees(req, res) {
             }
             var response = trees[stpage];
             res.status(200).send({ response, nextPage });
-
         }
-
     }
-
 }
 
 function getTree(req, res) {
