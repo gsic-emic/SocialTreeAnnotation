@@ -7,4 +7,6 @@ export interface Annotation {
     lat: number;
     long: number;
     specie: string;
+    hoja: string;
+    fruto: string;
   }

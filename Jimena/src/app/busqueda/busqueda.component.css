@@ -4,20 +4,17 @@
     text-align: center;
 }
 .contenedor_filtros{
-    display: block;
-    margin: 3px;
-    padding: 3px;
-}
-.btn-group{
-    margin: 2px;
-}
-.botones{
     display: flex;
-    flex-flow: nowrap;
-    text-align: center;
-    justify-content: center;
+    margin: 3px;
+    padding: 1px;
+    flex-flow: row wrap;
+    justify-content: space-around;
 }
-.boton{
-    text-align: center;
-    margin: 5px;
+.principal{
+    margin: 3px;
+}
+.container{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
 }

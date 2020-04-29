@@ -1,47 +1,90 @@
-<div class="container">
+<div class="centro">
     <h1>VALIDAR ANOTACIÓN</h1>
-    <div class=" d-flex flex-row justify-content-between">
-        <div class="alert alert-warning" role="alert">
-            Seleccione los datos que considere correctos marcando las casillas en cada apartado
-        </div>
+    <div class="alert alert-warning" role="alert" [hidden]="submitted">
+        Seleccione los datos que considere correctos marcando las casillas en cada apartado
     </div>
-    <div class="formulario">
-        <form class="form" (ngSubmit)="onSubmit()" #ValidationForm="ngForm">
-        <div class="parte_imagen">
-            <div class="nueva">
-                <label class="entrada"><i class="fas fa-image"></i> Imagen</label><br>
-                <div class="imagen">
-                    <img  src="{{arbol.imagen}}" class="card-img" alt="imagen de un {{arbol.especie}}">
-                </div>
-            </div>
-        </div>
-        <div class="resto">
-            <div class="nueva">
-                <label class="entrada"><i class="fas fa-map-marker-alt"></i> Ubicación</label><br>
-                <input type="radio" id="ubicacion"> {{arbol.lat}}, {{arbol.long}}<br>
-                <input type="radio" id="ubicacion"> {{arbol.lat}}, -5.8<br>
-            </div>
-            <div class="nueva">
-                <label class="entrada"><i class="fab fa-pagelines"></i> Especie </label><br>
-                <input type="radio" id="especie"> {{arbol.especie}}<br>
-                <input type="radio" id="especie2"> Ni idea<br>
-            </div>
-            <div class="nueva">
-                <label class="entrada"><i class="fas fa-leaf"></i> Tipo de hoja </label><br>
-                <input type="radio" id="especie"> Acicular<br>
-                <input type="radio" id="especie2"> Ni idea<br>
-            </div>
-        </div>
+</div>
 
-        <div class="botones">
-            <div class="boton">
-                <button type="button" class="btn btn-warning" (click)="borrar_datos()">Borrar selección</button>
-            </div>
-            <div class="boton">
-                <button type="submit" class="btn btn-success"> Confirmar </button>   
+<div class="card_container" [hidden]="submitted">
+    <form class="form" (ngSubmit)="onSubmit()" #ValidationForm="ngForm">
+        <div class="card border-success m-3" style="max-width: 18rem; min-width: 18rem;">
+            <div class="card-header"><i class="fas fa-image"></i> Imagen</div>
+            <div class="card-body text-success" >
+                <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                      <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
+                      <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+                      <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
+                    </ol>
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img  src="{{tree.image}}" class="d-block w-100" alt="imagen de un {{tree.species}}">
+                        <div class="carousel-caption d-none d-md-block">
+                          <h5>{{tree.species}}</h5>
+                          <p>{{tree.creator}}</p>
+                        </div>
+                      </div>
+                      <div class="carousel-item" *ngFor="let anot of annotations;">
+                        <img src="{{anot.image}}" class="d-block w-100" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                          <h5>{{anot.specie}}</h5>
+                          <p>{{anot.creator}}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
             </div>
         </div>
-        </form>
-    </div>
-    
+        <div class="card border-success m-3" style="max-width: 18rem; min-width: 18rem;">
+            <div class="card-header"><i class="fas fa-map-marker-alt"></i> Ubicación</div>
+            <div class="card-body text-success">
+                <input type="radio" [(ngModel)]="lat" name="lat" value="tree.lat"> Latitud:  {{tree.lat}}      
+                <input type="radio" [(ngModel)]="long"name="long" value="tree.long"> Longitud  {{tree.long}}<br>
+            </div>
+            <div class="card-body" *ngFor="let anot of annotations;">
+                <input type="radio" [(ngModel)]="lat" name="lat" value="{{anot.lat}}"> Latitud:  {{anot.lat}}       
+                <input type="radio" [(ngModel)]="long" name="long" value="{{anot.long}}"> Longitud:  {{anot.long}}<br>
+            </div>
+        </div>
+        <div class="card border-success m-3" style="max-width: 18rem; min-width: 18rem;">
+            <div class="card-header"><i class="fab fa-pagelines"></i> Especie </div>
+            <div class="card-body text-success">
+                <input type="radio" [(ngModel)]="specie" name="specie" value="{{tree.species}}"> {{tree.species}}<br>
+            </div>
+            <div class="card-body" *ngFor="let anot of annotations;">
+                <input type="radio" [(ngModel)]="specie" name="specie" value="{{anot.specie}}"> {{anot.specie}}<br>
+            </div>
+        </div>
+        <div class="card border-success m-3" style="max-width: 18rem; min-width: 18rem;">
+            <div class="card-header"><i class="fas fa-leaf"></i> Tipo de hoja </div>
+            <div class="card-body" *ngFor="let anot of annotations;">
+                <input type="radio" [(ngModel)]="hoja" name="hoja" value="{{anot.hoja}}" > {{anot.hoja}}<br>
+            </div>
+        </div>
+        <div class="card border-success m-3" style="max-width: 18rem; min-width: 18rem;">
+            <div class="card-header"><i class="fas fa-apple-alt"></i> Fruto </div>
+            <div class="card-body" *ngFor="let anot of annotations;">
+                <input type="radio" [(ngModel)]="fruto" name="fruto" value="{{anot.fruto}}"> {{anot.fruto}}<br>
+            </div>
+        </div>
+        <button type="button" class="btn btn-outline-danger m-3" (click)="reset()"><i class="far fa-times-circle"></i> Borrar selección</button>
+        <button type="submit" class="btn btn-success"><i class="far fa-check-circle"></i>  Confirmar </button> 
+    </form>
+</div>
+
+<div [hidden]="!submitted">
+<p>La valizadicón ha sido:</p>
+<p>{{lat}} y {{long}}</p>
+<p>{{specie}}</p>
+<p>{{hoja}}</p>
+<p>{{fruto}}</p>
+<p>{{hoja}}</p>
 </div>

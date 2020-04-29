@@ -10,42 +10,32 @@
 
 <!--Código para que se muestre el mapa-->
 <div *ngIf="mapa; else mostrarLista">
-  <app-mapa [arboles]="arboles"></app-mapa>
+  <div class="spinner-grow text-success" role="status" *ngIf="!terminado; else mostrarResultado">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <ng-template #mostrarResultado>
+    <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error">
+      <i class="fas fa-exclamation-circle"></i>
+      Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde
+    </div>
+    <app-mapa [trees]="trees"></app-mapa>
+  </ng-template>
 </div>
 
 <!--Código para que se muestren las anotaciones en formato de lista-->
 <!--Con ngFor recorro todos los elementos almacenados en la variable arboles[] -->
 <ng-template #mostrarLista>
-  <div [hidden]="submitted">
-    <div class="d-flex flex-wrap p-2 m-1">
-      <div class="card mb-3" style="max-width: 540px;" *ngFor="let arbol of arboles; index as i">
-        <div class="row no-gutters">
-          <div class="col-md-4">
-            <img src="{{arbol.imagen}}" class="card-img" alt="imagen de un pino">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h1 class="card-title">{{arbol.especie}}</h1>
-              <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{arbol.creador}}</small></h5>
-              <p class="card-text"> <i class="fas fa-map-marker-alt"></i> {{arbol.ubicacion}}</p>
-              <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> {{arbol.fecha}}</small></p>
-              <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
-                <button type="submit" class="btn btn-success" (click)="obtenerIdSelecionado(i)" [disabled]="!listaForm.form.valid"><i class="far fa-chart-bar"></i> Ver más</button>
-              </form>
-            </div>
-          </div>
-        </div>
+    <div class="spinner-grow text-success" role="status" *ngIf="!terminado; else mostrarResult">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <ng-template #mostrarResult>
+      <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error; else mostrarLista">
+        <i class="fas fa-exclamation-circle"></i>
+        Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde
       </div>
-    </div>
-    <br>
-  </div>
-
-  <div [hidden]="!submitted">
-    <button class="btn btn-outline-success" (click)="submitted=false"><i class="fas fa-angle-left"></i></button>
-    <div class="alert alert-warning" role="alert">
-      Para poder colaborar en las anotaciones necesitas estar <a [routerLink]="['/inicio_sesion']" class="alert-link">registrado</a>. 
-    </div>
-    <app-info-anotacion [arbol]="arbol_selected"></app-info-anotacion>
-  </div>
+      <ng-template #mostrarLista>
+        <app-lista [trees]="trees"></app-lista> <!--Componente que contiene la lista para mostrar los arboles-->
+      </ng-template>
+  </ng-template>
 </ng-template>
 

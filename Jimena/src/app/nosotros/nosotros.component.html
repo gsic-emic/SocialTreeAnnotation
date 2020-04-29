@@ -1,8 +1,37 @@
 <app-menu></app-menu>
 <p>Prueba de comunicación con la API REST</p>
 
+<div *ngFor="let tree of buenos; index as i">
+    <p>{{tree.id}} Latitud: {{tree.lat}}</p>
+    <p>           Longitud: {{tree.long}}</p><br>
+    <p>           Especie: {{tree.species}}</p><br>
+</div>
+<p>Next page: {{nextUrl}}</p>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a class="page-link" [routerLink]="['/nosotros']" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li> <!--metiendo "active" en la clase hago que se pinte el actual-->
+      <li class="page-item"><a class="page-link" [routerLink]="['/nosotros']">1</a></li>
+      <li class="page-item"><a class="page-link" [routerLink]="['/nosotros']">2</a></li>
+      <li class="page-item"><a class="page-link" [routerLink]="['/nosotros']">3</a></li>
+      <li class="page-item">
+        <a class="page-link" [routerLink]="['/nosotros']" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
+
+
+
+<!--Aquí había 2 botones y si no carga sale error
 <form #apiForm="ngForm">
-    <button type="button" class="btn btn-success m-2" (click)="getInfoAPI()"> Obtener estructura de la API</button>
+    <button type="button" class="btn btn-success m-2" (click)="getTrees()"> Obtener estructura de la API</button>
     <button type="button" class="btn btn-success m-2" (click)="getInfoAPI()"> Obtener datos arbol (id: 001)</button>
 </form>
 
@@ -15,9 +44,9 @@
         <div class="alert alert-success" role="alert">
             La consulta se ha realizado con éxito
         </div>
-        <!--Distingo si se consulta por la estructura o por el árbol-->
+        Distingo si se consulta por la estructura o por el árbol
         <div *ngIf="consultaAPI; else consultaTree">
-            <p>Resultado de la consulta: <br> {{dataAPI}}</p>
+            <p>Resultado de la consulta: <br> {{Trees.response}}</p>
         </div>
         <ng-template #consultaTree>
             <p>Resultado de la consulta: <br> {{dataTree}}</p>
@@ -32,4 +61,5 @@
     </ng-template>
     </ng-template>
 </div>
+-->
 <!-- -->

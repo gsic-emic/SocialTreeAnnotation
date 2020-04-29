@@ -1,22 +1,24 @@
 
   <app-menu></app-menu>
-  <div class="d-flex flex-wrap justify-content-around">
+  <div class="d-flex flex-wrap justify-content-around mb-3">
     <div class="p-3 m-3">
       <h1> INICIA SESIÓN </h1>
-      <form>
+      <form (ngSubmit)="onSubmit()" #login="ngForm">
         <div class="form-group">
-          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Correo electrónico">
+          <input type="email" id="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Correo electrónico"
+          [(ngModel)]="email" name="email" required>
           <small id="emailHelp" class="form-text text-muted">¿Has olvidado tu identificación?</small>
         </div>
         <div class="form-group">
-          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Contraseña">
+          <input type="password" id="password" class="form-control" id="exampleInputPassword1" placeholder="Contraseña" 
+          [(ngModel)]="password" name="password" required> 
         </div>
         <div class="form-group form-check">
           <input type="checkbox" class="form-check-input" id="exampleCheck1">
           <label class="form-check-label" for="exampleCheck1">Check me out</label>
         </div>
-        <button type="submit" class="btn btn-primary btn-success" [routerLink]="['/principal']">Entrar <i class="fas fa-long-arrow-alt-right"></i></button>
-      </form>
+        <button type="submit" class="btn btn-primary btn-primary" [disabled]="!login.form.valid">Entrar <i class="fas fa-long-arrow-alt-right"></i></button>
+      </form>                                    <!--[routerLink]="['/principal']"-->
     </div>
     
 
@@ -26,7 +28,7 @@
       <p><i class="fas fa-check"></i> Añade árboles nuevos de manera rápida </p>
       <p><i class="fas fa-check"></i> Accede a tu historial de anotaciones</p>
       <p><i class="fas fa-check"></i> Interactúa y colabora con otros usuarios para ayudarnos a crecer</p>
-      <button type="submit" class="btn btn-primary btn-success" [routerLink]="['/registro']">Unirse <i class="fas fa-long-arrow-alt-right"></i></button>
+      <button type="submit" class="btn btn-primary btn-primary" [routerLink]="['/registro']">Unirse <i class="fas fa-long-arrow-alt-right"></i></button>
     </div>
   </div>
     

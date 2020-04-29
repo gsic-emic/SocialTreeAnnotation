@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Arbol } from '../arbol';
+import {Tree} from '.././tree';
+
 
 declare let L;
 
@@ -10,25 +11,27 @@ declare let L;
 })
 export class MapaComponent implements OnInit {
 
-  @Input() arboles: Arbol[]; // Los árboles a mostrar llegan como parámetro de entrada desde la lista completa
+  @Input() trees: Tree[]; // Los árboles a mostrar llegan como parámetro de entrada desde la lista completa
 
   constructor() { }
 
   ngOnInit(): void { /*se ejecuta en cuanto angular tenga listo el componente*/
     /* Creación del objeto mapa y su capa de diseño */
-    var mymap = this.crearMapa(40.463, -3.749, 7); /* mapa centrado en españa */
+    var mymap = this.crearMapa(41.763, -4.593, 10); /* mapa centrado en españa */
     var layer = this.crearLayer_gray();
     layer.addTo(mymap);
 
-    
+    if (!this.trees){
+      this.cargando = true;
+    }
 
     /* Añado los marcadores de los árboles registrados */
     var treeIcon = this.crearIcono();
-    for (var i = 0; i <= this.arboles.length; i++) {
-      L.marker([this.arboles[i].lat, this.arboles[i].long], {icon: treeIcon}).addTo(mymap).bindPopup("Especie:" + this.arboles[i].especie);
+    for (var i = 0; i <= this.trees.length; i++) {
+      L.marker([this.trees[i].lat, this.trees[i].long], {icon: treeIcon}).addTo(mymap).bindPopup("Creado por: " + this.trees[i].creator +"\n" +this.trees[i].species);
    }
-
   }
+  public cargando: boolean = false;
 
   /* Creación del objeto mapa*/
   crearMapa (lat:number, long:number, zoom:number){

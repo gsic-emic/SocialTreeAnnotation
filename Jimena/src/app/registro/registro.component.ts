@@ -11,5 +11,16 @@ export class RegistroComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  public nombre: string;
+  public apellidos:string;
+  public sexo: string; 
+  public nac: number;
+  public email: string;
+  public password: string;
+
+  public onSubmit() {
+    console.log("Nombre" + this.nombre +", "+ this.apellidos);
+    console.log("Sexo:"+this.sexo);
+  }
 
 }

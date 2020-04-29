@@ -4,19 +4,19 @@
     <div class="card-body">
         <div class="row no-gutters">
             <div class="col-md-4">
-              <img src="{{arbol.imagen}}" class="card-img" alt="imagen de un pino">
+              <img src="{{tree.image}}" class="card-img" alt="imagen de un pino">
             </div>
             <div class="col-md-8">
               <div class="card-body">
-                <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{arbol.creador}}</small></h5>
-                <h1 class="card-title"><br><i class="fab fa-pagelines"></i> Especie: {{arbol.especie}}</h1>
+                <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{tree.creator}}</small></h5>
+                <h1 class="card-title"><br><i class="fab fa-pagelines"></i> Especie: {{tree.species}}</h1>
                 
-                <p class="card-text"><br><i class="fas fa-map-marker-alt"></i> {{arbol.ubicacion}}</p> <span class="badge badge-success">Ver en el mapa</span>
+                <p class="card-text"><br><i class="fas fa-map-marker-alt"></i> [{{tree.lat}}, {{tree.long}}]</p> <span class="badge badge-success">Ver en el mapa</span>
                 <!--<app-mapa [arboles]="arbol"></app-mapa>-->
 
                 <h3 class="card-title"><br><i class="fas fa-align-left"></i> Otros datos de interés:</h3>
                 <p class="card-text"><i class="fas fa-leaf"></i> Tipo de hoja:</p>
-                <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> {{arbol.fecha}}</small></p>
+                <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i>{{tree.date}}</small></p>
                 <button type="button" class="btn btn-success" (click)="mostrar_estadisticas=true"><i class="far fa-chart-bar"></i> Ver estadísticas de la anotación</button>
               </div>
               <div *ngIf="mostrar_estadisticas;"> 
