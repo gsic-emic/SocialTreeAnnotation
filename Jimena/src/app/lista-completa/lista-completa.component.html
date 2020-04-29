@@ -1,0 +1,44 @@
+<div [hidden]="submitted2">
+  <div class="d-flex flex-wrap p-2 m-1">
+    <div class="card mt-1 mb-2 mr-1" style="max-width: 520px;" *ngFor="let tree of trees; index as i">
+      <div class="row no-gutters">
+        <div class="col-md-4">
+          <img src="{{tree.image}}" class="card-img" alt="No existe imagen">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h1 class="card-title">{{tree.species}}</h1>
+            <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{tree.creator}}</small></h5>
+            <p class="card-text"> <i class="fas fa-map-marker-alt"></i> {{tree.lat}},  {{tree.long}}</p>
+            <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> {{tree.date}}</small></p>
+            <form (ngSubmit)="onSubmit()" #listaForm="ngForm" class="botones">
+              <div class="boton">
+                  <button type="submit" class="btn btn-primary" (click)="obtenerIdSelecionado(tree)"><i class="far fa-chart-bar"></i> Ver más</button>
+              </div>
+              <div class="boton">
+                  <button type="submit" class="btn btn-warning" (click)="obtenerIdSelecionado_validar(tree)"><i class="far fa-check-circle"></i> Validar</button>
+              </div>
+              <div class="boton">
+                  <button type="submit" class="btn btn-success"><i class="fas fa-edit"></i> Nueva anotación</button>
+              </div>
+            </form>                 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div [hidden]="!submitted2">
+  <div *ngIf="!validar">
+    <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
+    comprobar errores de info-anotacion
+  </div>
+  <div *ngIf="validar">
+    <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
+    <app-validar [tree]="treeSelected" [annotations]="annotations" ></app-validar>
+  </div>
+
+</div>

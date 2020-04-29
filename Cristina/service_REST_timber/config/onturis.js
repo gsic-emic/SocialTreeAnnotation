@@ -42,6 +42,7 @@ var onturis = {
 
 	geo_lat: "http://www.w3.org/2003/01/geo/wgs84_pos#lat",
 	geo_long: "http://www.w3.org/2003/01/geo/wgs84_pos#long",
+	dc_creator: "http://purl.org/dc/elements/1.1/creator"
 
 };
 

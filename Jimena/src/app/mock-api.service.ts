@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import {MensajeService} from './mensaje.service';
-import { Tree } from './tree';
+//import { Trees } from './trees';
 
 
 @Injectable({
@@ -10,7 +10,7 @@ import { Tree } from './tree';
 })
 export class MockAPIService {
 
-  private apiUrl = 'http://timber.gsic.uva.es/';  // URL to web api 
+  private apiUrl = 'http://localhost:8888/sta/';  // URL to web api 
                                       
 
   constructor( private http: HttpClient) { }
@@ -19,23 +19,17 @@ export class MockAPIService {
   getInfoAPI(): Observable<any[]>{
     return this.http.get<any[]>(this.apiUrl); //devuelve un observable, que tendré que consumir con subscribe()
   }
-  /* CON ESTA CONSULA DEBERÍA OBTENER:
-  {
-  "root": "/",
-  "users": "/user",
-  "user": "/user/:userId",
-  "trees": "/sta/data/tree",
-  "tree": "/sta/data/tree/:treeId",
-  "annotations": "/sta/data/annotation",
-  "annotation": "sta/data/annotation/:annotationId",
-  "images": "/sta/data/image",
-  "image": "/sta/data/image/:imagesId"
-}*/
+
+  /* GET the actual API structure*/
+  getTrees(url: string): Observable<string>{
+    return this.http.get<string>(url); 
+  }
+  
 
 
   /** GET a tree from the server */
   getTree (id): Observable<any[]> {
-    var urlComplete = "sta/data/tree/"+id;
+    var urlComplete = "data/tree/"+id;
     return this.http.get<any[]>(this.apiUrl+urlComplete);
   }
 

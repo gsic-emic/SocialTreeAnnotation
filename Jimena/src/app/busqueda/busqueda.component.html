@@ -3,112 +3,128 @@
 <div class="titulo">BÚSQUEDA</div>
 <!-- Filtros aplicables a la búsqueda -->
 <div class="contenedor_filtros">
-    <div class="btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Especie
-        </button>
-        <div class="dropdown-menu">
-        <a class="dropdown-item" href="#">Action</a>
-        <a class="dropdown-item" href="#">Another action</a>
-        <a class="dropdown-item" href="#">Something else here</a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#">Separated link</a>
-        </div>
-    </div>
-    <div class="btn-group">
-        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Creador
-        </button>
-        <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Todos</a>
-            <a class="dropdown-item" href="#">Principiantes</a>
-            <a class="dropdown-item" href="#">Expertos</a>
-            <a class="dropdown-item" href="#">Intermedios</a>
-        </div>
-    </div>
-
-    <div class="btn-group">
-        <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Tipo de hoja
-        </button>
-        <div class="dropdown-menu">
-            <a class="dropdown-item" href="#"></a>
-            <a class="dropdown-item" href="#"></a>
-            <a class="dropdown-item" href="#"></a>
-            <a class="dropdown-item" href="#"></a>
-        </div>
-    </div>
-
-    <div class="btn-group">
-        <button type="button" class="btn btn-outline-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Tipo de fruto
-        </button>
-        <div class="dropdown-menu">
-            <a class="dropdown-item" href="#"></a>
-            <a class="dropdown-item" href="#"></a>
-            <a class="dropdown-item" href="#"></a>
-            <a class="dropdown-item" href="#"></a>
-        </div>
-    </div>
-
-    <div class="btn-group">
-        <button type="button" class="btn btn-outline-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Ubicación
-        </button>
-        <div class="dropdown-menu">
-            <a class="dropdown-item" href="#"></a>
-        </div>
-    </div>
-
-    <div class="btn-buscar">
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Búsqueda general" aria-label="Busqueda">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Burcar</button>
+    <div class="principal">
+        <form class="formulario" (ngSubmit)="onSubmit()" #busquedaForm="ngForm">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01"><i class="fab fa-pagelines"></i>  Especie</label>
+                </div>
+                <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="specie" name="specie">
+                    <option  [value]="item" *ngFor="let item of species">{{item}}</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i>  Ubicación</span>
+                </div>
+                <input type="text" aria-label="First name" class="form-control" [(ngModel)]="lat" name="lat" placeholder="Latitud">
+                <input type="text" aria-label="Last name" class="form-control" [(ngModel)]="long" name="long" placeholder="Longitud">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01"><i class="fas fa-map-marked-alt"></i>  Provincias</label>
+                </div>
+                <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="provincia" name="provincia">
+                    <option  [value]="prov" *ngFor="let prov of provincias">{{prov}}</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default"><i class="fas fa-user"></i>  Creador</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input"  [(ngModel)]="creator" name="creator" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <button type="button" class="btn btn-outline-danger mr-2" (click)="borrarDatos()"><i class="far fa-times-circle"></i> Borrar </button>
+            <button type="submit" class="btn btn-outline-primary"><i class="fas fa-search"></i> Buscar</button>
         </form>
     </div>
-</div>
-
-<!--AQUI PODRÍA PONER UN SPINNER CON BOOSTRAP!!!!!!!-->
-
-<div class="d-flex flex-wrap p-2 m-1">
-    <div class="card mb-3" style="max-width: 540px;" *ngFor="let arbol of arboles; index as i">
-      <div class="row no-gutters">
-        <div class="col-md-4">
-          <img src="{{arbol.imagen}}" class="card-img" alt="imagen de un pino">
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h1 class="card-title">{{arbol.especie}}</h1>
-            <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{arbol.creador}}</small></h5>
-            <p class="card-text"> <i class="fas fa-map-marker-alt"></i> {{arbol.ubicacion}}</p>
-            <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> {{arbol.fecha}}</small></p>
-            <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
-                <div class="botones">
-                    <div class="boton">
-                        <button type="submit" class="btn btn-primary" (click)="obtenerIdSelecionado(i)"><i class="far fa-chart-bar"></i> Ver más</button>
-                    </div>
-                    <div class="boton">
-                        <button type="submit" class="btn btn-warning" (click)=" obtenerIdSelecionado_validar(i)"><i class="far fa-check-circle"></i> Validar</button>
-                    </div>
-                    <div class="boton">
-                        <button type="submit" class="btn btn-success"><i class="fas fa-edit"></i> Nueva anotación</button>
-                    </div>
-                </div>
+    
+    <!--Búsqueda general.. no se si la pondré
+    <div class="principal" [hidden]="submitted">
+        <div class="btn-buscar">
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" [(ngModel)]="general" name="general" placeholder="Búsqueda general" aria-label="Busqueda">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i> Buscar</button>
             </form>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
+    </div>-->
 </div>
-
+</div>
 
 <div [hidden]="!submitted">
-    <button class="btn btn-outline-success" (click)="submitted=false" (click)="validar=false"><i class="fas fa-angle-left"></i></button>
-    <div *ngIf="validar; else detalles">
-        <app-validar [arbol]="arbol_selected"></app-validar>
+    <div class="spinner-grow text-primary" role="status" *ngIf="!terminado; else mostrarResultado">
+        <span class="sr-only">Loading...</span>
     </div>
-    <ng-template #detalles>
-        <app-info-anotacion [arbol]="arbol_selected"></app-info-anotacion>
+    <ng-template #mostrarResultado>
+        <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
+        <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error; else mostrar">
+            <i class="fas fa-exclamation-circle"></i>
+            Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde o recargue la página
+        </div>
+        <ng-template #mostrar>
+            <div class="container">
+                <div class="card border-primary mb-3" style="max-width: 50rem;">
+                    <div class="card-header"><i class="fas fa-search"></i> Resultados de la búsqueda con: </div>
+                    <div class="card-body text-primary">
+                        <p class="card-text" [hidden]="!specie"><i class="fab fa-pagelines"></i> ESPECIE: {{specie}}</p>
+                        <p class="card-text" [hidden]="!lat"><i class="fas fa-map-marker-alt"></i> LATITUD: {{lat}} </p>
+                        <p class="card-text" [hidden]="!long"><i class="fas fa-map-marker-alt"></i> LONGITUD: {{long}}</p>
+                        <p class="card-text" [hidden]="!provincia"><i class="fas fa-map-marked-alt"></i> PROVINCIA: {{provincia}} </p>
+                        <p class="card-text" [hidden]="!creator"><i class="fas fa-user"></i> CREADOR: {{creator}}</p>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!existen; else mostrarLista">
+                <div class="alert alert-danger ml-2 mr-2 mt-1" role="alert" >
+                    <i class="fas fa-exclamation-circle"></i>
+                    No existe ningún árbol registrado con las características introducidas
+                </div>
+                <button type="button" class="btn btn-outline-primary" (click)="recargar()"><i class="fas fa-search"></i> Realizar otra búsqueda</button>
+            </div>
+            <ng-template #mostrarLista>
+                <app-lista-completa [trees]="trees"></app-lista-completa>
+            </ng-template>
+        </ng-template>
+        
     </ng-template>
 </div>
+    
+                
+                
+
+<!--<div [hidden]="!submitted">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-grow text-primary" role="status" *ngIf="!terminado; else mostrarResultado">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <ng-template #mostrarResultado> 
+        <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error; else mostrar">
+            <i class="fas fa-exclamation-circle"></i>
+            Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde o recargue la página
+        </div>
+        <ng-template #mostrar>
+                <div class="card border-primary mb-3" style="max-width: 50rem;">
+                    <div class="card-header"><i class="fas fa-search"></i> Filtros</div>
+                    <div class="card-body text-primary">
+                        <p class="card-text" [hidden]="!specie"><i class="fab fa-pagelines"></i> ESPECIE: {{specie}}</p>
+                        <p class="card-text" [hidden]="!lat"><i class="fas fa-map-marker-alt"></i> LATITUD: {{lat}} </p>
+                        <p class="card-text" [hidden]="!long"><i class="fas fa-map-marker-alt"></i> LONGITUD: {{long}}</p>
+                        <p class="card-text" [hidden]="!creator"><i class="fas fa-user"></i> CREADOR: {{creator}}</p>
+                    </div>
+                </div>
+                <div *ngIf="!existen; else mostrarLista">
+                    <div class="alert alert-danger ml-2 mr-2 mt-1" role="alert" >
+                        <i class="fas fa-exclamation-circle"></i>
+                        No existe ningún árbol registrado con las características introducidas
+                    </div>
+                    <button type="button" class="btn btn-outline-primary" (click)="recargar()"><i class="fas fa-search"></i> Realizar otra búsqueda</button>
+                </div>
+                <ng-template #mostrarLista>
+                    <app-lista-completa [trees]="trees"></app-lista-completa>
+                </ng-template>
+        </ng-template>
+        
+    </ng-template>
+</div>-->
+

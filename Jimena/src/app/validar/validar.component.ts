@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Arbol } from '../arbol';
+import { Tree } from '../tree';
+import { Annotation } from '../Annotation';
 
 @Component({
   selector: 'app-validar',
@@ -8,10 +9,18 @@ import { Arbol } from '../arbol';
 })
 export class ValidarComponent implements OnInit {
 
-  @Input() arbol: Arbol; /* Información que le llega del padre acerca del árbol a anotar*/
+  @Input() tree: Tree; /* Información que le llega del padre acerca del árbol a validar*/
+  @Input() annotations: Annotation[];
 
    //variables de control
    submitted = false;
+
+   // Variables que se recogen del formulario
+   public lat: number;
+   public long: number;
+   public specie: string;
+   public hoja: string;
+   public fruto: string;
 
   constructor() { }
 
@@ -22,7 +31,12 @@ export class ValidarComponent implements OnInit {
     this.submitted = true;
   }
 
-  borrar_datos(){
+  reset(){
+    this.lat = null;
+    this.long = null;
+    this.specie = null;
+    this.hoja = null;
+    this.fruto = null;
   }
 
 }

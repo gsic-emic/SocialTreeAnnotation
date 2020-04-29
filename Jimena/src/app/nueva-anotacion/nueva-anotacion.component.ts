@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Arbol } from '../arbol';
+import { Tree } from './../tree';
 
 @Component({
   selector: 'app-nueva-anotacion',
@@ -8,19 +8,21 @@ import { Arbol } from '../arbol';
 })
 export class NuevaAnotacionComponent implements OnInit {
 
-  arbol: Arbol;
-  lat: number;
-  long: number;
-  especie: string;
-  hoja: string;
-  fruto: string;
-  imagen: string;
-  creador = "Jimena";
-  fecha: string;
+  // Variables para recoger los datos del cuestionario
+  public newTree: Tree;
+  public lat: number;
+  public long: number;
+  public especie: string;
+  public hoja: string;
+  public fruto: string;
+  public imagen: string;
+  public creador = "Jimena";
+  public fecha: string;
 
   //variables de control
-  submitted = false;
-  confirmacion = false;
+  public submitted: boolean = false;
+  public confirmacion: boolean = false;
+
   constructor() { }
 
   ngOnInit(): void {
@@ -28,7 +30,7 @@ export class NuevaAnotacionComponent implements OnInit {
 
 
   // método que pasa a la página para confirmar la nueva anotación
-  onSubmit() { 
+  public onSubmit() { 
     this.submitted = true;
     this.fecha = this.construirFecha();
   }
@@ -39,7 +41,7 @@ export class NuevaAnotacionComponent implements OnInit {
   }
 
   //método que borra los datos introducidos por el usuario y vuelve al formulacio de nueva anotación
-  borrar_datos(){
+  public borrarDatos(){
     this.lat = null;
     this.long = null;
     this.especie = null;
@@ -50,22 +52,20 @@ export class NuevaAnotacionComponent implements OnInit {
     this.volver();
     this.confirmacion = false;
   }
-  crearArbol(){
-    /* Hacer esto me está dando problemas...aquí posiblemente se manden los datos directamente a la API
-    this.arbol.lat = this.lat;
-    this.arbol.long = this.long;
-    this.arbol.especie = this.especie;
-    this.arbol.creador = this.creador;
-    this.arbol.imagen = this.imagen;
-    this.arbol.fecha = this.construirFecha();
-    this.arbol.id = "004";*/
+  public createTree(id: string, latitud: number, longitud: number, specie: string, creator: string, image: string, date: string){
+    let tree = { id: id, lat: latitud, long: longitud, species: specie, creator:  creator, image: image, date: date};
+    console.log("Se ha creado el siguiente árbol: "+ tree.id +":"+tree.lat, tree.long + "especie:"+tree.species);
+    return tree;
   }
-  construirFecha(): string{
+  public saveNewTree(){
+    this.newTree = this.createTree('', this.lat, this.long, this.especie, this.creador, this.imagen, this.fecha);
+  }
+  public construirFecha(): string{
     var f = new Date();
     var fecha;
     return fecha = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear();
   }
-  onSubmit2(){
+  public onSubmit2(){
     this.confirmacion = true;
   }
 

@@ -11,5 +11,11 @@ export class IniciarSesionComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  public email: string;
+  public password: string;
+
+  public onSubmit(){
+
+  }
 
 }

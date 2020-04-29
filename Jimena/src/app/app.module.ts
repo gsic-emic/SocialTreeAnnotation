@@ -29,6 +29,8 @@ import { MensajesComponent } from './mensajes/mensajes.component';
 import { ArbolComponent } from './arbol/arbol.component';
 import { NosotrosComponent } from './nosotros/nosotros.component';
 import { ContactoComponent } from './contacto/contacto.component';
+import { ListaComponent } from './lista/lista.component';
+import { ListaCompletaComponent } from './lista-completa/lista-completa.component';
 
 const routes: Routes = [ 
   { path: 'inicio_sesion', component: IniciarSesionComponent },
@@ -75,7 +77,9 @@ const routes: Routes = [
     MensajesComponent,
     ArbolComponent,
     NosotrosComponent,
-    ContactoComponent
+    ContactoComponent,
+    ListaComponent,
+    ListaCompletaComponent
   ],
   imports: [
     BrowserModule,

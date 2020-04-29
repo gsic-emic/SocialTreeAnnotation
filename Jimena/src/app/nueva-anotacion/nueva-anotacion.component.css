@@ -14,15 +14,7 @@ a{
     font-size: 4vw;
     text-align: center;
 }
-.aclaracion{
-    font-size: 3vw;
-}
 .nueva{
-    background: rgba(37, 34, 214, 0.15);
-    width: 100%;
-    margin: 10px;
-    padding: 2vh 4vw;
-    border-radius: 5px;
     display: flex;
     flex-flow: row wrap;
     justify-content: space-around;
@@ -41,7 +33,7 @@ a{
 }
 
 .entrada{
-    font-size: 3vw;
+    font-size: 3vh;
 }
 .botones{
     display: flex;
