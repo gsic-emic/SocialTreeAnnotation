@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { ListaCompletaComponent } from './../lista-completa/lista-completa.component';
+import { Observable } from  'rxjs';
 //--------------------------
 import {MockAPIService} from '../mock-api.service';
 import {Tree} from '.././tree';
@@ -11,14 +13,22 @@ import {Tree} from '.././tree';
 })
 export class BusquedaComponent implements OnInit {
 
+  // El componente búsqueda es padre de lista-completa -> creo vínculo entre ellos para ver la variable del filtro
+  //@ViewChild(ListaCompletaComponent) lista; 
+
   constructor(private api: MockAPIService) { }
 
-  //variables de control
-  public submitted: boolean = false;
-
   ngOnInit(): void {
-    
+   
   }
+  comprobarFiltro(filtro: boolean){
+    this.filtro = filtro;
+  }
+
+  //---------------------------------------
+  // variables de control
+  public submitted: boolean = false;
+  public filtro: boolean = true;
 
   //---------------------------------------
   // Variables para obtender los datos almacenados en la api-

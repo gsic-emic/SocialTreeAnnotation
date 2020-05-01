@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MiAnotInfoComponent } from './mi-anot-info.component';
+import { AddAnnotComponent } from './add-annot.component';
 
-describe('MiAnotInfoComponent', () => {
-  let component: MiAnotInfoComponent;
-  let fixture: ComponentFixture<MiAnotInfoComponent>;
+describe('AddAnnotComponent', () => {
+  let component: AddAnnotComponent;
+  let fixture: ComponentFixture<AddAnnotComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MiAnotInfoComponent ]
+      declarations: [ AddAnnotComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MiAnotInfoComponent);
+    fixture = TestBed.createComponent(AddAnnotComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

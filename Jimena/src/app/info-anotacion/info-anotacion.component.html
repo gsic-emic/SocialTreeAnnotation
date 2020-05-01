@@ -1,33 +1,87 @@
 <!-- Código para mostrar la información almacenada de un árbol concreto-->
-
-<div class="card p-3 mb-4">
+<div class="container">
+  <div class="titulo"> Información del árbol </div>
+  <div class="card p-2 mb-3">
     <div class="card-body">
         <div class="row no-gutters">
             <div class="col-md-4">
-              <img src="{{tree.image}}" class="card-img" alt="imagen de un pino">
+              <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                  <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
+                  <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+                  <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img  src="{{tree.image}}" class="d-block w-100" alt="imagen de un {{tree.species}}">
+                    <div class="carousel-caption d-none d-md-block">
+                      <h5>{{tree.creator}}</h5>
+                      <p>{{tree.date}}</p>
+                    </div>
+                  </div>
+                  <div class="carousel-item" *ngFor="let anot of annotations;">
+                    <img src="{{anot.image}}" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                      <h5>{{anot.creator}}</h5>
+                      <p>{{anot.date}}</p>
+                    </div>
+                  </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
             </div>
             <div class="col-md-8">
               <div class="card-body">
-                <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{tree.creator}}</small></h5>
                 <h1 class="card-title"><br><i class="fab fa-pagelines"></i> Especie: {{tree.species}}</h1>
+                <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{tree.creator}}</small></h5>
                 
                 <p class="card-text"><br><i class="fas fa-map-marker-alt"></i> [{{tree.lat}}, {{tree.long}}]</p> <span class="badge badge-success">Ver en el mapa</span>
                 <!--<app-mapa [arboles]="arbol"></app-mapa>-->
-
+                <p class="card-text"><small class="text-muted"><br><i class="fas fa-clock"></i> Creación: {{tree.date}}</small></p>
+              </div>
+                <!--
                 <h3 class="card-title"><br><i class="fas fa-align-left"></i> Otros datos de interés:</h3>
                 <p class="card-text"><i class="fas fa-leaf"></i> Tipo de hoja:</p>
                 <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i>{{tree.date}}</small></p>
                 <button type="button" class="btn btn-success" (click)="mostrar_estadisticas=true"><i class="far fa-chart-bar"></i> Ver estadísticas de la anotación</button>
-              </div>
+              
+              
               <div *ngIf="mostrar_estadisticas;"> 
                 <h3 class="card-title"><br><i class="far fa-chart-bar"></i> Ranking de usuarios:</h3>
                 <p class="text-danger">Aquí irán gráficas y comentarios de otros usuarios sobre la anotacion</p>
                 <br><br><br><br>
                 <p class="card-text"><i class="fas fa-medal"></i> 3 expertos validaron esta anotación</p>
                 <p class="card-text"><i class="fas fa-medal"></i> 7 principiantes validaron esta anotación</p>
-              </div>
+              </div>-->
              </div>
           <br>
         </div>
     </div>
+  </div>
+  <!-- ANOTACIONES -->
+  <div class="titulo"> Anotaciones del árbol</div>
+  <div class="anotaciones">
+    <div class="card border-success m-3" style="max-width: 18rem;" *ngFor="let anot of annotations;">
+      <div class="card-header"><i class="far fa-user"></i> {{anot.creator}} </div>
+      <div class="card-body text-success">
+        <h5 class="card-title"><i class="fab fa-pagelines"></i> {{anot.specie}}</h5>
+        <p class="card-text">****esto dependerá del tipo de anotación****</p>
+        <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creación: {{anot.date}}</small></p>
+      </div>
+    </div>
+  </div>
+  <!--Pensar cómo hacer para saber si no hay anotaciones
+  <ng-template class="anotaciones" #mostrarAviso>
+    <div class="alert alert-warning m-1" role="alert">
+      ¡Este árbol aún no tiene ninguna anotación! Se el primero en registrar una nueva <a [routerLink]="['/inicio_sesion']" class="alert-link">iniciando sesión</a>. 
+    </div>
+  </ng-template>-->
+    
 </div>
