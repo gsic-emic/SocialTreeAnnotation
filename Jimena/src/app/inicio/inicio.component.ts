@@ -59,8 +59,8 @@ export class InicioComponent implements OnInit {
     for (let clave in this.objTrees){
       if (this.objTrees[clave].creator == "http://crossforest.eu/ifn/ontology/")
       { this.objTrees[clave].creator = "IFN"} 
-      if (!this.objTrees[clave].image)
-      {this.objTrees[clave].image = "./../assets/images/no-image.png";} // LA IMAGEN LA TENDRÉ QUE BUSCARLA EN UNA ANOTACIÓN
+      // LA IMAGEN LA TENDRÉ QUE BUSCAR EN UNA ANOTACIÓN ---> de momento pongo que no hay
+      this.objTrees[clave].image = "./../assets/images/no-image.png";
       this.objTrees[clave].date = "1/1/2020";
       this.trees[i] = this.createTree(clave, this.objTrees[clave].lat, this.objTrees[clave].long, this.objTrees[clave].species, this.objTrees[clave].creator, this.objTrees[clave].image, this.objTrees[clave].date);
       i++;

@@ -1,3 +1,16 @@
 a{
     color: black;
 }
+.container{
+    display: block;
+    padding: 5px;
+}
+.titulo{
+    font-size: 4vw;
+    text-align: center;
+}
+.anotaciones{
+    display: flex;
+    flex-flow: row wrap;
+    margin-bottom: 50px;
+}

@@ -23,15 +23,15 @@
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
       <li class="page-item">
-        <a class="page-link" [routerLink]="['/nosotros']" aria-label="Previous">
+        <a class="page-link" [routerLink]="['/']" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li> <!--metiendo "active" en la clase hago que se pinte el actual-->
-      <li class="page-item"><a class="page-link" [routerLink]="['/nosotros']">1</a></li>
-      <li class="page-item"><a class="page-link" [routerLink]="['/nosotros']">2</a></li>
-      <li class="page-item"><a class="page-link" [routerLink]="['/nosotros']">3</a></li>
+      <li class="page-item"><a class="page-link" [routerLink]="['/']">1</a></li>
+      <li class="page-item"><a class="page-link" [routerLink]="['/']">2</a></li>
+      <li class="page-item"><a class="page-link" [routerLink]="['/']">3</a></li>
       <li class="page-item">
-        <a class="page-link" [routerLink]="['/nosotros']" aria-label="Next">
+        <a class="page-link" [routerLink]="['/']" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>
@@ -41,9 +41,11 @@
 </div>
 
 <div [hidden]="!submitted">
-  <button class="btn btn-outline-success" (click)="submitted=false"><i class="fas fa-angle-left"></i></button>
-  <div class="alert alert-warning m-1" role="alert">
-    Para poder colaborar en las anotaciones necesitas estar <a [routerLink]="['/inicio_sesion']" class="alert-link">registrado</a>. 
+  <div class="atras">
+    <button class="btn btn-outline-success" (click)="submitted=false"><i class="fas fa-angle-left"></i></button>
+    <div class="alert alert-warning m-1" role="alert">
+      Para poder colaborar en las anotaciones necesitas estar <a [routerLink]="['/inicio_sesion']" class="alert-link">registrado</a>. 
+    </div>
   </div>
-  <app-info-anotacion [tree]="tree_selected"></app-info-anotacion>
+  <app-info-anotacion [tree]="tree_selected" [annotations]="annotations"></app-info-anotacion>
 </div>

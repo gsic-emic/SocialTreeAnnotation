@@ -1,0 +1,49 @@
+<div class="container" [hidden]="submitted">
+    <form class="formulario" (ngSubmit)="onSubmit()" #AnnotForm="ngForm">
+        <div class="card border-success mb-3" style="max-width: 70rem;">
+            <div class="card-header"><i class="fas fa-plus-circle"></i> Nueva Anotación</div>
+            <div class="nueva">
+                <div class="form-group p-1">
+                    <label class="entrada" for="imagen"><i class="fas fa-camera"></i> Insertar imagen </label>
+                    <input type="file" class="form-control" [(ngModel)]="imagen" name="imagen">
+                </div>
+                <div class="form-group">
+                    <label class="entrada" for="ubicacion"><i class="fas fa-map-marker-alt"></i> Ubicación </label>
+                    <input type="number" class="form-control" id="lat" placeholder="Latitud" [(ngModel)]="lat" name="lat"> 
+                    <input type="number" class="form-control" id="long" placeholder="Longitud" [(ngModel)]="long" name="long">
+                </div>
+            </div>
+            <div class="nueva">
+                <div class="form-group">
+                    <label class="entrada" for="especie"><i class="fab fa-pagelines"></i> Especie:</label>
+                    <input type="text" class="form-control" id="especie" placeholder="Especie"
+                        [(ngModel)]="especie" name="especie">
+                </div>
+                <div class="form-group">
+                    <label class="entrada" for="hoja"><i class="fas fa-leaf"></i> Tipo de hoja:</label>
+                    <input type="text" class="form-control" id="hoja" placeholder="Tipo de hoja"
+                        [(ngModel)]="hoja" name="hoja">
+                </div>
+            </div>
+            <div class="nueva">
+                <div class="form-group">
+                    <label class="entrada" for="fruto"><i class="fas fa-apple-alt"></i> Tipo de fruto:</label>
+                    <input type="text" class="form-control" id="fruto" placeholder="Fruto"
+                        [(ngModel)]="fruto" name="fruto">
+                </div>
+            </div>
+      </div>
+      <button type="button" class="btn btn-outline-danger mr-3" (click)="borrarDatos()"><i class="far fa-times-circle"></i> Borrar todo </button>
+      <button type="submit" class="btn btn-success">Siguiente</button>   <!--aquí se va a confirm-->
+    </form>
+</div>
+<div class="container" [hidden]="!submitted">
+    {{especie}}<br>
+    {{lat}}<br>
+    {{long}}<br>
+    {{fruto}}<br>
+    {{hoja}}<br>
+    {{imagen}}<br>
+
+</div>
+

@@ -21,8 +21,8 @@ a{
 }
 .recopilacion{
     display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
+    flex-flow: column;
+    align-items: center;
 }
 .anot_nueva{
     background: rgba(37, 34, 214, 0.15);

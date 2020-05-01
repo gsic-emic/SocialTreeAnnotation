@@ -20,7 +20,6 @@ import { NuevaAnotacionComponent } from './nueva-anotacion/nueva-anotacion.compo
 import { MisAnotacionesComponent } from './mis-anotaciones/mis-anotaciones.component';
 import { BusquedaComponent } from './busqueda/busqueda.component';
 import { AjustesComponent } from './ajustes/ajustes.component';
-import { MiAnotInfoComponent } from './mi-anot-info/mi-anot-info.component';
 import { ComunidadComponent } from './comunidad/comunidad.component';
 import { ValidarComponent } from './validar/validar.component';
 import { ConfirmAnotComponent } from './confirm-anot/confirm-anot.component';
@@ -31,6 +30,7 @@ import { NosotrosComponent } from './nosotros/nosotros.component';
 import { ContactoComponent } from './contacto/contacto.component';
 import { ListaComponent } from './lista/lista.component';
 import { ListaCompletaComponent } from './lista-completa/lista-completa.component';
+import { AddAnnotComponent } from './add-annot/add-annot.component';
 
 const routes: Routes = [ 
   { path: 'inicio_sesion', component: IniciarSesionComponent },
@@ -41,7 +41,6 @@ const routes: Routes = [
   { path: 'nuevaAnot', component: NuevaAnotacionComponent },
   { path: 'validar', component: ValidarComponent },
   { path: 'comunidad', component: ComunidadComponent },
-  { path: 'mi_info', component: MiAnotInfoComponent },
   { path: 'ajustes', component: AjustesComponent },
   { path: 'busqueda', component: BusquedaComponent },
   { path: 'mis_anot', component: MisAnotacionesComponent },
@@ -69,7 +68,6 @@ const routes: Routes = [
     MisAnotacionesComponent,
     BusquedaComponent,
     AjustesComponent,
-    MiAnotInfoComponent,
     ComunidadComponent,
     ValidarComponent,
     ConfirmAnotComponent,
@@ -79,7 +77,8 @@ const routes: Routes = [
     NosotrosComponent,
     ContactoComponent,
     ListaComponent,
-    ListaCompletaComponent
+    ListaCompletaComponent,
+    AddAnnotComponent
   ],
   imports: [
     BrowserModule,

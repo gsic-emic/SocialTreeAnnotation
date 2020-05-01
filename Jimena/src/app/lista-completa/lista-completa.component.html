@@ -19,7 +19,7 @@
                   <button type="submit" class="btn btn-warning" (click)="obtenerIdSelecionado_validar(tree)"><i class="far fa-check-circle"></i> Validar</button>
               </div>
               <div class="boton">
-                  <button type="submit" class="btn btn-success"><i class="fas fa-edit"></i> Nueva anotación</button>
+                  <button type="submit" class="btn btn-success" (click)="obtenerSelecionadoNueva(tree)" ><i class="fas fa-edit"></i> Nueva anotación</button>
               </div>
             </form>                 
           </div>
@@ -32,13 +32,18 @@
 
 
 <div [hidden]="!submitted2">
-  <div *ngIf="!validar">
+  <div *ngIf="new; else resto">
     <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
-    comprobar errores de info-anotacion
+    <app-add-annot></app-add-annot>
   </div>
-  <div *ngIf="validar">
-    <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
-    <app-validar [tree]="treeSelected" [annotations]="annotations" ></app-validar>
-  </div>
-
+  <ng-template #resto>
+    <div *ngIf="!validar">
+      <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
+      <app-info-anotacion [tree]="treeSelected" [annotations]="annotations"></app-info-anotacion>
+    </div>
+    <div *ngIf="validar">
+      <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
+      <app-validar [tree]="treeSelected" [annotations]="annotations" ></app-validar>
+    </div>
+  </ng-template>
 </div>

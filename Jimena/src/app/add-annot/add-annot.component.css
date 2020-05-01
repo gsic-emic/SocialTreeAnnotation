@@ -1,0 +1,17 @@
+.container{
+    padding: 3px;
+    padding-bottom: 50px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+.nueva{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.entrada{
+    font-size: 3vh;
+}

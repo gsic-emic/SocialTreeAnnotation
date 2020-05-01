@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Tree } from './../tree';
 import { Annotation } from '../Annotation';
 
@@ -10,7 +10,12 @@ import { Annotation } from '../Annotation';
 })
 export class ListaCompletaComponent implements OnInit {
 
+  // Componente hijo del componente búsqueda
   @Input() trees: Tree[]; // Los árboles a mostrar llegan como parámetro de entrada
+
+  // Variable que quiero mandar al padre para ocultar el filtro cuando se pulse algún botón
+  @Output() filtro = new EventEmitter<boolean>();
+  //----------------------------------
 
   constructor() { }
 
@@ -22,16 +27,16 @@ export class ListaCompletaComponent implements OnInit {
     console.log(this.annotations);
   }
 
-  // Variables para el control del formulario
+  // Variables de control
   public submitted2: boolean = false;
   public validar: boolean = false;
   public i: number = 0;
+  public new: boolean = false;
   //---------------------------------------
 
   // Variables para almacenar los datos provenientes de la consulta
   public treeSelected: Tree;
   public annotations: Annotation[]=[]; // anotaciones que pertenecen al árbol seleccionado
-
   public id: string;
   public creator: string;
   public date: string;
@@ -54,7 +59,8 @@ export class ListaCompletaComponent implements OnInit {
     // -----> de momento las meto a mano.... pero esto queda pendiente!
 
   public onSubmit() { 
-    this.submitted2 = true; 
+    this.submitted2 = true;
+    this.filtro.emit(false);
   }
   public obtenerIdSelecionado(tree: Tree){
     this.treeSelected = tree;
@@ -63,9 +69,15 @@ export class ListaCompletaComponent implements OnInit {
     this.treeSelected = tree;
     this.validar = true;
   }
+  public obtenerSelecionadoNueva(tree: Tree){
+    this.treeSelected = tree;
+    this.new = true;
+  }
   public volver(){
     this.submitted2 = false;
     this.validar = false;
+    this.new = false;
+    this.filtro.emit(true);
   }
 
 
