@@ -1,41 +1,42 @@
 <app-menu></app-menu>
 
-<div class="btn-group" role="group" aria-label="Basic example">
+<div class="contenedor">
+  <div class="btn-group" role="group" aria-label="Basic example">
     <button type="button" class="btn btn-success" (click)="mapa=true"><i class="fas fa-location-arrow"></i> Mapa</button>
     <button type="button" class="btn btn-outline-success" (click)="mapa=false"><i class="fas fa-list-ul"></i> Lista</button>
-</div>
-
-<!-- Divido el flujo del programa en dos, para poder ver la página de inicio con el mapa o con la lista-->
-<!-- La variable mapa está inicializada a true, en el momento que se pinche a lista, cambia a false y se muestra la lista-->
-
-<!--Código para que se muestre el mapa-->
-<div *ngIf="mapa; else mostrarLista">
-  <div class="spinner-grow text-success" role="status" *ngIf="!terminado; else mostrarResultado">
-    <span class="sr-only">Loading...</span>
   </div>
-  <ng-template #mostrarResultado>
-    <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error">
-      <i class="fas fa-exclamation-circle"></i>
-      Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde
-    </div>
-    <app-mapa [trees]="trees"></app-mapa>
-  </ng-template>
-</div>
 
-<!--Código para que se muestren las anotaciones en formato de lista-->
-<!--Con ngFor recorro todos los elementos almacenados en la variable arboles[] -->
-<ng-template #mostrarLista>
-    <div class="spinner-grow text-success" role="status" *ngIf="!terminado; else mostrarResult">
+  <!-- Divido el flujo del programa en dos, para poder ver la página de inicio con el mapa o con la lista-->
+  <!-- La variable mapa está inicializada a true, en el momento que se pinche a lista, cambia a false y se muestra la lista-->
+
+  <!--Código para que se muestre el mapa-->
+  <div *ngIf="mapa; else mostrarLista">
+    <div class="spinner-grow text-success" role="status" *ngIf="!terminado; else mostrarResultado">
       <span class="sr-only">Loading...</span>
     </div>
-    <ng-template #mostrarResult>
-      <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error; else mostrarLista">
+    <ng-template #mostrarResultado>
+      <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error">
         <i class="fas fa-exclamation-circle"></i>
         Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde
       </div>
-      <ng-template #mostrarLista>
-        <app-lista [trees]="trees"></app-lista> <!--Componente que contiene la lista para mostrar los arboles-->
-      </ng-template>
-  </ng-template>
-</ng-template>
+      <app-mapa [trees]="trees"></app-mapa>
+    </ng-template>
+  </div>
 
+  <!--Código para que se muestren las anotaciones en formato de lista-->
+  <!--Con ngFor recorro todos los elementos almacenados en la variable arboles[] -->
+  <ng-template #mostrarLista>
+      <div class="spinner-grow text-success" role="status" *ngIf="!terminado; else mostrarResult">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <ng-template #mostrarResult>
+        <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error; else mostrarLista">
+          <i class="fas fa-exclamation-circle"></i>
+          Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde
+        </div>
+        <ng-template #mostrarLista>
+          <app-lista [trees]="trees"></app-lista> <!--Componente que contiene la lista para mostrar los arboles-->
+        </ng-template>
+    </ng-template>
+  </ng-template>
+</div>

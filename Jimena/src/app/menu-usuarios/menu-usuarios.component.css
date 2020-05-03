@@ -13,6 +13,7 @@ a:hover {
     flex-flow: row nowrap;
     margin: 3px;
     padding: 3px;
+    justify-content: space-around;
 }
 .accion{
     font-size: 0,2vw;

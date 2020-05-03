@@ -5,7 +5,5 @@
 }
 .card_container{
     display: flex;
-    flex-flow: row wrap;
-    margin-bottom: 100px;
-    justify-content: space-around;
+    justify-content: center;
 }
