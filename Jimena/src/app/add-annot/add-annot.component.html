@@ -17,24 +17,24 @@
                 <div class="form-group">
                     <label class="entrada" for="especie"><i class="fab fa-pagelines"></i> Especie:</label>
                     <input type="text" class="form-control" id="especie" placeholder="Especie"
-                        [(ngModel)]="especie" name="especie">
+                        [(ngModel)]="especie" name="especie" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)">
                 </div>
                 <div class="form-group">
                     <label class="entrada" for="hoja"><i class="fas fa-leaf"></i> Tipo de hoja:</label>
                     <input type="text" class="form-control" id="hoja" placeholder="Tipo de hoja"
-                        [(ngModel)]="hoja" name="hoja">
+                        [(ngModel)]="hoja" name="hoja" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)">
                 </div>
             </div>
             <div class="nueva">
                 <div class="form-group">
                     <label class="entrada" for="fruto"><i class="fas fa-apple-alt"></i> Tipo de fruto:</label>
                     <input type="text" class="form-control" id="fruto" placeholder="Fruto"
-                        [(ngModel)]="fruto" name="fruto">
+                        [(ngModel)]="fruto" name="fruto" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)">
                 </div>
             </div>
       </div>
       <button type="button" class="btn btn-outline-danger mr-3" (click)="borrarDatos()"><i class="far fa-times-circle"></i> Borrar todo </button>
-      <button type="submit" class="btn btn-success">Siguiente</button>   <!--aquí se va a confirm-->
+      <button type="submit" class="btn btn-success" [disabled]="!AnnotForm.form.valid">Siguiente</button>   <!--aquí se va a confirm-->
     </form>
 </div>
 <div class="container" [hidden]="!submitted">

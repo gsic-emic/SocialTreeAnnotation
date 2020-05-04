@@ -32,7 +32,7 @@
       <ng-template #mostrarResult>
         <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error; else mostrarLista">
           <i class="fas fa-exclamation-circle"></i>
-          Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde
+          Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde o recargue la página
         </div>
         <ng-template #mostrarLista>
           <app-lista [trees]="trees"></app-lista> <!--Componente que contiene la lista para mostrar los arboles-->
