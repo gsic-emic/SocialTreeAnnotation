@@ -7,11 +7,11 @@
       <form (ngSubmit)="onSubmit()" #regForm="ngForm">
         <div class="form-group">
           <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Nombre" 
-          [(ngModel)]="nombre" name="nombre"required>
+          [(ngModel)]="nombre" name="nombre" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)" required>
         </div>
         <div class="form-group">
           <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Apellidos"
-          [(ngModel)]="apellidos" name="apellidos" required>
+          [(ngModel)]="apellidos" name="apellidos" pattern="(^[a-zA-Z\sñ]+$)" required>
         </div>
         <div class="form-group">
         <br><h5>SEXO*</h5>
@@ -34,17 +34,19 @@
 
         <br><h5>AÑO DE NACIMIENTO</h5>
           <div class="form-group">
-            <input type="number" class="form-control" id="formGroupExampleInput" placeholder="Año" [(ngModel)]="nac" name="nac">
+            <input type="number" class="form-control" id="formGroupExampleInput" placeholder="Año" 
+            [(ngModel)]="nac" name="nac" pattern="(^[1-2]{1}[0-9]{3}$)">
         </div>
 
         <br><h5>TU CUENTA</h5>
         <div class="form-group">
             <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Correo electrónico"
-            [(ngModel)]="email" name="email" required>
+            [(ngModel)]="email" name="email" pattern="^([0-9a-z]+)([0-9a-z\.-_]+)@([0-9a-z\.-_]+)\.([0-9a-z]+)$" required>
         </div>
         <div class="form-group">
             <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="Crear contraseña"
-            [(ngModel)]="password" name="password" required>
+            [(ngModel)]="password" name="password" pattern="(^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$)" required>
+            <small id="emailHelp" class="form-text text-muted">La contraseña debe tener mínimo 8 caracteres, incluyendo una mayúscula y 2 números</small>
         </div>
 
         <button type="submit" class="btn btn-primary btn-success" [disabled]="!regForm.form.valid">Enviar <i class="fas fa-long-arrow-alt-right"></i></button>

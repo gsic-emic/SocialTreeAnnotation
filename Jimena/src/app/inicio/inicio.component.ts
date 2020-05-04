@@ -40,6 +40,7 @@ export class InicioComponent implements OnInit {
       (error) =>{
         console.error(error); // si se ha producido algún error
         this.error = true;
+        alert("Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde o recargue la página");
         this.terminado = true;
       },
       () =>{
