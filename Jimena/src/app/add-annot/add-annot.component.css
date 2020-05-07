@@ -5,6 +5,10 @@
     flex-flow: column;
     align-items: center;
 }
+.titulo{
+    font-size: 4vw;
+    text-align: center;
+}
 .nueva{
     display: flex;
     flex-flow: row wrap;

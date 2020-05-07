@@ -21,7 +21,6 @@ import { MisAnotacionesComponent } from './mis-anotaciones/mis-anotaciones.compo
 import { BusquedaComponent } from './busqueda/busqueda.component';
 import { AjustesComponent } from './ajustes/ajustes.component';
 import { ComunidadComponent } from './comunidad/comunidad.component';
-import { ValidarComponent } from './validar/validar.component';
 import { ConfirmAnotComponent } from './confirm-anot/confirm-anot.component';
 import { RegistroAnotComponent } from './registro-anot/registro-anot.component';
 import { MensajesComponent } from './mensajes/mensajes.component';
@@ -39,7 +38,6 @@ const routes: Routes = [
   { path: 'contacto', component: ContactoComponent },
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'nuevaAnot', component: NuevaAnotacionComponent },
-  { path: 'validar', component: ValidarComponent },
   { path: 'comunidad', component: ComunidadComponent },
   { path: 'ajustes', component: AjustesComponent },
   { path: 'busqueda', component: BusquedaComponent },
@@ -69,7 +67,6 @@ const routes: Routes = [
     BusquedaComponent,
     AjustesComponent,
     ComunidadComponent,
-    ValidarComponent,
     ConfirmAnotComponent,
     RegistroAnotComponent,
     MensajesComponent,

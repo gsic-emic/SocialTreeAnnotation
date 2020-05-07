@@ -1,9 +1,0 @@
-.centro{
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-}
-.card_container{
-    display: flex;
-    justify-content: center;
-}

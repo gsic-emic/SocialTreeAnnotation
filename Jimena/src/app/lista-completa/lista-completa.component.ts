@@ -21,38 +21,34 @@ export class ListaCompletaComponent implements OnInit {
 
   ngOnInit(): void {
     //esto es de prueba.... luego lo obtendré con una consulta a la api
-    this.annotations[this.i] = this.createAnnotation("http://timber.gsic.uva.es/sta/data/annotation/001", "Jimena", "28/04/2020", "./../assets/images/pino1.png", 41.8, -5, "Pino", "Acícula", "");
-    this.i++;
-    this.annotations[this.i] = this.createAnnotation("http://timber.gsic.uva.es/sta/data/annotation/002", "Cristina", "27/04/2020", "./../assets/images/abeto1.png", 42, -5.012, "Pino", "Aguja", "Piñones");
+    this.annotations[0] = {id: "http://timber.gsic.uva.es/sta/data/annotation/001", creator: "Jimena", date: "28/04/2020", type:{ image: "./../assets/images/pino1.png"}};    
+    this.annotations[1] = {id: "http://timber.gsic.uva.es/sta/data/annotation/002", creator: "Cristina", date: "27/04/2020", type: {image: "./../assets/images/abeto1.png"}};
+    this.annotations[2] = {id: "http://timber.gsic.uva.es/sta/data/annotation/003", creator: "Jimena", date: "27/04/2020", type: {specie: "Pino"}};
+    this.annotations[3] = {id: "http://timber.gsic.uva.es/sta/data/annotation/004", creator: "Juan", date: "20/04/2020", type: {hoja: "Acícula"}};
+    this.annotations[4] = {id: "http://timber.gsic.uva.es/sta/data/annotation/005", creator: "Maria", date: "06/05/2020", type: {fruto: "Castaña"}};
+
+
+
     console.log(this.annotations);
   }
 
   // Variables de control
   public submitted2: boolean = false;
-  public validar: boolean = false;
-  public i: number = 0;
   public new: boolean = false;
   //---------------------------------------
 
   // Variables para almacenar los datos provenientes de la consulta
   public treeSelected: Tree;
   public annotations: Annotation[]=[]; // anotaciones que pertenecen al árbol seleccionado
-  public id: string;
-  public creator: string;
-  public date: string;
-  public image: string;
-  public lat: number;
-  public long: number;
-  public specie: string;
-  public hoja: string;
-  public fruto: string;
+
   //---------------------------------------
-  // método que  crea un objeto de tipo Tree
-  public createAnnotation(id: string, creator: string, date: string, image: string, lat: number, long: number, specie: string, hoja: string, fruto: string){
-    let annot = { id: id, creator: creator, date: date, image: image, lat: lat, long: long, specie: specie, hoja: hoja, fruto: fruto};
+  // método que  crea un objeto de tipo Annotation
+  /*public createAnnotation(id: string, creator: string, date: string, type: string){
+    let annot = { id: id, creator: creator, date: date, type: type};
+
     //console.log("Se ha creado la siguiente anotación: "+ annot.id +":"+annot.lat, annot.long);
     return annot;
-  }
+  }*/
 
   // una vez que se el árbol seleccionado, tendré que realizar una consulta para averiguar todas las anotaciones
     //  que tiene para mostrarlas
@@ -62,12 +58,8 @@ export class ListaCompletaComponent implements OnInit {
     this.submitted2 = true;
     this.filtro.emit(false);
   }
-  public obtenerIdSelecionado(tree: Tree){
+  public obtenerSelecionado(tree: Tree){
     this.treeSelected = tree;
-  }
-  public obtenerIdSelecionado_validar(tree: Tree){
-    this.treeSelected = tree;
-    this.validar = true;
   }
   public obtenerSelecionadoNueva(tree: Tree){
     this.treeSelected = tree;
@@ -75,10 +67,7 @@ export class ListaCompletaComponent implements OnInit {
   }
   public volver(){
     this.submitted2 = false;
-    this.validar = false;
     this.new = false;
     this.filtro.emit(true);
   }
-
-
 }
