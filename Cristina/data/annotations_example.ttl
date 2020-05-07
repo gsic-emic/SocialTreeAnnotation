@@ -36,7 +36,7 @@
     dc:created "2020-02-03T19:42:01"^^xsd:date .
 
 <http://timber.gsic.uva.es/sta/data/annotation/006>
-    a sta:PositionAnnotation , sta:AssertedPosition ;
+    a sta:PositionAnnotation , sta:AssertedPosition , sta:PrimaryPosition ;
     dc:creator <http://timber.gsic.uva.es/users/user002> ; 
     geo:lat 43.261255 ;
     geo:long -2.879990 ;

@@ -1,6 +1,6 @@
-/* var trees = [];
+var treesArray = [];
 
-var tree_content = {};
+/*var tree_content = {};
 trees[0] = { '<http://timber.gsic.uva.es/trees/tree001>': tree_content };
 
 tree_content = {
@@ -8,3 +8,7 @@ tree_content = {
     'annotations': '<http://timber.gsic.uva.es/trees/tree001/annotations>',
 }
  */
+
+module.exports = {
+    treesArray
+}
