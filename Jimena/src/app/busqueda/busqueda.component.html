@@ -16,13 +16,6 @@
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i>  Ubicación</span>
-                        </div>
-                        <input type="text" aria-label="First name" class="form-control" [(ngModel)]="lat" name="lat" placeholder="Latitud">
-                        <input type="text" aria-label="Last name" class="form-control" [(ngModel)]="long" name="long" placeholder="Longitud">
-                    </div>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
                         <label class="input-group-text" for="inputGroupSelect01"><i class="fas fa-map-marked-alt"></i>  Provincias</label>
                         </div>
                         <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="provincia" name="provincia">
@@ -39,16 +32,6 @@
                     <button type="submit" class="btn btn-outline-primary"><i class="fas fa-search"></i> Buscar</button>
                 </form>
             </div>
-            
-            <!--Búsqueda general.. no se si la pondré
-            <div class="principal" [hidden]="submitted">
-                <div class="btn-buscar">
-                    <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="search" [(ngModel)]="general" name="general" placeholder="Búsqueda general" aria-label="Busqueda">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i> Buscar</button>
-                    </form>
-                </div>
-            </div>-->
         </div>
         </div>
         
@@ -68,8 +51,6 @@
                             <div class="card-header"><i class="fas fa-search"></i> Resultados de la búsqueda con: </div>
                             <div class="card-body text-primary">
                                 <p class="card-text" [hidden]="!specie"><i class="fab fa-pagelines"></i> ESPECIE: {{specie}}</p>
-                                <p class="card-text" [hidden]="!lat"><i class="fas fa-map-marker-alt"></i> LATITUD: {{lat}} </p>
-                                <p class="card-text" [hidden]="!long"><i class="fas fa-map-marker-alt"></i> LONGITUD: {{long}}</p>
                                 <p class="card-text" [hidden]="!provincia"><i class="fas fa-map-marked-alt"></i> PROVINCIA: {{provincia}} </p>
                                 <p class="card-text" [hidden]="!creator"><i class="fas fa-user"></i> CREADOR: {{creator}}</p>
                             </div>

@@ -11,16 +11,9 @@
             <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{tree.creator}}</small></h5>
             <p class="card-text"> <i class="fas fa-map-marker-alt"></i> {{tree.lat}},  {{tree.long}}</p>
             <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> {{tree.date}}</small></p>
-            <form (ngSubmit)="onSubmit()" #listaForm="ngForm" class="botones">
-              <div class="boton">
-                  <button type="submit" class="btn btn-primary" (click)="obtenerIdSelecionado(tree)"><i class="far fa-chart-bar"></i> Ver más</button>
-              </div>
-              <div class="boton">
-                  <button type="submit" class="btn btn-warning" (click)="obtenerIdSelecionado_validar(tree)"><i class="far fa-check-circle"></i> Validar</button>
-              </div>
-              <div class="boton">
-                  <button type="submit" class="btn btn-success" (click)="obtenerSelecionadoNueva(tree)" ><i class="fas fa-edit"></i> Nueva anotación</button>
-              </div>
+            <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
+              <button type="submit" class="btn btn-success mr-2" (click)="obtenerSelecionado(tree)"><i class="far fa-chart-bar"></i> Ver más</button>
+              <button type="submit" class="btn btn-primary" (click)="obtenerSelecionadoNueva(tree)" ><i class="fas fa-edit"></i> Completar información</button>
             </form>                 
           </div>
         </div>
@@ -32,18 +25,12 @@
 
 
 <div [hidden]="!submitted2">
-  <div *ngIf="new; else resto">
+  <div *ngIf="new; else resto"> <!-- Distingo si se pulsa a la info de la anotacion o a crear una nueva-->
     <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
     <app-add-annot></app-add-annot>
   </div>
   <ng-template #resto>
-    <div *ngIf="!validar">
       <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
       <app-info-anotacion [tree]="treeSelected" [annotations]="annotations"></app-info-anotacion>
-    </div>
-    <div *ngIf="validar">
-      <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
-      <app-validar [tree]="treeSelected" [annotations]="annotations" ></app-validar>
-    </div>
   </ng-template>
 </div>

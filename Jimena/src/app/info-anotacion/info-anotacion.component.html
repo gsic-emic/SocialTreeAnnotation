@@ -5,37 +5,7 @@
     <div class="card-body">
         <div class="row no-gutters">
             <div class="col-md-4">
-              <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
-                <ol class="carousel-indicators">
-                  <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
-                  <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-                  <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
-                </ol>
-                <div class="carousel-inner">
-                  <div class="carousel-item active">
-                    <img  src="{{tree.image}}" class="d-block w-100" alt="imagen de un {{tree.species}}">
-                    <div class="carousel-caption d-none d-md-block">
-                      <h5>{{tree.creator}}</h5>
-                      <p>{{tree.date}}</p>
-                    </div>
-                  </div>
-                  <div class="carousel-item" *ngFor="let anot of annotations;">
-                    <img src="{{anot.image}}" class="d-block w-100" alt="...">
-                    <div class="carousel-caption d-none d-md-block">
-                      <h5>{{anot.creator}}</h5>
-                      <p>{{anot.date}}</p>
-                    </div>
-                  </div>
-                </div>
-                <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="sr-only">Next</span>
-                </a>
-              </div>
+              <img src="{{tree.image}}" class="card-img" alt="imagen no disponible">
             </div>
             <div class="col-md-8">
               <div class="card-body">
@@ -46,20 +16,6 @@
                 <!--<app-mapa [arboles]="arbol"></app-mapa>-->
                 <p class="card-text"><small class="text-muted"><br><i class="fas fa-clock"></i> Creación: {{tree.date}}</small></p>
               </div>
-                <!--
-                <h3 class="card-title"><br><i class="fas fa-align-left"></i> Otros datos de interés:</h3>
-                <p class="card-text"><i class="fas fa-leaf"></i> Tipo de hoja:</p>
-                <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i>{{tree.date}}</small></p>
-                <button type="button" class="btn btn-success" (click)="mostrar_estadisticas=true"><i class="far fa-chart-bar"></i> Ver estadísticas de la anotación</button>
-              
-              
-              <div *ngIf="mostrar_estadisticas;"> 
-                <h3 class="card-title"><br><i class="far fa-chart-bar"></i> Ranking de usuarios:</h3>
-                <p class="text-danger">Aquí irán gráficas y comentarios de otros usuarios sobre la anotacion</p>
-                <br><br><br><br>
-                <p class="card-text"><i class="fas fa-medal"></i> 3 expertos validaron esta anotación</p>
-                <p class="card-text"><i class="fas fa-medal"></i> 7 principiantes validaron esta anotación</p>
-              </div>-->
              </div>
           <br>
         </div>
@@ -68,15 +24,50 @@
   <!-- ANOTACIONES -->
   <div class="titulo"> Anotaciones del árbol</div>
   <div class="anotaciones">
-    <div class="card border-success m-3" style="max-width: 18rem;" *ngFor="let anot of annotations;">
+    <div class="card border-success align-self-start m-3" style="max-width: 18rem;" *ngFor="let anot of annotations;">
       <div class="card-header"><i class="far fa-user"></i> {{anot.creator}} </div>
+      <!-- Distingo el tipo de anotación para mostrarlo de una manera u otra-->
+        <div class="card-body text-success">
+          <div class="tipo_anot" *ngIf="anot.type.image">
+            <p class="card-text"><small class="text-muted">{{anot.creator}} añadió una anotación de tipo imagen: </small></p>
+            <img src="{{anot.type.image}}" class="d-block w-100 h-50" alt="imagen no disponible">
+          </div>
+          <div class="tipo_anot" *ngIf="anot.type.specie">
+            <p class="card-text"><small class="text-muted">{{anot.creator}} añadió una anotación de tipo especie: </small></p>
+            <h5 class="card-title"><i class="fab fa-pagelines"></i> {{anot.type.specie}}</h5>
+          </div>
+          <div class="tipo_anot" *ngIf="anot.type.location">
+            <p class="card-text"><small class="text-muted">{{anot.creator}} añadió una anotación de tipo ubicación: </small></p>
+            <h5 class="card-title"><i class="fas fa-map-marker-alt"></i> </h5>
+          </div>
+          <div class="tipo_anot" *ngIf="anot.type.hoja">
+            <p class="card-text"><small class="text-muted">{{anot.creator}} añadió una anotación de tipo hoja: </small></p>
+            <h5 class="card-title"><i class="fas fa-leaf"></i> {{anot.type.hoja}}</h5>
+          </div>
+          <div class="tipo_anot" *ngIf="anot.type.fruto">
+            <p class="card-text"><small class="text-muted">{{anot.creator}} añadió una anotación de tipo fruto: </small></p>
+            <h5 class="card-title"><i class="fas fa-apple-alt"></i> {{anot.type.fruto}}</h5>
+          </div>
+          <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creación: {{anot.date}}</small></p>
+        </div>
+      <div class="card-footer bg-transparent border-success d-flex justify-content-between">
+        <div class="icono ml-4">
+          <i class="fas fa-thumbs-up"></i>
+        </div>
+        <div class="icono mr-4">
+          <i class="fas fa-thumbs-down"></i>
+        </div> 
+      </div>
+    </div>
+    <div class="card border-success align-self-start m-3" style="max-width: 18rem;">
+      <div class="card-header">Añade una nueva anotación</div>
       <div class="card-body text-success">
-        <h5 class="card-title"><i class="fab fa-pagelines"></i> {{anot.specie}}</h5>
-        <p class="card-text">****esto dependerá del tipo de anotación****</p>
-        <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creación: {{anot.date}}</small></p>
+        <h5 class="card-title"><i class="fas fa-plus"></i></h5>
       </div>
     </div>
   </div>
+
+  
   <!--Pensar cómo hacer para saber si no hay anotaciones
   <ng-template class="anotaciones" #mostrarAviso>
     <div class="alert alert-warning m-1" role="alert">

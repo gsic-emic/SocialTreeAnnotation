@@ -13,4 +13,5 @@ a{
     display: flex;
     flex-flow: row wrap;
     margin-bottom: 50px;
+    justify-content: space-between;
 }

@@ -41,8 +41,6 @@ export class BusquedaComponent implements OnInit {
 
 
   // Variables para el control de los filtros del formulario
-  public lat: number;
-  public long: number;
   public specie: string;
   public provincia: string; //------> para hacer búsquedas de árbol de una zona
   public creator: string;
@@ -62,8 +60,6 @@ export class BusquedaComponent implements OnInit {
   }
 
   public borrarDatos(){
-    this.lat = null;
-    this.long = null;
     this.specie = null;
     this.creator = null;
     //this.recargar();

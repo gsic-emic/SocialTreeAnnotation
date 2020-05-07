@@ -1,49 +1,59 @@
 <div class="container" [hidden]="submitted">
-    <form class="formulario" (ngSubmit)="onSubmit()" #AnnotForm="ngForm">
-        <div class="card border-success mb-3" style="max-width: 70rem;">
-            <div class="card-header"><i class="fas fa-plus-circle"></i> Nueva Anotación</div>
-            <div class="nueva">
-                <div class="form-group p-1">
-                    <label class="entrada" for="imagen"><i class="fas fa-camera"></i> Insertar imagen </label>
-                    <input type="file" class="form-control" [(ngModel)]="imagen" name="imagen">
-                </div>
-                <div class="form-group">
-                    <label class="entrada" for="ubicacion"><i class="fas fa-map-marker-alt"></i> Ubicación </label>
-                    <input type="number" class="form-control" id="lat" placeholder="Latitud" [(ngModel)]="lat" name="lat"> 
-                    <input type="number" class="form-control" id="long" placeholder="Longitud" [(ngModel)]="long" name="long">
-                </div>
+    <div class="titulo"> Añadir nueva anotación </div>
+    <form class="formulario" (ngSubmit)="onSubmit()" #tipoForm="ngForm">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">Seleccione el tipo de anotación que desea añadir</label>
             </div>
-            <div class="nueva">
-                <div class="form-group">
-                    <label class="entrada" for="especie"><i class="fab fa-pagelines"></i> Especie:</label>
-                    <input type="text" class="form-control" id="especie" placeholder="Especie"
-                        [(ngModel)]="especie" name="especie" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)">
-                </div>
-                <div class="form-group">
-                    <label class="entrada" for="hoja"><i class="fas fa-leaf"></i> Tipo de hoja:</label>
-                    <input type="text" class="form-control" id="hoja" placeholder="Tipo de hoja"
-                        [(ngModel)]="hoja" name="hoja" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)">
-                </div>
-            </div>
-            <div class="nueva">
-                <div class="form-group">
-                    <label class="entrada" for="fruto"><i class="fas fa-apple-alt"></i> Tipo de fruto:</label>
-                    <input type="text" class="form-control" id="fruto" placeholder="Fruto"
-                        [(ngModel)]="fruto" name="fruto" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)">
-                </div>
-            </div>
-      </div>
-      <button type="button" class="btn btn-outline-danger mr-3" (click)="borrarDatos()"><i class="far fa-times-circle"></i> Borrar todo </button>
-      <button type="submit" class="btn btn-success" [disabled]="!AnnotForm.form.valid">Siguiente</button>   <!--aquí se va a confirm-->
+            <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="type" name="type">
+                <option  [value]="item" *ngFor="let item of tipo">{{item}}</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-outline-primary"> Siguiente </button>
     </form>
 </div>
-<div class="container" [hidden]="!submitted">
-    {{especie}}<br>
-    {{lat}}<br>
-    {{long}}<br>
-    {{fruto}}<br>
-    {{hoja}}<br>
-    {{imagen}}<br>
 
+<div class="container" [hidden]="!submitted">
+    <div [hidden]="submitted2">
+        <form class="formulario"  (ngSubmit)="onSubmit2()" #AnnotForm="ngForm">
+            <div class="card border-success mb-3" style="max-width: 70rem;">
+                <div class="card-header"><i class="fas fa-plus-circle"></i> Nueva Anotación de tipo {{type}}</div>
+                <div class="nueva">
+                    <!-- Diferencio el tipo de anotación que se va a crear-->
+                    <div class="form-group p-1" *ngIf="type == 'Imagen'">
+                        <label class="entrada" for="imagen"><i class="fas fa-camera"></i> Insertar imagen </label>
+                        <input type="file" class="form-control" [(ngModel)]="imagen" name="imagen" required>
+                    </div>
+                    <div class="form-group" *ngIf="type == 'Ubicación'">
+                        <label class="entrada" for="ubicacion"><i class="fas fa-map-marker-alt"></i> Ubicación </label>
+                        <input type="number" class="form-control" id="lat" placeholder="Latitud" [(ngModel)]="lat" name="lat" required> 
+                        <input type="number" class="form-control" id="long" placeholder="Longitud" [(ngModel)]="long" name="long" required>
+                    </div>
+                    <div class="form-group" *ngIf="type == 'Especie'">
+                        <label class="entrada" for="especie"><i class="fab fa-pagelines"></i> Especie:</label>
+                        <input type="text" class="form-control" id="especie" placeholder="Especie"
+                            [(ngModel)]="especie" name="especie" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)" required>
+                    </div>
+                    <div class="form-group" *ngIf="type == 'Hoja'">
+                        <label class="entrada" for="hoja"><i class="fas fa-leaf"></i> Tipo de hoja:</label>
+                        <input type="text" class="form-control" id="hoja" placeholder="Tipo de hoja"
+                            [(ngModel)]="hoja" name="hoja" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)" required>
+                    </div>
+                    <div class="form-group" *ngIf="type == 'Fruto'">
+                        <label class="entrada" for="fruto"><i class="fas fa-apple-alt"></i> Tipo de fruto:</label>
+                        <input type="text" class="form-control" id="fruto" placeholder="Fruto"
+                            [(ngModel)]="fruto" name="fruto" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)" required>
+                    </div>
+                </div>
+          </div>
+          <button type="button" class="btn btn-outline-danger mr-3" (click)="borrarDatos()"><i class="far fa-times-circle"></i> Cancelar </button>
+          <button type="submit" class="btn btn-success" [disabled]="!AnnotForm.form.valid"><i class="fas fa-plus-circle"></i> Crear</button>   
+        </form>
+    </div>
+</div>
+<div class="container" [hidden]="!submitted2">
+    <div class="alert alert-warning" role="alert">
+        La anotación se ha añadido correctamente
+    </div>
 </div>
 
