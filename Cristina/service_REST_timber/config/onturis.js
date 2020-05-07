@@ -27,6 +27,8 @@ var onturis = {
 	//PROPIEDADES
 	prHasImage: 'http://timber.gsic.uva.es/sta/ontology/hasImage',
 	prHasTaxon: 'http://timber.gsic.uva.es/sta/ontology/hasTaxon',
+	prHasVulgarName: 'http://timber.gsic.uva.es/sta/ontology/hasVulgarName',
+
 	//Imagen
 	prHasPart: 'http://timber.gsic.uva.es/sta/ontology/hasPart',
 	//Árbol
@@ -39,6 +41,8 @@ var onturis = {
 	prHasPrimarySpecies: 'http://timber.gsic.uva.es/sta/ontology/hasPrimarySpecies',
 	prHasAssertedAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasAssertedAnnotation',
 	prHasAssertedSpecies: 'http://timber.gsic.uva.es/sta/ontology/hasAssertedSpecies',
+	prHasAssertedPosition: 'http://timber.gsic.uva.es/sta/ontology/hasAssertedPosition',
+
 
 	geo_lat: "http://www.w3.org/2003/01/geo/wgs84_pos#lat",
 	geo_long: "http://www.w3.org/2003/01/geo/wgs84_pos#long",
