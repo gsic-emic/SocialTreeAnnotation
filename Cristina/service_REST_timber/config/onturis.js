@@ -28,6 +28,8 @@ var onturis = {
 	prHasImage: 'http://timber.gsic.uva.es/sta/ontology/hasImage',
 	prHasTaxon: 'http://timber.gsic.uva.es/sta/ontology/hasTaxon',
 	prHasVulgarName: 'http://timber.gsic.uva.es/sta/ontology/hasVulgarName',
+	prHasAcceptedName: 'http://timber.gsic.uva.es/sta/ontology/hasAcceptedName',
+
 
 	//Imagen
 	prHasPart: 'http://timber.gsic.uva.es/sta/ontology/hasPart',
@@ -46,7 +48,8 @@ var onturis = {
 
 	geo_lat: "http://www.w3.org/2003/01/geo/wgs84_pos#lat",
 	geo_long: "http://www.w3.org/2003/01/geo/wgs84_pos#long",
-	dc_creator: "http://purl.org/dc/elements/1.1/creator"
+	dc_creator: "http://purl.org/dc/elements/1.1/creator",
+	ifn_ontology: "http://crossforest.eu/ifn/ontology/"
 
 };
 

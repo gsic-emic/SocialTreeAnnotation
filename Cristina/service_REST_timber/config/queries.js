@@ -147,6 +147,39 @@ queriesArray.push({
             }'
 });
 
+queriesArray.push({
+    'name': 'trees_uris_zone',
+    'query': 'CONSTRUCT { \n \
+                ?tree geo:lat ?lat ;  \n \
+                      geo:long ?long .  \n \
+                }  \n \
+            WHERE { \n \
+                ?tree a <' + onturis.tree + '> . \n \
+                ?tree <' + onturis.prHasPrimaryPosition + '> ?ann. \n \
+                ?ann geo:lat ?lat ; \n \
+                     geo:long ?long . \n \
+                     FILTER (?lat > {{latsouth}}) . \n \
+                     FILTER (?lat < {{latnorth}}) . \n \
+                     FILTER (?long > {{longwest}}) . \n \
+                     FILTER (?long < {{longeast}}) . \n \
+            } \n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}'
+});
+
+queriesArray.push({
+    'name': 'trees_uris_specie',
+    'query': 'CONSTRUCT { \n \
+                ?tree <' + onturis.prHasTaxon + '>   ?species_iris .  \n \
+                }  \n \
+            WHERE { \n \
+                ?tree a <' + onturis.tree + '> . \n \
+                ?tree <' + onturis.prHasPrimarySpecies + '> ?ann. \n \
+                ?ann  <' + onturis.prHasTaxon + '>  ?species_iris . \n \
+                FILTER ( ?species_iris IN ( <{{{uri_specie}}}> )). \n \            } \n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}'
+});
 /*prefix sta: <http://timber.gsic.uva.es/sta/ontology/>
 SELECT DISTINCT ?ann ?value
 WHERE {

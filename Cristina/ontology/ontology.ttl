@@ -212,10 +212,18 @@ sta:hasTaxon a owl:ObjectProperty , rdf:Property ;
   rdfs:range ifn:Taxon ;
   rdfs:isDefinedBy sta: .
 
-sta:hasVulgarName a owl:ObjectProperty , rdf:Property ;
+ifn:hasvulgarName a owl:AnnotationProperty , rdf:Property ;
+  rdfs:subpropertyOf rdfs:label ;
   rdfs:label "has vulgar name"@en , "tiene nombre vulgar"@es ;
-  rdfs:comment ""@en , ""@es ;
   rdfs:domain sta:SpeciesAnnotation ;
+  rdfs:range rdf:langString ;
+  rdfs:isDefinedBy sta: .
+
+ifn:hasAcceptedName a owl:AnnotationProperty , rdf:Property ;
+  rdfs:subpropertyOf rdfs:label ;
+  rdfs:label "has sccientific accepted name"@en , "tiene nombre científico aceptado"@es ;
+  rdfs:domain sta:SpeciesAnnotation ;
+  rdfs:range rdf:langString ;
   rdfs:isDefinedBy sta: .
 
 sta:hasPrimaryAnnotation a owl:ObjectProperty , rdf:Property ;
