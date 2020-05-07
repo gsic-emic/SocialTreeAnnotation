@@ -12,7 +12,9 @@
                                   <http://timber.gsic.uva.es/sta/data/annotation/003> ; 
                                   sta:hasPositionAnnotation <http://timber.gsic.uva.es/sta/data/annotation/004> ;
                                   sta:hasPrimarySpecies <http://timber.gsic.uva.es/sta/data/annotation/005> ; 
-                                  sta:hasAssertedPosition <http://timber.gsic.uva.es/sta/data/annotation/006> .
+                                  sta:hasAssertedPosition <http://timber.gsic.uva.es/sta/data/annotation/006> ;
+                                  sta:hasPrimaryPosition <http://timber.gsic.uva.es/sta/data/annotation/006> .
+
 <http://timber.gsic.uva.es/sta/data/tree/f4275> a sta:Tree ;
                                 dc:creator <http://timber.gsic.uva.es/users/bfec1> ; # Creador del árbol (lo da de alta en el sistema)
                                 sta:hasImageAnnotation

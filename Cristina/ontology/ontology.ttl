@@ -212,6 +212,12 @@ sta:hasTaxon a owl:ObjectProperty , rdf:Property ;
   rdfs:range ifn:Taxon ;
   rdfs:isDefinedBy sta: .
 
+sta:hasVulgarName a owl:ObjectProperty , rdf:Property ;
+  rdfs:label "has vulgar name"@en , "tiene nombre vulgar"@es ;
+  rdfs:comment ""@en , ""@es ;
+  rdfs:domain sta:SpeciesAnnotation ;
+  rdfs:isDefinedBy sta: .
+
 sta:hasPrimaryAnnotation a owl:ObjectProperty , rdf:Property ;
   rdfs:subPropertyOf sta:hasAnnotation ;
   rdfs:label "has primary annotation"@en , "tiene anotación primaria"@es ;

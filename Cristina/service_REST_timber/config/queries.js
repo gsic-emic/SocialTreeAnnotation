@@ -61,25 +61,12 @@ queriesArray.push({
                     ?tree <' + onturis.prHasTaxon + '> ?taxon . \n \
                 }  \n \
                 WHERE {  \n \
-                    ?tree a <' + onturis.tree + '> ;  \n \
-                          ?has ?annotation . \n \
+                    ?tree ?has ?annotation . \n \
                     ?has rdfs:subPropertyOf* <' + onturis.prHasPrimaryAnnotation + '> .  \n \
                     ?annotation <' + onturis.prHasTaxon + '> ?taxon . \n \
                     FILTER(?tree IN ( {{{treesArea}}} )) \n \
             } \n \
             ORDER BY (?tree)' 
-});
-
-//Todos los árboles del sistema (recupero uri, posición y especie).
-//PROBLEMA: si no tiene anotación acepatada no devuelve nada... REVISAR/PEnsar como hacerlo...
-// con optional se puede pero no es eficiente... mirar cómo está en el crossforest
-queriesArray.push({
-    'name': 'trees',
-    'query':    'SELECT ?tree ?lat ?long ?species \n \
-                WHERE { \n \
-                    ?tree {{annotationType}} ?annot .\n \
-                    ?annot a <' + onturis.assertedAnnotation + '> .\n \
-                }'
 });
 
 //Recuperar todos los árboles y sus anotaciones
@@ -106,7 +93,6 @@ queriesArray.push({'name': 'allTrees_pos',
                  ?annotation geo:lat ?lat ; \n \
                              geo:long ?long . \n \
               } \n \
-              ORDER BY (?tree) \n \
               LIMIT {{limit}} \n \
               OFFSET {{offset}}'      
 });
@@ -116,17 +102,59 @@ queriesArray.push({'name': 'allTrees_species',
                 ?tree <' + onturis.prHasTaxon + '> ?taxon . \n \
               }  \n \
               WHERE {  \n \
-                 ?tree a sta:Tree ;  \n \
-                 <' + onturis.prHasPrimarySpecies +'> | <' + onturis.prHasAssertedSpecies +'> ?annotation . \n \
-                 ?annotation <' + onturis.prHasTaxon + '> ?taxon . \n \
+                    ?tree ?has ?annotation . \n \
+                    ?has rdfs:subPropertyOf* <' + onturis.prHasPrimaryAnnotation + '> .  \n \
+                    ?annotation <' + onturis.prHasTaxon + '> ?taxon . \n \
                  VALUES ?tree { {{{treesArea}}} } \n \
-              } \n \
-              ORDER BY (?tree)'      
+              }'      
 });
 /*?has ?annotation . \n \
                 ?has rdfs:subPropertyOf* <' + onturis.prHasPrimaryAnnotation + '> .  \n \
 */
 
+/* Consultas cambios que me comentó Guillermo 27/4/2020 */
+queriesArray.push({
+    'name': 'trees_uris',
+    'query': 'CONSTRUCT \n \
+            WHERE { \n \
+                ?tree a <' + onturis.tree + '> . \n \
+            } \n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}'
+});
+
+queriesArray.push({
+    'name': 'trees_prop_annotation',
+    'query': 'CONSTRUCT { \n \
+                ?iri <{{{propiri}}}> ?value . \n \
+            } \n \
+            WHERE { \n \
+                ?iri <{{{propiritype}}}>/<{{{propiri}}}> ?value . \n \
+                FILTER ( ?iri IN ( <{{{uri}}}> )). \n \
+            }'
+});
+//NO VA BIEN SIEMPRE. A VECES SI
+queriesArray.push({
+    'name': 'trees_prop_primaryAnnotation',
+    'query': 'CONSTRUCT { \n \
+                ?iri <{{{propiri}}}> ?value . \n \
+            } \n \
+            WHERE { \n \
+                ?iri ?prop ?ann . \n \
+                ?prop rdfs:subPropertyOf* sta:hasPrimaryAnnotation . \n \
+                ?ann <{{{propiri}}}> ?value . \n \
+                FILTER ( ?iri IN ( <{{{uri}}}> )). \n \
+            }'
+});
+
+/*prefix sta: <http://timber.gsic.uva.es/sta/ontology/>
+SELECT DISTINCT ?ann ?value
+WHERE {
+?type rdfs:subClassOf* sta:PrimaryAnnotation .
+?iri ?prop ?annotation .
+?ann a ?type;
+sta:hasTaxon ?value .
+}*/
 
 /**
  * Generales
@@ -141,10 +169,12 @@ queriesArray.push({'name': 'indivs',
 });
 
 queriesArray.push({'name': 'details',
-	'query': 'SELECT * \n \
+	'query': 'CONSTRUCT { \n \
+                ?iri <{{{propiri}}}> ?value . \n \
+            }  \n \
             WHERE { \n \
-                ?s ?p ?o . \n \
-                VALUES ?s { <{{{uri}}}> }. \n \
+                ?iri <{{{propiri}}}> ?value . \n \
+                FILTER (  ?iri IN ( <{{{uri}}}> )). \n \
             }'
 });
 
