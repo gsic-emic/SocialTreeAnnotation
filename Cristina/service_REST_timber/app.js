@@ -1,7 +1,7 @@
 #!/bin/env node
 
 //Modo estricto
-'use strict'
+//'use strict'
 
 // Carga módulos express y cliente sparql virtuoso
 const express = require('express');

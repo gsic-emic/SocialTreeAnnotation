@@ -60,3 +60,35 @@ WHERE {
       BIND(URI(?tree) as ?tree)
  VALUES ?tree { <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-1> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-10> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-11> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-12> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-13> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-14> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-2> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-3> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-4> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-5> } 
 }
+
+###########################################################################################################
+prefix sta: <http://timber.gsic.uva.es/sta/ontology/>
+SELECT DISTINCT ?ann ?value
+WHERE {
+?type rdfs:subClassOf* sta:PrimaryAnnotation .
+?iri ?prop ?ann .
+?ann a ?type;
+sta:hasTaxon ?value .
+}LIMIT 10
+
+###########################################################################################################
+
+prefix sta: <http://timber.gsic.uva.es/sta/ontology/>
+SELECT *
+WHERE {
+?prop rdfs:subPropertyOf* sta:hasPrimaryAnnotation .
+?tree ?prop ?value .
+?value geo:lat ?lat .
+    FILTER (  ?tree IN ( <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-1>, <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-10>, <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-11>, <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-12>, <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-13>, <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-14>, <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-2>, <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-3>, <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-4>, <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-5>, <http://timber.gsic.uva.es/sta/data/tree/001>) )
+}
+
+###########################################################################################################
+Todas las anotaciones de especie:
+
+prefix sta: <http://timber.gsic.uva.es/sta/ontology/>
+SELECT *
+WHERE {
+?tree (sta:|!sta:)/geo:lat ?value .
+VALUES ?tree { <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-1> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-10> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-11> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-12> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-13> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-14> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-2> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-3> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-4> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-5> } 
+}
+
