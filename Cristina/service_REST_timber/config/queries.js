@@ -180,6 +180,19 @@ queriesArray.push({
             LIMIT {{limit}} \n \
             OFFSET {{offset}}'
 });
+
+queriesArray.push({
+    'name': 'trees_uris_creator',
+    'query': 'CONSTRUCT { \n \
+                ?tree dc:creator ?creator .  \n \
+                }  \n \
+            WHERE { \n \
+                ?tree a <' + onturis.tree + '> . \n \
+                ?tree dc:creator ?creator. \n \
+                FILTER ( ?creator IN ( <{{{uri_creator}}}> )). \n \            } \n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}'
+});
 /*prefix sta: <http://timber.gsic.uva.es/sta/ontology/>
 SELECT DISTINCT ?ann ?value
 WHERE {
