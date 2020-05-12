@@ -13,7 +13,6 @@ var treesNoCache = [];
  * @param {*} res 
  */
 
-//FALLA http://timber.gsic.uva.es/sta/data/tree?page=9
 function getTrees(req, res) {
     var arg = {};
     let nextPage = undefined;
@@ -21,12 +20,10 @@ function getTrees(req, res) {
     var response = {};
     var fullUrl = "";
     var namesParamsJson = [];
-
     var irisTrees = [];
     var querys = [];
     //var params = [];
     var propIrisFull = [];
-
 
     let queryParameters = req.query;
     arg.offset = 0; //por defecto
@@ -39,10 +36,7 @@ function getTrees(req, res) {
     else {
         queryParameters.page = 0;
     }
-
-    var lengthTotal = arg.limit * queryParameters.page;
-
-    // Para recuperar los árboles en un área se necesitan 4 puntos (2 coordenadas) => lat0,long0,lat1,long1 (+página)
+    //Listar todos los árboles del sistema en un área dada por 4 puntos (2 coordenadas) => lat0,long0,lat1,long1
     if (Object.keys(queryParameters).length == 4 || Object.keys(queryParameters).length == 5) {
         //Si alguna de las posiciones está vacía => 400 Bad Request
         if (queryParameters.lat0 == "" || queryParameters.long0 == "" || queryParameters.lat1 == "" || queryParameters.long1 == "") {
@@ -50,7 +44,7 @@ function getTrees(req, res) {
         }
         //Si la query es válida
         else {
-            namesParamsJson = ["creator", "species", "scientific_name", "species_iris"];
+            namesParamsJson = ["creator", "species" ];
             arg.latsouth = queryParameters.lat0;
             arg.longwest = queryParameters.long0;
             arg.latnorth = queryParameters.lat1;
@@ -110,9 +104,7 @@ function getTrees(req, res) {
 
                             //REPASAR: Lo bueno sería hacer un bucle aquí. Y hacer un array con [onturis.dc_creator]... igual que namesParamsJson
                             propIrisFull.push({ [onturis.dc_creator]: namesParamsJson[0] });
-                            propIrisFull.push({ [onturis.prHasVulgarName]: namesParamsJson[1] });
-                            propIrisFull.push({ [onturis.prHasAcceptedName]: namesParamsJson[2] });
-                            propIrisFull.push({ [onturis.prHasTaxon]: namesParamsJson[3] });
+                            propIrisFull.push({ [onturis.prHasTaxon]: namesParamsJson[1] });
 
                             // Si es una propiedad del árbol
                             var propAnn = false;
@@ -122,9 +114,7 @@ function getTrees(req, res) {
                             // Si es una propiedad de una anotación (estaría bien pasar otro campo que indicase de que tipo es la anotación y así hacer una única llamada a setQuerys(). Mejoras a futuro)
                             propAnn = true;
                             arg.propiritype = onturis.prHasPrimarySpecies;
-                            params.propIris.push({ [onturis.prHasVulgarName]: namesParamsJson[1] });
-                            params.propIris.push({ [onturis.prHasAcceptedName]: namesParamsJson[2] });
-                            params.propIris.push({ [onturis.prHasTaxon]: namesParamsJson[3] });
+                            params.propIris.push({ [onturis.prHasTaxon]: namesParamsJson[1] });
                             setQuerys(params, propAnn, arg, querys);
 
                             Promise.all(params.querys).then((data) => {
@@ -266,13 +256,15 @@ function getTrees(req, res) {
 
 
     }
+    //Listar todos los árboles del sistema y filtrando por especie
     else {
+        //Listar todos los árboles del sistema de una especie
         if (queryParameters.species != undefined) {
             if (queryParameters.species == "") {
                 res.status(400).send();
             }
             else {
-                namesParamsJson = ["creator", "lat", "long", "species", "scientific_name"];
+                namesParamsJson = ["creator", "lat", "long", "species"];
                 fullUrl = req.protocol + '://' + req.hostname + req.originalUrl.split('&page')[0];
                 arg.uri_specie = onturis.ifn_ontology + queryParameters.species;
                 console.log("SPECIE: " + arg.uri_specie);
@@ -309,8 +301,8 @@ function getTrees(req, res) {
                                     //Almaceno en cache y en el objeto de respuesta la posición
                                     trees[tree] = {};
                                     response[tree] = {};
-                                    trees[tree]["species_iris"]=data_trees[tree][onturis.prHasTaxon][0].value;
-                                    response[tree]["species_iris"]=trees[tree]["species_iris"]
+                                    trees[tree][namesParamsJson[3]]=data_trees[tree][onturis.prHasTaxon][0].value;
+                                    response[tree][namesParamsJson[3]]=trees[tree][namesParamsJson[3]]
                                     treesNoCache.push(tree);
                                 }
                             })
@@ -328,8 +320,7 @@ function getTrees(req, res) {
                                 propIrisFull.push({ [onturis.dc_creator]: namesParamsJson[0] });
                                 propIrisFull.push({ [onturis.geo_lat]: namesParamsJson[1] });
                                 propIrisFull.push({ [onturis.geo_long]: namesParamsJson[2] });
-                                propIrisFull.push({ [onturis.prHasVulgarName]: namesParamsJson[3] });
-                                propIrisFull.push({ [onturis.prHasAcceptedName]: namesParamsJson[4] });
+                            
 
                                 // Si es una propiedad del árbol
                                 var propAnn = false;
@@ -341,11 +332,7 @@ function getTrees(req, res) {
                                 arg.propiritype = onturis.prHasPrimaryPosition;
                                 params.propIris.push({ [onturis.geo_lat]: namesParamsJson[1] });
                                 params.propIris.push({ [onturis.geo_long]: namesParamsJson[2] });
-                                setQuerys(params, propAnn, arg, querys);
-                                arg.propiritype = onturis.prHasPrimarySpecies;
-                                params.propIris.push({ [onturis.prHasVulgarName]: namesParamsJson[3] });
-                                params.propIris.push({ [onturis.prHasAcceptedName]: namesParamsJson[4] });
-                                setQuerys(params, propAnn, arg, querys);
+                                setQuerys(params, propAnn, arg, querys);     
 
                                 Promise.all(params.querys).then((data) => {
                                     //Resolucion Promise.all
@@ -401,8 +388,9 @@ function getTrees(req, res) {
                     });
             }
         }
+        //Listar todos los árboles del sistema
         else {
-            namesParamsJson = ["creator", "lat", "long", "species", "scientific_name", "species_iris"];
+            namesParamsJson = ["creator", "lat", "long", "species"];
             fullUrl = req.protocol + '://' + req.hostname + req.originalUrl.split('?page')[0];
 
             // Paso 1, siempre se consulta al Virutoso para obtener las IRIs de los árboles solicitados. Obtengo la página correspondiente de todos los árboles del sistema
@@ -454,9 +442,7 @@ function getTrees(req, res) {
                             propIrisFull.push({ [onturis.dc_creator]: namesParamsJson[0] });
                             propIrisFull.push({ [onturis.geo_lat]: namesParamsJson[1] });
                             propIrisFull.push({ [onturis.geo_long]: namesParamsJson[2] });
-                            propIrisFull.push({ [onturis.prHasVulgarName]: namesParamsJson[3] });
-                            propIrisFull.push({ [onturis.prHasAcceptedName]: namesParamsJson[4] });
-                            propIrisFull.push({ [onturis.prHasTaxon]: namesParamsJson[5] });
+                            propIrisFull.push({ [onturis.prHasTaxon]: namesParamsJson[3] });
 
                             // Si es una propiedad del árbol
                             var propAnn = false;
@@ -470,9 +456,7 @@ function getTrees(req, res) {
                             params.propIris.push({ [onturis.geo_long]: namesParamsJson[2] });
                             setQuerys(params, propAnn, arg, querys);
                             arg.propiritype = onturis.prHasPrimarySpecies;
-                            params.propIris.push({ [onturis.prHasVulgarName]: namesParamsJson[3] });
-                            params.propIris.push({ [onturis.prHasAcceptedName]: namesParamsJson[4] });
-                            params.propIris.push({ [onturis.prHasTaxon]: namesParamsJson[5] });
+                            params.propIris.push({ [onturis.prHasTaxon]: namesParamsJson[3] });
                             setQuerys(params, propAnn, arg, querys);
 
                             /* SIN FUNCIÓN setQuerys(). Funciona

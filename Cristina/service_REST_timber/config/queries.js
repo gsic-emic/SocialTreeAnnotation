@@ -212,6 +212,34 @@ queriesArray.push({'name': 'details',
 });
 
 
+queriesArray.push({'name': 'details_allprop',
+	'query': 'CONSTRUCT { \n \
+                ?iri ?p ?value . \n \
+            }  \n \
+            WHERE { \n \
+                ?iri ?p ?value . \n \
+                FILTER (  ?iri IN ( <{{{uri}}}> )). \n \
+            }'
+});
+
+// get subclass relations from a base class
+queriesArray.push({'name': 'subclasses',
+//	'prefixes': ['rdfs', 'ifn', 'mfe', 'epsg', 'patch', 'poly', 'plot', 'tree', 'is'],
+	'query': 'SELECT DISTINCT ?sup ?sub \n \
+WHERE { \n \
+  ?sup rdfs:subClassOf* <{{{uri}}}> . \n \
+  ?sub rdfs:subClassOf ?sup . \n \
+}'
+});
+
+// get values for properties
+queriesArray.push({'name': 'propvalues',
+//	'prefixes': ['ifn', 'mfe', 'epsg', 'patch', 'poly', 'plot', 'tree', 'is'],
+	'query': 'SELECT DISTINCT ?uri ?value \n \
+WHERE { \n \
+?uri <{{{propuri}}}> ?value . \n \
+FILTER (?uri IN ( {{{furis}}} )) }'
+});
 module.exports = {
     queriesArray,
     queryPrefixes
