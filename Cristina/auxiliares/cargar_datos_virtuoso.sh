@@ -31,6 +31,8 @@ for file_fullpath in "$ruta_git_data"/*; do
     # Si el fichero tiene ifn en el nombre lo cargo a otro grafo
     if [[ $fichero_datos =~ (.*ifn.*) ]]; then
         /usr/local/bin/isql $port $user $pass exec="ld_dir('$ruta_virtuoso', '$fichero_datos', '$grafo_crossforestTrees');"
+    elif [[ $fichero_datos =~ (.*crossforest.*) ]]; then
+        /usr/local/bin/isql $port $user $pass exec="ld_dir('$ruta_virtuoso', '$fichero_datos', '$grafo_crossforest');"
     else
         /usr/local/bin/isql $port $user $pass exec="ld_dir('$ruta_virtuoso', '$fichero_datos', '$grafo');"
     fi
