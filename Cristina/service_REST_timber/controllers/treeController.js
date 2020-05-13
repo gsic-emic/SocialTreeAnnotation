@@ -394,7 +394,7 @@ function getTrees(req, res) {
             else {
                 namesParamsJson = ["lat", "long", "species"];
                 fullUrl = req.protocol + '://' + req.hostname + req.originalUrl.split('&page')[0];
-                arg.uri_creator = "ifn" ? "http://crossforest.eu/ifn/ontology/": "http://timber.gsic.uva.es/users/"+ queryParameters.creator;
+                arg.uri_creator = (queryParameters.creator == "ifn") ? "http://crossforest.eu/ifn/ontology/": "http://timber.gsic.uva.es/users/"+ queryParameters.creator ;
                 // Paso 1, siempre se consulta al Virutoso para obtener las IRIs de los árboles solicitados. Obtengo la página correspondiente de todos los árboles del sistema
                 queryInterface.getData("trees_uris_creator", arg, sparqlClient)
                     .then((data_trees) => {
