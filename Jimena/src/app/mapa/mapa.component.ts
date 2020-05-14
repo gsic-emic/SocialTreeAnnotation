@@ -12,12 +12,14 @@ declare let L;
 export class MapaComponent implements OnInit {
 
   @Input() trees: Tree[]; // Los árboles a mostrar llegan como parámetro de entrada desde la lista completa
+   cargando: boolean = false; // controla el spinner de "cargando"
+   muestra_info: boolean = false;
 
   constructor() { }
 
   ngOnInit(): void { /*se ejecuta en cuanto angular tenga listo el componente*/
     /* Creación del objeto mapa y su capa de diseño */
-    var mymap = this.crearMapa(41.763, -5.1093, 13); /* mapa centrado en españa */
+    var mymap = this.crearMapa(41.763, -5.1093, 13); // mapa centrado en españa 
     var layer = this.crearLayer_gray();
     layer.addTo(mymap);
 
@@ -25,14 +27,21 @@ export class MapaComponent implements OnInit {
       this.cargando = true;
     }
 
-    /* Añado los marcadores de los árboles registrados */
+    // Añado los marcadores de los árboles registrados
     var treeIcon = this.crearIcono();
     for (var i = 0; i <= this.trees.length; i++) {
-      L.marker([this.trees[i].lat, this.trees[i].long], {icon: treeIcon}).addTo(mymap).bindPopup("Creado por: " + this.trees[i].creator +"\n" +this.trees[i].species);
+      L.marker([this.trees[i].lat, this.trees[i].long], {icon: treeIcon}).
+      addTo(mymap).bindPopup(
+        '<div class="card" style="width: 12rem;"><div class="card-body"><h5 class="card-title"><i class="fab fa-pagelines"></i> '+this.trees[i].species + 
+        '</h5><h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> Creador: ' + this.trees[i].creator +
+        '</h6><p class="card-text"><i class="far fa-clock"></i></p><button type="button" class="btn btn-primary ml-4">Ver más</button></div></div>');
    }
    
   }
-  public cargando: boolean = false;
+  mostrar_info(){
+    this.muestra_info = true;
+  }
+  
 
   /* Creación del objeto mapa*/
   crearMapa (lat:number, long:number, zoom:number){

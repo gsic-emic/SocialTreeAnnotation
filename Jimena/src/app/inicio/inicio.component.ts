@@ -18,6 +18,7 @@ export class InicioComponent implements OnInit {
   //-----------------------------
   mapa: boolean = true;
   actualUrl: string = "http://localhost:8888/sta/data/tree";
+  url_zona: string = "http://localhost:8888/sta/data/tree?lat0=41.7&long0=-5.4&lat1=41.8&long1=-4.9"
   nextUrl: string;
   objTrees: Tree[]; // Objeto JSON que almacena todos los árboles devueltos
   trees: Tree[]=[]; // Array con todos los árboles del sistema con formato adecuado para visualización
@@ -39,7 +40,7 @@ export class InicioComponent implements OnInit {
   getTrees(url: string){
     this.api.getTrees(url).subscribe(
       (data: any) =>{
-        this.nextUrl = data.nextPage.url;
+        //this.nextUrl = data.nextPage.url;
         this.objTrees = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
         //console.log(data);
         this.convertirDato();
@@ -69,7 +70,7 @@ export class InicioComponent implements OnInit {
         //this.terminado_species = true;
       },
       () =>{  // una vez que tengo las especies, pedo llamar a la funcion que obtiene los árboles
-        this.getTrees(this.actualUrl);
+        this.getTrees(this.url_zona);
       }
       );
   }
