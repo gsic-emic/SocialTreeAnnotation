@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 //--------------------------
 import {MockAPIService} from '../mock-api.service';
 import {Tree} from '.././tree';
+import { Specie } from '../species';
 //-----------------------------
 
 @Component({
@@ -15,17 +16,22 @@ export class InicioComponent implements OnInit {
   constructor(private api: MockAPIService) { }
 
   //-----------------------------
-  public mapa: boolean = true;
-  public actualUrl: string = "http://localhost:8888/sta/data/tree";
-  public nextUrl: string;
-  public objTrees: Tree[]; // Objeto JSON que almacena todos los árboles devueltos
-  public trees: Tree[]=[]; // Array con todos los árboles del sistema con formato adecuado para visualización
-  public error: boolean = false;
-  public terminado: boolean = false;
+  mapa: boolean = true;
+  actualUrl: string = "http://localhost:8888/sta/data/tree";
+  nextUrl: string;
+  objTrees: Tree[]; // Objeto JSON que almacena todos los árboles devueltos
+  trees: Tree[]=[]; // Array con todos los árboles del sistema con formato adecuado para visualización
+  error: boolean = false;
+  terminado: boolean = false;
+  terminado_species: boolean = false;
+  especies: Specie[] = [];
+  objSpecies: object[]=[];
+  buscadorSpecies: string = "http://crossforest.eu/ifn/ontology/vulgarName";
+  buscadorUri: string = "uri";
   
 
   ngOnInit(): void {
-    this.getTrees(this.actualUrl);
+    this.getSpecies(); // nada más cargarse que recoja las especies, dentro de esta funcion ya se llama a la de getTrees 
  }
 
   //-----------------------------
@@ -35,6 +41,7 @@ export class InicioComponent implements OnInit {
       (data: any) =>{
         this.nextUrl = data.nextPage.url;
         this.objTrees = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
+        //console.log(data);
         this.convertirDato();
       },
       (error) =>{
@@ -45,6 +52,24 @@ export class InicioComponent implements OnInit {
       },
       () =>{
         this.terminado = true;
+      }
+      );
+  }
+
+  getSpecies(){
+    this.api.getSpecies().subscribe(
+      (data: any) =>{
+        this.objSpecies = data.response;
+        //console.log(this.objSpecies);
+      },
+      (error) =>{
+        console.error(error); // si se ha producido algún error
+        this.error = true;
+        alert("Ha habido un error al intentar cargar las especies del sistema.");
+        //this.terminado_species = true;
+      },
+      () =>{  // una vez que tengo las especies, pedo llamar a la funcion que obtiene los árboles
+        this.getTrees(this.actualUrl);
       }
       );
   }
@@ -59,7 +84,16 @@ export class InicioComponent implements OnInit {
     let i=0;
     for (let clave in this.objTrees){
       if (this.objTrees[clave].creator == "http://crossforest.eu/ifn/ontology/")
-      { this.objTrees[clave].creator = "IFN"} 
+        { 
+          this.objTrees[clave].creator = "IFN"
+        } 
+      for (let clav in this.objSpecies){
+        if(this.objTrees[clave].species == this.objSpecies[clav].uri){
+          this.objTrees[clave].species = this.objSpecies[clav][this.buscadorSpecies]["lits"].es;
+          console.log(this.objSpecies[clav][this.buscadorSpecies]["lits"].es);
+          break;
+        }
+      }
       // LA IMAGEN LA TENDRÉ QUE BUSCAR EN UNA ANOTACIÓN ---> de momento pongo que no hay
       this.objTrees[clave].image = "./../assets/images/no-image.png";
       this.objTrees[clave].date = "1/1/2020";
@@ -67,14 +101,5 @@ export class InicioComponent implements OnInit {
       i++;
     }
   }
-
-
   //----------------------------------------------------------
-
-
-  /* Método con árboles de prueba metidos a mano ----------------------------
-  getArboles(): void {
-    this.arboles = this.arbolService.getArboles();
-  }
-  //---------------------------------------------------------------------------*/
 }

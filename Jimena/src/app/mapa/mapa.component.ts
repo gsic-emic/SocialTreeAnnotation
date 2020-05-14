@@ -30,6 +30,7 @@ export class MapaComponent implements OnInit {
     for (var i = 0; i <= this.trees.length; i++) {
       L.marker([this.trees[i].lat, this.trees[i].long], {icon: treeIcon}).addTo(mymap).bindPopup("Creado por: " + this.trees[i].creator +"\n" +this.trees[i].species);
    }
+   
   }
   public cargando: boolean = false;
 
@@ -87,6 +88,4 @@ export class MapaComponent implements OnInit {
     });
     return circle;
   }
-
-
 }
