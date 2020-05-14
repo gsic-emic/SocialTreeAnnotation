@@ -25,7 +25,7 @@ import { ConfirmAnotComponent } from './confirm-anot/confirm-anot.component';
 import { RegistroAnotComponent } from './registro-anot/registro-anot.component';
 import { MensajesComponent } from './mensajes/mensajes.component';
 import { ArbolComponent } from './arbol/arbol.component';
-import { NosotrosComponent } from './nosotros/nosotros.component';
+import { BuscadorComponent } from './buscador/buscador.component';
 import { ContactoComponent } from './contacto/contacto.component';
 import { ListaComponent } from './lista/lista.component';
 import { ListaCompletaComponent } from './lista-completa/lista-completa.component';
@@ -36,7 +36,7 @@ const routes: Routes = [
   { path: 'reg-anot', component: RegistroAnotComponent },
   { path: 'confirm', component: ConfirmAnotComponent },
   { path: 'contacto', component: ContactoComponent },
-  { path: 'nosotros', component: NosotrosComponent },
+  { path: 'buscador', component: BuscadorComponent },
   { path: 'nuevaAnot', component: NuevaAnotacionComponent },
   { path: 'comunidad', component: ComunidadComponent },
   { path: 'ajustes', component: AjustesComponent },
@@ -71,7 +71,7 @@ const routes: Routes = [
     RegistroAnotComponent,
     MensajesComponent,
     ArbolComponent,
-    NosotrosComponent,
+    BuscadorComponent,
     ContactoComponent,
     ListaComponent,
     ListaCompletaComponent,

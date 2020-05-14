@@ -13,14 +13,13 @@ export class RegistroComponent implements OnInit {
   }
   public nombre: string;
   public apellidos:string;
-  public sexo: string; 
-  public nac: number;
+  public username: string;
   public email: string;
   public password: string;
 
   public onSubmit() {
     console.log("Nombre" + this.nombre +", "+ this.apellidos);
-    console.log("Sexo:"+this.sexo);
+    console.log("Nombre de usuario:"+this.username);
   }
 
 }
