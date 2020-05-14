@@ -6,6 +6,7 @@ const userController = require('../controllers/userController');
 const treeController = require('../controllers/treeController');
 const annotationController = require('../controllers/annotationController');
 const imageController = require('../controllers/imageController');
+const speciesController = require('../controllers/speciesController');
 
 const api = express.Router();
 
@@ -18,7 +19,8 @@ var urls = {
     annotations: '/data/annotation',
     annotation: '/data/annotation/:annotationId',
     images: '/data/image',
-    image: '/data/image/:imagesId'
+    image: '/data/image/:imagesId',
+    species: '/data/species'
 };
 
 //Root
@@ -72,4 +74,8 @@ api.get('/images/:imagesId/parts/:partId', imageController.getImagePart);
 api.put('/images/:imagesId/parts/:partId', imageController.updateImagePart);
 api.delete('/images/:imagesId/parts/:partId', imageController.deleteImagePart);
  */
+
+//Especies
+api.get(urls.species, speciesController.getSpecies);
+
 module.exports = api

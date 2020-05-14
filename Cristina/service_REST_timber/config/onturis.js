@@ -27,9 +27,6 @@ var onturis = {
 	//PROPIEDADES
 	prHasImage: 'http://timber.gsic.uva.es/sta/ontology/hasImage',
 	prHasTaxon: 'http://timber.gsic.uva.es/sta/ontology/hasTaxon',
-	prHasVulgarName: 'http://timber.gsic.uva.es/sta/ontology/hasVulgarName',
-	prHasAcceptedName: 'http://timber.gsic.uva.es/sta/ontology/hasAcceptedName',
-
 
 	//Imagen
 	prHasPart: 'http://timber.gsic.uva.es/sta/ontology/hasPart',
@@ -49,7 +46,15 @@ var onturis = {
 	geo_lat: "http://www.w3.org/2003/01/geo/wgs84_pos#lat",
 	geo_long: "http://www.w3.org/2003/01/geo/wgs84_pos#long",
 	dc_creator: "http://purl.org/dc/elements/1.1/creator",
-	ifn_ontology: "http://crossforest.eu/ifn/ontology/"
+	ifn_ontology: "http://crossforest.eu/ifn/ontology/",
+	ifn_species: "http://crossforest.eu/ifn/ontology/Species",
+	ifn_especiesTop: ['http://crossforest.eu/ifn/ontology/Class2', 'http://crossforest.eu/ifn/ontology/Class1'],
+	// especies
+	prifnScientificName: 'http://crossforest.eu/ifn/ontology/hasAcceptedName>/<http://crossforest.eu/ifn/ontology/name',
+	prifnVulgarName: 'http://crossforest.eu/ifn/ontology/vulgarName',
+	prifnWikipediaPage: 'http://crossforest.eu/ifn/ontology/hasWikipediaPage',
+	prifnSameAs: 'http://schema.org/sameAs',
+
 
 };
 
