@@ -16,20 +16,18 @@ export class MockAPIService {
   constructor( private http: HttpClient) { }
 
   /* GET the actual API structure*/
-  getInfoAPI(): Observable<any[]>{
-    return this.http.get<any[]>(this.apiUrl); //devuelve un observable, que tendré que consumir con subscribe()
-  }
-
-  /* GET the actual API structure*/
   getTrees(url: string): Observable<string>{
     return this.http.get<string>(url); 
   }
   
-
-
   /** GET a tree from the server */
   getTree (id): Observable<any[]> {
     var urlComplete = "data/tree/"+id;
+    return this.http.get<any[]>(this.apiUrl+urlComplete);
+  }
+
+  getSpecies(): Observable<any[]> {
+    var urlComplete = "data/species";
     return this.http.get<any[]>(this.apiUrl+urlComplete);
   }
 

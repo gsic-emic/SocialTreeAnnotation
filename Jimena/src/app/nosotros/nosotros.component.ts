@@ -83,25 +83,7 @@ export class NosotrosComponent implements OnInit {
       this.pulsado = true;
   }*/
 
-  getInfoAPI(){
-    this.api.getInfoAPI().subscribe(
-      (data) =>{
-        this.dataAPI = data; // si la consulta se realiza con éxito, guardo los datos que me devuelve
-        console.log("La consulta se ha realizado con éxito y se ha obtendio lo siguiente: " + this.dataAPI);
-        this.dataAPI_exito = true;
-      },
-      (error) =>{
-        console.error(error); // si se ha producido algún error
-        console.log("Ha habido un error al conectarse con el servidor");
-        this.terminado = true;
-      },
-      () =>{
-        this.terminado = true;
-      }
-      );
-      this.pulsado = true;
-  }
-
+ 
   /*getTree(treeId){
     this.consultaAPI = false;
     this.api.getTree(this.treeId).subscribe(

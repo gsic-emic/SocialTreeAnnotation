@@ -3,10 +3,10 @@ export interface Tree {
       id: string;
       lat: number;
       long: number;
-      species: string;
+      species?: string;
       creator: string;
-      image: string;
-      date: string;
+      image?: string;
+      date?: string;
   }
 
   
