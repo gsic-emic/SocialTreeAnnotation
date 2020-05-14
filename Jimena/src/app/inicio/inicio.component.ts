@@ -88,9 +88,8 @@ export class InicioComponent implements OnInit {
           this.objTrees[clave].creator = "IFN"
         } 
       for (let clav in this.objSpecies){
-        if(this.objTrees[clave].species == this.objSpecies[clav].uri){
+        if(this.objTrees[clave].species == this.objSpecies[clav]["uri"]){
           this.objTrees[clave].species = this.objSpecies[clav][this.buscadorSpecies]["lits"].es;
-          console.log(this.objSpecies[clav][this.buscadorSpecies]["lits"].es);
           break;
         }
       }
