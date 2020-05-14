@@ -180,6 +180,19 @@ queriesArray.push({
             LIMIT {{limit}} \n \
             OFFSET {{offset}}'
 });
+
+queriesArray.push({
+    'name': 'trees_uris_creator',
+    'query': 'CONSTRUCT { \n \
+                ?tree dc:creator ?creator .  \n \
+                }  \n \
+            WHERE { \n \
+                ?tree a <' + onturis.tree + '> . \n \
+                ?tree dc:creator ?creator. \n \
+                FILTER ( ?creator IN ( <{{{uri_creator}}}> )). \n \            } \n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}'
+});
 /*prefix sta: <http://timber.gsic.uva.es/sta/ontology/>
 SELECT DISTINCT ?ann ?value
 WHERE {
@@ -212,6 +225,32 @@ queriesArray.push({'name': 'details',
 });
 
 
+queriesArray.push({'name': 'details_allprop',
+	'query': 'SELECT * \n \
+            WHERE { \n \
+                ?iri ?prop ?value . \n \
+                FILTER (  ?iri IN ( <{{{uri}}}> )). \n \
+            }'
+});
+
+// get subclass relations from a base class
+queriesArray.push({'name': 'subclasses',
+//	'prefixes': ['rdfs', 'ifn', 'mfe', 'epsg', 'patch', 'poly', 'plot', 'tree', 'is'],
+	'query': 'SELECT DISTINCT ?sup ?sub \n \
+WHERE { \n \
+  ?sup rdfs:subClassOf* <{{{uri}}}> . \n \
+  ?sub rdfs:subClassOf ?sup . \n \
+}'
+});
+
+// get values for properties
+queriesArray.push({'name': 'propvalues',
+//	'prefixes': ['ifn', 'mfe', 'epsg', 'patch', 'poly', 'plot', 'tree', 'is'],
+	'query': 'SELECT DISTINCT ?uri ?value \n \
+WHERE { \n \
+?uri <{{{propuri}}}> ?value . \n \
+FILTER (?uri IN ( {{{furis}}} )) }'
+});
 module.exports = {
     queriesArray,
     queryPrefixes

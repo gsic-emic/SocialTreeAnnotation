@@ -92,3 +92,27 @@ WHERE {
 VALUES ?tree { <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-1> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-10> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-11> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-12> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-13> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-14> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-2> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-3> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-4> <http://timber.gsic.uva.es/sta/data/tree/47-0007-A-1-5> } 
 }
 
+######################
+Insertar datos:
+
+http://timber.gsic.uva.es:8890/sparql-auth
+Default graph: http://timber.gsic.uva.es
+
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+prefix sta: <http://timber.gsic.uva.es/sta/ontology/> 
+prefix tree: <http://timber.gsic.uva.es/sta/data/tree/> 
+INSERT DATA
+{ tree:1414 a   sta:Tree ;
+dc:creator  <http://timber.gsic.uva.es/sta/data/user/12345> .
+}
+
+
+
+http://vos.openlinksw.com/owiki/wiki/VOS/VirtRDFInsert
+virtuoso
+usuario demo, d0Niq2VWmI
+
+Digest username="demo", realm="SPARQL Endpoint", nonce="eba22571690f085ae5c49f99a97c6cd2", uri="/sparql-auth?default-graph-uri=http%3A%2F%2Ftimber.gsic.uva.es&query=PREFIX+dc%3A+%3Chttp%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%3E%0D%0Aprefix+sta%3A+%3Chttp%3A%2F%2Ftimber.gsic.uva.es%2Fsta%2Fontology%2F%3E+%0D%0Aprefix+tree%3A+%3Chttp%3A%2F%2Ftimber.gsic.uva.es%2Fsta%2Fdata%2Ftree%2F%3E+%0D%0A%0D%0AINSERT+DATA%0D%0A%7B+tree%3A14143+a+++sta%3ATree+%3B%0D%0Adc%3Acreator++%3Chttp%3A%2F%2Ftimber.gsic.uva.es%2Fsta%2Fdata%2Fuser%2F12345%3E+.%0D%0A%7D&format=text%2Fhtml&timeout=0&debug=on&run=+Run+Query+", algorithm=MD5, response="0d8c56ab3398f5699caea8dfc76ff593", opaque="5ebe2294ecd0e0f08eab7690d2a6ee69", qop=auth, nc=0000000e, cnonce="6d78128eb3883525"
+
+
+http://vos.openlinksw.com/owiki/wiki/VOS/VirtTipsAndTricksDigestAuthAJAX

@@ -13,20 +13,16 @@ var treesNoCache = [];
  * @param {*} res 
  */
 
-//FALLA http://timber.gsic.uva.es/sta/data/tree?page=9
 function getTrees(req, res) {
     var arg = {};
     let nextPage = undefined;
-    var treesPage = {};
     var response = {};
     var fullUrl = "";
     var namesParamsJson = [];
-
     var irisTrees = [];
     var querys = [];
     //var params = [];
     var propIrisFull = [];
-
 
     let queryParameters = req.query;
     arg.offset = 0; //por defecto
@@ -39,10 +35,7 @@ function getTrees(req, res) {
     else {
         queryParameters.page = 0;
     }
-
-    var lengthTotal = arg.limit * queryParameters.page;
-
-    // Para recuperar los árboles en un área se necesitan 4 puntos (2 coordenadas) => lat0,long0,lat1,long1 (+página)
+    //Listar todos los árboles del sistema en un área dada por 4 puntos (2 coordenadas) => lat0,long0,lat1,long1
     if (Object.keys(queryParameters).length == 4 || Object.keys(queryParameters).length == 5) {
         //Si alguna de las posiciones está vacía => 400 Bad Request
         if (queryParameters.lat0 == "" || queryParameters.long0 == "" || queryParameters.lat1 == "" || queryParameters.long1 == "") {
@@ -50,7 +43,7 @@ function getTrees(req, res) {
         }
         //Si la query es válida
         else {
-            namesParamsJson = ["creator", "species", "scientific_name", "species_iris"];
+            namesParamsJson = ["creator", "species"];
             arg.latsouth = queryParameters.lat0;
             arg.longwest = queryParameters.long0;
             arg.latnorth = queryParameters.lat1;
@@ -91,10 +84,10 @@ function getTrees(req, res) {
                                 //Almaceno en cache y en el objeto de respuesta la posición
                                 trees[tree] = {};
                                 response[tree] = {};
-                                trees[tree]["lat"]=data_trees[tree][onturis.geo_lat][0].value;
-                                trees[tree]["long"]=data_trees[tree][onturis.geo_long][0].value;
-                                response[tree]["lat"]= trees[tree]["lat"];
-                                response[tree]["long"]=trees[tree]["long"];
+                                trees[tree]["lat"] = data_trees[tree][onturis.geo_lat][0].value;
+                                trees[tree]["long"] = data_trees[tree][onturis.geo_long][0].value;
+                                response[tree]["lat"] = trees[tree]["lat"];
+                                response[tree]["long"] = trees[tree]["long"];
                                 treesNoCache.push(tree);
                             }
                         })
@@ -110,9 +103,7 @@ function getTrees(req, res) {
 
                             //REPASAR: Lo bueno sería hacer un bucle aquí. Y hacer un array con [onturis.dc_creator]... igual que namesParamsJson
                             propIrisFull.push({ [onturis.dc_creator]: namesParamsJson[0] });
-                            propIrisFull.push({ [onturis.prHasVulgarName]: namesParamsJson[1] });
-                            propIrisFull.push({ [onturis.prHasAcceptedName]: namesParamsJson[2] });
-                            propIrisFull.push({ [onturis.prHasTaxon]: namesParamsJson[3] });
+                            propIrisFull.push({ [onturis.prHasTaxon]: namesParamsJson[1] });
 
                             // Si es una propiedad del árbol
                             var propAnn = false;
@@ -122,9 +113,7 @@ function getTrees(req, res) {
                             // Si es una propiedad de una anotación (estaría bien pasar otro campo que indicase de que tipo es la anotación y así hacer una única llamada a setQuerys(). Mejoras a futuro)
                             propAnn = true;
                             arg.propiritype = onturis.prHasPrimarySpecies;
-                            params.propIris.push({ [onturis.prHasVulgarName]: namesParamsJson[1] });
-                            params.propIris.push({ [onturis.prHasAcceptedName]: namesParamsJson[2] });
-                            params.propIris.push({ [onturis.prHasTaxon]: namesParamsJson[3] });
+                            params.propIris.push({ [onturis.prHasTaxon]: namesParamsJson[1] });
                             setQuerys(params, propAnn, arg, querys);
 
                             Promise.all(params.querys).then((data) => {
@@ -266,16 +255,17 @@ function getTrees(req, res) {
 
 
     }
+    //Listar todos los árboles del sistema o los árboles de una especie o los árboles creados por un usuario
     else {
+        //Listar todos los árboles del sistema de una especie
         if (queryParameters.species != undefined) {
             if (queryParameters.species == "") {
                 res.status(400).send();
             }
             else {
-                namesParamsJson = ["creator", "lat", "long", "species", "scientific_name"];
+                namesParamsJson = ["creator", "lat", "long", "species"];
                 fullUrl = req.protocol + '://' + req.hostname + req.originalUrl.split('&page')[0];
                 arg.uri_specie = onturis.ifn_ontology + queryParameters.species;
-                console.log("SPECIE: " + arg.uri_specie);
                 // Paso 1, siempre se consulta al Virutoso para obtener las IRIs de los árboles solicitados. Obtengo la página correspondiente de todos los árboles del sistema
                 queryInterface.getData("trees_uris_specie", arg, sparqlClient)
                     .then((data_trees) => {
@@ -309,8 +299,8 @@ function getTrees(req, res) {
                                     //Almaceno en cache y en el objeto de respuesta la posición
                                     trees[tree] = {};
                                     response[tree] = {};
-                                    trees[tree]["species_iris"]=data_trees[tree][onturis.prHasTaxon][0].value;
-                                    response[tree]["species_iris"]=trees[tree]["species_iris"]
+                                    trees[tree][namesParamsJson[3]] = data_trees[tree][onturis.prHasTaxon][0].value;
+                                    response[tree][namesParamsJson[3]] = trees[tree][namesParamsJson[3]]
                                     treesNoCache.push(tree);
                                 }
                             })
@@ -328,8 +318,7 @@ function getTrees(req, res) {
                                 propIrisFull.push({ [onturis.dc_creator]: namesParamsJson[0] });
                                 propIrisFull.push({ [onturis.geo_lat]: namesParamsJson[1] });
                                 propIrisFull.push({ [onturis.geo_long]: namesParamsJson[2] });
-                                propIrisFull.push({ [onturis.prHasVulgarName]: namesParamsJson[3] });
-                                propIrisFull.push({ [onturis.prHasAcceptedName]: namesParamsJson[4] });
+
 
                                 // Si es una propiedad del árbol
                                 var propAnn = false;
@@ -341,10 +330,6 @@ function getTrees(req, res) {
                                 arg.propiritype = onturis.prHasPrimaryPosition;
                                 params.propIris.push({ [onturis.geo_lat]: namesParamsJson[1] });
                                 params.propIris.push({ [onturis.geo_long]: namesParamsJson[2] });
-                                setQuerys(params, propAnn, arg, querys);
-                                arg.propiritype = onturis.prHasPrimarySpecies;
-                                params.propIris.push({ [onturis.prHasVulgarName]: namesParamsJson[3] });
-                                params.propIris.push({ [onturis.prHasAcceptedName]: namesParamsJson[4] });
                                 setQuerys(params, propAnn, arg, querys);
 
                                 Promise.all(params.querys).then((data) => {
@@ -401,8 +386,154 @@ function getTrees(req, res) {
                     });
             }
         }
+        //Listar todos los árboles del sistema creados por un usuario
+        else if (queryParameters.creator != undefined) {
+            if (queryParameters.creator == "") {
+                res.status(400).send();
+            }
+            else {
+                namesParamsJson = ["lat", "long", "species"];
+                fullUrl = req.protocol + '://' + req.hostname + req.originalUrl.split('&page')[0];
+                arg.uri_creator = (queryParameters.creator == "ifn") ? "http://crossforest.eu/ifn/ontology/" : "http://timber.gsic.uva.es/users/" + queryParameters.creator;
+                // Paso 1, siempre se consulta al Virutoso para obtener las IRIs de los árboles solicitados. Obtengo la página correspondiente de todos los árboles del sistema
+                queryInterface.getData("trees_uris_creator", arg, sparqlClient)
+                    .then((data_trees) => {
+                        // Las keys de data forman un array con todas las IRIs de los árboles
+                        irisTrees = Object.keys(data_trees);
+                        if (irisTrees.length == 0) {
+                            res.status(204).send();
+                        }
+                        else {
+                            //Si hay más páginas las incluyo
+                            if (irisTrees.length == arg.limit) {
+                                nextPage = { "url": `${fullUrl}&page=${Number(queryParameters.page) + 1}` };
+                            }
+                            //En el paso 2 se obtienen los datos a devolver (se comprueba si están cacheados y sino se consulta al Virtuoso). En este caso devuelvo la posición, la especie y el creador ¿¿ALGO MÁS??{};
+
+                            //COMPROBAR SI ESTÁN CACHEADOS, PARA CADA ÁRBOL
+                            irisTrees.forEach(tree => {
+                                if (trees[tree] != undefined) {
+                                    //console.log("Árbol cacheado, hay que ver si tengo guardados los datos que necesito devolver")
+                                    //¿Si tengo un árbol cacheado tendré todos sus datos? Puede que tenga algunos sí y otros no cacheados y tenga que hacer las consultas de los que me faltan... PDTE IMPLEMENTAR
+                                    if (trees[tree].creator != undefined && trees[tree].lat != undefined && trees[tree].long != undefined) {
+                                        //console.log("Arbol " + tree + " cacheado");
+                                        treesNoCache = treesNoCache.filter(e => e !== tree); //Elimino el árbol del array de árboles no cacheados
+                                        response[tree] = trees[tree];
+                                    }
+                                    //Si le falta algún dato considero que no está cacheado y consulto
+                                    else {
+                                        treesNoCache.push(tree);
+                                    }
+                                }
+                                else {
+                                    //console.log("Árbol " + tree + " no cacheado");
+                                    treesNoCache.push(tree);
+                                }
+                            })
+                            // Si hay algún árbol no cacheado consulto al virtuoso sobre él
+                            if (treesNoCache.length != 0) {
+                                arg = {};
+                                arg.uri = treesNoCache.toString().replace(/,/g, '>, <');
+
+                                var params = {
+                                    propIris: [],
+                                    querys: []
+                                };
+
+                                //REPASAR: Lo bueno sería hacer un bucle aquí. Y hacer un array con [onturis.dc_creator]... igual que namesParamsJson
+                                propIrisFull.push({ [onturis.geo_lat]: namesParamsJson[0] });
+                                propIrisFull.push({ [onturis.geo_long]: namesParamsJson[1] });
+                                propIrisFull.push({ [onturis.prHasTaxon]: namesParamsJson[2] });
+
+
+                                // Si es una propiedad de una anotación (estaría bien pasar otro campo que indicase de que tipo es la anotación y así hacer una única llamada a setQuerys(). Mejoras a futuro)
+                                propAnn = true;
+                                arg.propiritype = onturis.prHasPrimaryPosition;
+                                params.propIris.push({ [onturis.geo_lat]: namesParamsJson[0] });
+                                params.propIris.push({ [onturis.geo_long]: namesParamsJson[1] });
+                                setQuerys(params, propAnn, arg, querys);
+                                arg.propiritype = onturis.prHasPrimarySpecies;
+                                params.propIris.push({ [onturis.prHasTaxon]: namesParamsJson[2] });
+                                setQuerys(params, propAnn, arg, querys);
+
+                                /* SIN FUNCIÓN setQuerys(). Funciona
+                                arg.propiri = onturis.dc_creator;
+                                params.push({ [arg.propiri]: "creator" });
+                                querys.push(queryInterface.getData("details", arg, sparqlClient));
+                                arg.propiri = onturis.geo_lat;
+                                params.push({ [arg.propiri]: "lat" });
+                                arg.propiritype = onturis.prHasPrimaryPosition;
+                                params.push({ [arg.propiritype]: "propiritype" });
+                                querys.push(queryInterface.getData("trees_prop_annotation", arg, sparqlClient));
+                                arg.propiri = onturis.geo_long;
+                                params.push({ [arg.propiri]: "long" });
+                                querys.push(queryInterface.getData("trees_prop_annotation", arg, sparqlClient));
+                                */
+                                Promise.all(params.querys).then((data) => {
+                                    //Resolucion Promise.all
+                                    params.querys = [];//Reincio array de querys
+
+                                    //Formateo del resultado
+                                    var i = 0;
+                                    var j = 0;
+                                    //uris árboles 
+                                    for (j = 0; j < data.length; j++) {
+                                        setTrees = data[j];
+                                        parametro = namesParamsJson[j];
+                                        Object.keys(setTrees).forEach(tree => {
+                                            //console.log(tree)
+                                            trees[tree] == undefined ? trees[tree] = {} : trees[tree];
+                                            response[tree] == undefined ? response[tree] = {} : response[tree];
+                                            trees[tree][parametro] = {};
+                                            response[tree][parametro] = {};
+                                            trees[tree][parametro] = setTrees[tree][Object.keys(propIrisFull[i])[0]][0].value;
+                                            response[tree][parametro] = trees[tree][parametro];
+                                            treesNoCache = treesNoCache.filter(e => e !== tree);
+                                        })
+                                        i = i + 1;
+                                    }
+                                    /*treesNoCache.forEach(tree => {
+                                        trees[tree] = {};
+                                        response[tree] = {};
+                                        data.forEach(e => {
+                                            //response[tree] = testParam(response, e, tree, params);
+                                            trees[tree] = response[tree];
+                                        })
+                                    });*/
+
+                                    res.status(200).send({ response, nextPage });
+                                })
+                                    .catch((err) => {
+                                        console.log("Error" + err.message);
+                                        if (err.statusCode != null && err.statusCode != undefined) {
+                                            res.status(err.statusCode).send({ message: err });
+                                        }
+                                        else {
+                                            err = err.message;
+                                            res.status(500).send(err);
+                                        }
+                                    });
+                            }
+                            else {
+                                res.status(200).send({ response, nextPage });
+                            }
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("Error en conexión con endpoint");
+                        if (err.statusCode != null && err.statusCode != undefined) {
+                            res.status(err.statusCode).send({ message: err });
+                        }
+                        else {
+                            err = err.message;
+                            res.status(500).send(err);
+                        }
+                    });
+            }
+        }
+        //Listar todos los árboles del sistema
         else {
-            namesParamsJson = ["creator", "lat", "long", "species", "scientific_name", "species_iris"];
+            namesParamsJson = ["creator", "lat", "long", "species"];
             fullUrl = req.protocol + '://' + req.hostname + req.originalUrl.split('?page')[0];
 
             // Paso 1, siempre se consulta al Virutoso para obtener las IRIs de los árboles solicitados. Obtengo la página correspondiente de todos los árboles del sistema
@@ -454,9 +585,7 @@ function getTrees(req, res) {
                             propIrisFull.push({ [onturis.dc_creator]: namesParamsJson[0] });
                             propIrisFull.push({ [onturis.geo_lat]: namesParamsJson[1] });
                             propIrisFull.push({ [onturis.geo_long]: namesParamsJson[2] });
-                            propIrisFull.push({ [onturis.prHasVulgarName]: namesParamsJson[3] });
-                            propIrisFull.push({ [onturis.prHasAcceptedName]: namesParamsJson[4] });
-                            propIrisFull.push({ [onturis.prHasTaxon]: namesParamsJson[5] });
+                            propIrisFull.push({ [onturis.prHasTaxon]: namesParamsJson[3] });
 
                             // Si es una propiedad del árbol
                             var propAnn = false;
@@ -470,9 +599,7 @@ function getTrees(req, res) {
                             params.propIris.push({ [onturis.geo_long]: namesParamsJson[2] });
                             setQuerys(params, propAnn, arg, querys);
                             arg.propiritype = onturis.prHasPrimarySpecies;
-                            params.propIris.push({ [onturis.prHasVulgarName]: namesParamsJson[3] });
-                            params.propIris.push({ [onturis.prHasAcceptedName]: namesParamsJson[4] });
-                            params.propIris.push({ [onturis.prHasTaxon]: namesParamsJson[5] });
+                            params.propIris.push({ [onturis.prHasTaxon]: namesParamsJson[3] });
                             setQuerys(params, propAnn, arg, querys);
 
                             /* SIN FUNCIÓN setQuerys(). Funciona
@@ -622,22 +749,20 @@ function getTrees(req, res) {
 
 function getTree(req, res) {
     var arg = {};
-    var objResults = {};
-    var objAux = {};
-    var my_array = [];
     arg.uri = "http://timber.gsic.uva.es/sta/data/tree/" + req.params.treeId;
-    queryInterface.getData("details", arg, sparqlClient)
+    var response = {};
+
+    queryInterface.getData("details_allprop", arg, sparqlClient)
         .then((data) => {
-            res.contentType('application/json');
+            var idTree = req.params.treeId;
+            trees[idTree] == undefined ? trees[idTree] = {} : trees[idTree];
+            response[idTree] ={};
 
             data.results.bindings.forEach(element => {
-                objAux = {};
-                objAux[element.p.value] = element.o;
-                my_array.push(objAux)
-                objResults[element.s.value] = my_array;
+                trees[idTree][element.prop.value]=element.value;
+                response[idTree][element.prop.value]=trees[idTree][element.prop.value];
             });
-            //console.log(objResults);
-            res.status(200).send(JSON.stringify(objResults));
+            res.status(200).send({response});
         })
         .catch((err) => {
             console.log("Error en conexión con endpoint");
@@ -645,10 +770,10 @@ function getTree(req, res) {
                 res.status(err.statusCode).send({ message: err });
             }
             else {
-                res.status(500).send({ message: err });
+                err = err.message;
+                res.status(500).send(err);
             }
         });
-    //res.send({ message: `Árbol ${req.params.treeId}` });
 }
 
 
