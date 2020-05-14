@@ -6,8 +6,8 @@
         <h1> INICIA SESIÓN </h1>
         <form (ngSubmit)="onSubmit()" #login="ngForm">
           <div class="form-group">
-            <input type="email" id="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Correo electrónico"
-            [(ngModel)]="email" name="email" pattern="^([0-9a-z]+)([0-9a-z\.-_]+)@([0-9a-z\.-_]+)\.([0-9a-z]+)$" required>
+            <input type="email" id="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Nombre de usuario"
+            [(ngModel)]="username" name="username"  required>
             <small id="emailHelp" class="form-text text-muted">¿Has olvidado tu identificación?</small>
           </div>
           <div class="form-group">
