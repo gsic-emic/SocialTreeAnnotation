@@ -255,7 +255,7 @@ function getTrees(req, res) {
 
 
     }
-    //Listar todos los árboles del sistema y filtrando por especie
+    //Listar todos los árboles del sistema o los árboles de una especie o los árboles creados por un usuario
     else {
         //Listar todos los árboles del sistema de una especie
         if (queryParameters.species != undefined) {
@@ -394,7 +394,7 @@ function getTrees(req, res) {
             else {
                 namesParamsJson = ["lat", "long", "species"];
                 fullUrl = req.protocol + '://' + req.hostname + req.originalUrl.split('&page')[0];
-                arg.uri_creator = (queryParameters.creator == "ifn") ? "http://crossforest.eu/ifn/ontology/": "http://timber.gsic.uva.es/users/"+ queryParameters.creator ;
+                arg.uri_creator = (queryParameters.creator == "ifn") ? "http://crossforest.eu/ifn/ontology/" : "http://timber.gsic.uva.es/users/" + queryParameters.creator;
                 // Paso 1, siempre se consulta al Virutoso para obtener las IRIs de los árboles solicitados. Obtengo la página correspondiente de todos los árboles del sistema
                 queryInterface.getData("trees_uris_creator", arg, sparqlClient)
                     .then((data_trees) => {
@@ -749,22 +749,20 @@ function getTrees(req, res) {
 
 function getTree(req, res) {
     var arg = {};
-    var objResults = {};
-    var objAux = {};
-    var my_array = [];
     arg.uri = "http://timber.gsic.uva.es/sta/data/tree/" + req.params.treeId;
-    queryInterface.getData("details", arg, sparqlClient)
+    var response = {};
+
+    queryInterface.getData("details_allprop", arg, sparqlClient)
         .then((data) => {
-            res.contentType('application/json');
+            var idTree = req.params.treeId;
+            trees[idTree] == undefined ? trees[idTree] = {} : trees[idTree];
+            response[idTree] ={};
 
             data.results.bindings.forEach(element => {
-                objAux = {};
-                objAux[element.p.value] = element.o;
-                my_array.push(objAux)
-                objResults[element.s.value] = my_array;
+                trees[idTree][element.prop.value]=element.value;
+                response[idTree][element.prop.value]=trees[idTree][element.prop.value];
             });
-            //console.log(objResults);
-            res.status(200).send(JSON.stringify(objResults));
+            res.status(200).send({response});
         })
         .catch((err) => {
             console.log("Error en conexión con endpoint");
@@ -772,10 +770,10 @@ function getTree(req, res) {
                 res.status(err.statusCode).send({ message: err });
             }
             else {
-                res.status(500).send({ message: err });
+                err = err.message;
+                res.status(500).send(err);
             }
         });
-    //res.send({ message: `Árbol ${req.params.treeId}` });
 }
 
 

@@ -226,11 +226,9 @@ queriesArray.push({'name': 'details',
 
 
 queriesArray.push({'name': 'details_allprop',
-	'query': 'CONSTRUCT { \n \
-                ?iri ?p ?value . \n \
-            }  \n \
+	'query': 'SELECT * \n \
             WHERE { \n \
-                ?iri ?p ?value . \n \
+                ?iri ?prop ?value . \n \
                 FILTER (  ?iri IN ( <{{{uri}}}> )). \n \
             }'
 });

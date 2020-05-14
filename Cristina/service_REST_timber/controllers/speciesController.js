@@ -78,7 +78,7 @@ function getSpeciesInfo(callback) {
     // obtengo subclases de suristop
     getSubclassesSpecies(suristop, function () { // aquí ya tengo la taxonomía de especies
         var suris = _.keys(especies);
-        getPropsResources(queryInterface, suris, [onturis.prifnScientificName, onturis.prifnVulgarName,
+        queryInterface.getPropsResources(queryInterface, suris, [onturis.prifnScientificName, onturis.prifnVulgarName,
         onturis.prifnWikipediaPage, onturis.prifnSameAs],
             especies, function () {
                 // callback?
@@ -165,106 +165,6 @@ function initClass(objbase, cluri) {
     }
 }
 
-
-function getPropsResources(provdatos, ruris, props, target, callback) {
-	// num de consultas
-	var nrequests = 0;
-	var totalrequests = 0;
-	// chequeo los recursos implicados en cada propiedad
-	_.each(props, function(prop) {
-		// lista de uris a obtener
-		var uris = [];
-		// analizo si existen los recursos y las propiedades
-		_.each(ruris, function(ruri) {
-			// creo el recurso si hace falta
-			if (target[ruri] == undefined)
-				target[ruri] = { "uri" : ruri };
-			if (target[ruri][prop] == undefined) 
-				uris.push(ruri);
-		});
-
-		// preparo lotes de 100 uris
-		var lote = 100;
-		var urisets = [];
-		for (var ind=0; uris.length > ind*lote; ind++) {
-			var begin = ind*lote;
-			var end = (ind + 1)*lote;
-			if (end > uris.length)
-				end = uris.length;		
-			urisets.push( uris.slice( begin, end ) );		
-		}
-		
-		// incremento peticiones
-		nrequests += urisets.length;
-		totalrequests += urisets.length;
-				
-		// solicito cada lote
-		_.each(urisets, function(uriset) {
-			// preparo subconjunto de uris
-			var aux = {};
-			aux.propuri = prop;
-			aux.uris = [];
-			aux.furis = []; 
-			_.each(uriset, function(uri) {
-				aux.uris.push(uri);
-				aux.furis.push("<"+uri+">");
-			});
-            provdatos.getData('propvalues', aux, sparqlClient).then((datos) => {
-				// creo los arrays de las propiedades aquí (ya que ha habido respuesta buena)
-				_.each(aux.uris, function(evuri) {
-					if (target[evuri][prop] == undefined)
-						target[evuri][prop] = {};
-				});						
-				// ahora proceso los resultados
-				_.each(datos.results.bindings, function(row) {
-					// obtengo datos
-					var evuri = row.uri.value;
-					var value = row.value;
-					// object property?
-					if (value.type === "uri") {
-						// inicializo array de object values si hace falta
-						if (target[evuri][prop].ovals == undefined)
-							target[evuri][prop].ovals = [];
-						// guardo valor
-						target[evuri][prop].ovals.push(value.value);
-					}					
-					// datatype property?
-					else if (value.type === "literal" || value.type === "typed-literal") {	
-						// inicializo objeto de literales si hace falta
-						if (target[evuri][prop].lits == undefined)
-							target[evuri][prop].lits = {};
-						// guardo valor
-						var lang = value["xml:lang"] == undefined? "nolang" : value["xml:lang"];
-						var val = value.value;
-						target[evuri][prop].lits[lang] = val;
-					}
-					// no incluyo blank nodes
-				});				
-				// decremento peticiones
-				nrequests--;
-				// callback?
-				if (nrequests <= 0 && callback != undefined)
-					callback();
-            })
-            .catch((err) => {
-                console.log("Error en conexión con endpoint");
-                if (err.statusCode != null && err.statusCode != undefined) {
-                    res.status(err.statusCode).send({ message: err });
-                }
-                else {
-                    err = err.message;
-                    res.status(500).send(err);
-                }
-            });
-		});
-	});	
-	// no requests, callback
-	if (nrequests == 0 && callback != undefined)
-		callback();
-	
-	// devuelvo número de consultas hechas
-	return totalrequests;
-}
 
 module.exports = {
     getSpecies
