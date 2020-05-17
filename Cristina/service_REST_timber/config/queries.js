@@ -202,6 +202,21 @@ WHERE {
 sta:hasTaxon ?value .
 }*/
 
+
+queriesArray.push({
+    'name': 'annotations_uris_creator',
+    'query': 'CONSTRUCT { \n \
+                ?ann dc:creator ?creator .  \n \
+        }  \n \
+            WHERE { \n \
+                ?types rdfs:subClassOf* <' + onturis.annotation + '> . \n \
+                ?ann a ?types ; \n \
+                     dc:creator ?creator . \n \
+            FILTER ( ?creator IN ( <{{{uri_creator}}}> )). \n \
+            } \n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}'
+});
 /**
  * Generales
  */
