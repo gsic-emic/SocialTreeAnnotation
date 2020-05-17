@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import {MensajeService} from './mensaje.service';
-//import { Trees } from './trees';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class MockAPIService {
+export class APIService {
 
   private apiUrl = 'http://localhost:8888/sta/';  // URL to web api 
                                       
@@ -30,6 +28,13 @@ export class MockAPIService {
     var urlComplete = "data/species";
     return this.http.get<any[]>(this.apiUrl+urlComplete);
   }
+
+  // Me devuelve todos los árboles creados por un usuario
+  getUserTrees (userId): Observable<any[]> {
+    var urlComplete = "data/tree?creator="+userId;
+    return this.http.get<any[]>(this.apiUrl+urlComplete);
+  }
+
 
 
 

@@ -23,13 +23,13 @@ import { AjustesComponent } from './ajustes/ajustes.component';
 import { ComunidadComponent } from './comunidad/comunidad.component';
 import { ConfirmAnotComponent } from './confirm-anot/confirm-anot.component';
 import { RegistroAnotComponent } from './registro-anot/registro-anot.component';
-import { MensajesComponent } from './mensajes/mensajes.component';
 import { ArbolComponent } from './arbol/arbol.component';
 import { BuscadorComponent } from './buscador/buscador.component';
 import { ContactoComponent } from './contacto/contacto.component';
 import { ListaComponent } from './lista/lista.component';
 import { ListaCompletaComponent } from './lista-completa/lista-completa.component';
 import { AddAnnotComponent } from './add-annot/add-annot.component';
+import { MilistaComponent } from './milista/milista.component';
 
 const routes: Routes = [ 
   { path: 'inicio_sesion', component: IniciarSesionComponent },
@@ -69,13 +69,13 @@ const routes: Routes = [
     ComunidadComponent,
     ConfirmAnotComponent,
     RegistroAnotComponent,
-    MensajesComponent,
     ArbolComponent,
     BuscadorComponent,
     ContactoComponent,
     ListaComponent,
     ListaCompletaComponent,
-    AddAnnotComponent
+    AddAnnotComponent,
+    MilistaComponent
   ],
   imports: [
     BrowserModule,
