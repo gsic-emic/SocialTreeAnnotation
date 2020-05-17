@@ -1,23 +1,22 @@
-<div [hidden]="submitted2">
+<div  class="mb-5" [hidden]="submitted2">
   <div class="d-flex flex-wrap justify-content-center p-2 m-1">
-    <div class="card mt-1 mb-2 mr-1" style="max-width: 520px;" *ngFor="let tree of trees; index as i">
+    <div class="card mt-1 mb-2 mr-1 flex-fill" style="max-width: 550px;" *ngFor="let tree of trees; index as i">
       <div class="row no-gutters">
-        <div class="col-md-4">
-          <img src="{{tree.image}}" class="card-img" alt="No existe imagen">
-        </div>
         <div class="col-md-8">
           <div class="card-body">
             <h1 class="card-title">{{tree.species}}</h1>
             <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{tree.creator}}</small></h5>
             <p class="card-text"> <i class="fas fa-map-marker-alt"></i> {{tree.lat}},  {{tree.long}}</p>
             <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> {{tree.date}}</small></p>
-            <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
-              <button type="submit" class="btn btn-success mr-2" (click)="obtenerSelecionado(tree)"><i class="far fa-chart-bar"></i> Ver más</button>
-              <button type="submit" class="btn btn-primary" (click)="obtenerSelecionadoNueva(tree)" ><i class="fas fa-edit"></i> Completar información</button>
-            </form>                 
           </div>
         </div>
-      </div>
+            <div class="col-md-4  d-flex justify-content-center align-items-center mb-1">
+              <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
+                <button type="submit" class="btn btn-outline-success m-1" (click)="obtenerSelecionado(tree)" title="Más información"><i class="fas fa-info-circle"></i></button>
+                <button type="submit" class="btn btn-primary m-1" (click)="obtenerSelecionadoNueva(tree)" title="Añadir anotación"><i class="fas fa-edit"></i></button>
+              </form>  
+            </div>               
+        </div>
     </div>
   </div>
 </div>

@@ -4,54 +4,64 @@
         <div class="titulo">BÚSQUEDA</div>
         <!-- Filtros aplicables a la búsqueda -->
         <div class="contenedor_filtros">
-            <div class="principal">
-                <form class="formulario" (ngSubmit)="onSubmit()" #busquedaForm="ngForm">
-                    <div class="input-group mb-3">
+            <form class="formulario" (ngSubmit)="onSubmit()" #busquedaForm="ngForm">
+                <div class="d-flex justify-content-around">
+                    <div class="input-group m-2">
                         <div class="input-group-prepend">
                         <label class="input-group-text" for="inputGroupSelect01"><i class="fab fa-pagelines"></i>  Especie</label>
                         </div>
                         <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="specie" name="specie">
-                            <option  [value]="item" *ngFor="let item of species">{{item}}</option>
+                            <option  [value]="item" *ngFor="let item of ESPECIES">{{item}}</option>
                         </select>
                     </div>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputGroupSelect01"><i class="fas fa-map-marked-alt"></i>  Provincias</label>
-                        </div>
-                        <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="provincia" name="provincia">
-                            <option  [value]="prov" *ngFor="let prov of provincias">{{prov}}</option>
-                        </select>
-                    </div>
-                    <div class="input-group mb-3">
+                    <!--<div class="input-group m-2">
                         <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default"><i class="fas fa-user"></i>  Creador</span>
                         </div>
                         <input type="text" class="form-control" aria-label="Sizing example input"  [(ngModel)]="creator" name="creator" aria-describedby="inputGroup-sizing-default">
-                    </div>
+                    </div>-->
+                </div>
+                <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-outline-danger mr-2" (click)="borrarDatos()"><i class="far fa-times-circle"></i> Borrar </button>
                     <button type="submit" class="btn btn-outline-primary"><i class="fas fa-search"></i> Buscar</button>
-                </form>
-            </div>
-        </div>
-        </div>
-        
-        <div [hidden]="!submitted">
-            <div class="spinner-grow text-primary" role="status" *ngIf="!terminado; else mostrarResultado">
-                <span class="sr-only">Loading...</span>
-            </div>
-            <ng-template #mostrarResultado>
-                <button class="btn btn-outline-success mb-2" (click)="volver()" [hidden]="!filtro"><i class="fas fa-angle-left"></i></button>
-                <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error; else mostrar">
-                    <i class="fas fa-exclamation-circle"></i>
-                    Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde o recargue la página
                 </div>
+            </form>
+        </div>
+        <!--Código para que se muestre el mapa-->
+        <div class="spinner-grow text-success" role="status" *ngIf="!terminado; else mostrarResultado">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <ng-template #mostrarResultado>
+            <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error">
+                <i class="fas fa-exclamation-circle"></i>
+                Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde
+            </div>
+            <div *ngIf="! activar_filtro; else filtrar"> <!--se muestran todos los arboles en el mapa-->
+                <app-mapa [trees]="allTrees"></app-mapa>
+            </div>
+            <ng-template #filtrar>
+                <app-mapa [trees]="filterTrees"></app-mapa> <!-- se muestran los arboles filtrados en el mapa-->
+            </ng-template>
+        </ng-template>  
+    </div>
+   
+        
+    <div [hidden]="!submitted">
+        <div class="spinner-grow text-primary" role="status" *ngIf="!terminado; else verLista">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <ng-template #verLista>
+            <button class="btn btn-outline-success mb-2" (click)="volver()" [hidden]="!filtro"><i class="fas fa-angle-left"></i></button>
+            <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error; else mostrar">
+                <i class="fas fa-exclamation-circle"></i>
+                 Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde o recargue la página
+            </div>
                 <ng-template #mostrar>
                     <div class="container" [hidden]="!filtro">
                         <div class="card border-primary mb-3" style="max-width: 50rem;">
                             <div class="card-header"><i class="fas fa-search"></i> Resultados de la búsqueda con: </div>
                             <div class="card-body text-primary">
                                 <p class="card-text" [hidden]="!specie"><i class="fab fa-pagelines"></i> ESPECIE: {{specie}}</p>
-                                <p class="card-text" [hidden]="!provincia"><i class="fas fa-map-marked-alt"></i> PROVINCIA: {{provincia}} </p>
                                 <p class="card-text" [hidden]="!creator"><i class="fas fa-user"></i> CREADOR: {{creator}}</p>
                             </div>
                         </div>
@@ -64,10 +74,10 @@
                         <button type="button" class="btn btn-outline-primary" (click)="recargar()"><i class="fas fa-search"></i> Realizar otra búsqueda</button>
                     </div>
                     <ng-template #mostrarLista>
-                        <app-lista-completa [trees]="trees" (filtro)="comprobarFiltro($event)"></app-lista-completa>
+                        <app-lista-completa [trees]="filterTrees" (filtro)="comprobarFiltro($event)"></app-lista-completa>
                     </ng-template>
                 </ng-template>
                 
             </ng-template>
-        </div>        
+    </div>        
 </div>

@@ -1,20 +1,19 @@
 <div [hidden]="submitted">
-<div class="d-flex flex-wrap justify-content-center p-2 mr-1 ml-1">
-    <div class="card mr-1 mb-3" style="max-width: 520px;" *ngFor="let tree of trees; index as i">
+<div class="d-flex flex-wrap justify-content-center p-2 m-2">
+    <div class="card m-1 mb-3 flex-fill" style="max-width: 520px;" *ngFor="let tree of trees; index as i">
       <div class="row no-gutters">
-        <div class="col-md-4">
-          <img src="{{tree.image}}" class="card-img" alt="imagen de un pino">
-        </div>
         <div class="col-md-8">
           <div class="card-body">
             <h1 class="card-title">{{tree.species}}</h1>
             <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{tree.creator}}</small></h5>
             <p class="card-text"> <i class="fas fa-map-marker-alt"></i> [{{tree.lat}},  {{tree.long}}]</p>
             <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i>{{tree.date}}</small></p>
-            <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
-              <button type="submit" class="btn btn-success" (click)="obtenerIdSelecionado(tree)" [disabled]="!listaForm.form.valid"><i class="far fa-chart-bar"></i> Ver más</button>
-            </form>
           </div>
+        </div>
+        <div class="col-md-4 d-flex justify-content-center align-items-center mb-1">
+          <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
+            <button type="submit" class="btn btn-success py-3" (click)="obtenerIdSelecionado(tree)" [disabled]="!listaForm.form.valid"><i class="fas fa-plus"></i> Ver más</button>
+          </form>
         </div>
       </div>
     </div>

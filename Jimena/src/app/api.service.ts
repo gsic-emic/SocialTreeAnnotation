@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { Tree } from './tree';
 
 
 @Injectable({
@@ -13,9 +14,15 @@ export class APIService {
 
   constructor( private http: HttpClient) { }
 
-  /* GET the actual API structure*/
+  /* GET all the trees storaged on the system */
   getTrees(url: string): Observable<string>{
     return this.http.get<string>(url); 
+  }
+  // Me devuelve los arboles almacenados en una zona especificadas por 2 latitudes y 2 longitudes
+  getTreesZone(lat0: number, long0: number, lat1: number, long1: number): Observable<string>{
+    var urlComplete = "data/tree?lat0="+lat0+"&long0="+long0+"&lat1="+lat1+"&long1="+long1;
+    //console.log(urlComplete);
+    return this.http.get<string>(this.apiUrl+urlComplete); 
   }
   
   /** GET a tree from the server */
@@ -24,6 +31,7 @@ export class APIService {
     return this.http.get<any[]>(this.apiUrl+urlComplete);
   }
 
+  // Devuelve todas las FAMILIAS, GENEROS y ESPECIES  que hay en la ontologia
   getSpecies(): Observable<any[]> {
     var urlComplete = "data/species";
     return this.http.get<any[]>(this.apiUrl+urlComplete);
@@ -35,12 +43,4 @@ export class APIService {
     return this.http.get<any[]>(this.apiUrl+urlComplete);
   }
 
-
-
-
-  /** Log a TreeService message with the MessageService 
-  //TENGO QUE DAR UNA VUELTA A ESTO DE LOS MENSAJES
-  private log(message: string) {
-  this.messageService.add(`HeroService: ${message}`);
-  }*/
 }

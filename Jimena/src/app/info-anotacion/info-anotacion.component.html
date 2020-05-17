@@ -5,9 +5,6 @@
     <div class="card-body">
         <div class="row no-gutters">
             <div class="col-md-4">
-              <img src="{{tree.image}}" class="card-img" alt="imagen no disponible">
-            </div>
-            <div class="col-md-8">
               <div class="card-body">
                 <h1 class="card-title"><br><i class="fab fa-pagelines"></i> Especie: {{tree.species}}</h1>
                 <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{tree.creator}}</small></h5>
@@ -17,6 +14,11 @@
                 <p class="card-text"><small class="text-muted"><br><i class="fas fa-clock"></i> Creación: {{tree.date}}</small></p>
               </div>
              </div>
+            <div class="col-md-8" style="max-width: 50rem; max-height: 50rem;">
+              <div class="contenedor_mapa">
+                <!--<app-mapa [trees]="tree"></app-mapa>-->
+              </div>
+            </div>
           <br>
         </div>
     </div>
@@ -24,7 +26,7 @@
   <!-- ANOTACIONES -->
   <div class="titulo"> Anotaciones del árbol</div>
   <div class="anotaciones">
-    <div class="card border-success align-self-start m-3" style="max-width: 18rem;" *ngFor="let anot of annotations;">
+    <div class="card border-success m-3 flex-fill" style="max-width: 18rem;" *ngFor="let anot of annotations;">
       <div class="card-header"><i class="far fa-user"></i> {{anot.creator}} </div>
       <!-- Distingo el tipo de anotación para mostrarlo de una manera u otra-->
         <div class="card-body text-success">
@@ -51,28 +53,21 @@
           <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creación: {{anot.date}}</small></p>
         </div>
       <div class="card-footer bg-transparent border-success d-flex justify-content-between">
-        <div class="icono ml-4">
-          <i class="fas fa-thumbs-up"></i>
+        <div class="icono">
+          <i class="fas fa-thumbs-up"></i> Estoy de acuerdo
         </div>
-        <div class="icono mr-4">
-          <i class="fas fa-thumbs-down"></i>
+        <div class="icono ml-1">
+          <i class="fas fa-thumbs-down"></i> No estoy de acuerdo
         </div> 
       </div>
     </div>
-    <div class="card border-success align-self-start m-3" style="max-width: 18rem;">
+    <div class="card text-white bg-success flex-fill m-3" style="max-width: 18rem;">
       <div class="card-header">Añade una nueva anotación</div>
-      <div class="card-body text-success">
-        <h5 class="card-title"><i class="fas fa-plus"></i></h5>
+      <div class="card-body">
+        <h5 class="card-title text-center"><a [routerLink]="['/nuevaAnot']" class="alert-link" title="Crear nueva anotación"><i class="fas fa-plus"></i></a></h5>
+        <p class="card-text"><a [routerLink]="['/inicio_sesion']" class="alert-link">Regístrate</a> para poder añadir una nueva anotación</p>
       </div>
     </div>
   </div>
-
-  
-  <!--Pensar cómo hacer para saber si no hay anotaciones
-  <ng-template class="anotaciones" #mostrarAviso>
-    <div class="alert alert-warning m-1" role="alert">
-      ¡Este árbol aún no tiene ninguna anotación! Se el primero en registrar una nueva <a [routerLink]="['/inicio_sesion']" class="alert-link">iniciando sesión</a>. 
-    </div>
-  </ng-template>-->
     
 </div>
