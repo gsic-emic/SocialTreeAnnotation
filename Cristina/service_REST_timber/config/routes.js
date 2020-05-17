@@ -57,8 +57,8 @@ api.delete(urls.tree, treeController.deleteTree);
 
 //Anotaciones
 api.get(urls.annotations, annotationController.getAnnotations);
-/* api.post(urls.annotations, annotationController.createAnnotation);
 api.get(urls.annotation, annotationController.getAnnotation);
+/* api.post(urls.annotations, annotationController.createAnnotation);
 api.put(urls.annotation, annotationController.updateAnnotation);
 api.delete(urls.annotation, annotationController.deleteAnnotation);
 
