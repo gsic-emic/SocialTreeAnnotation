@@ -1,6 +1,6 @@
 // Interfaz que maneja las especies
 export interface Specie {
-    uri: string;
+    id: string;
     //subclasses: Array;
     //nivel: number;
     //expuris: Array;

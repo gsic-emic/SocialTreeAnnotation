@@ -19,8 +19,6 @@ export class InfoAnotacionComponent implements OnInit {
     
   }
 
-  // Variables de control
-  public mostrar_estadisticas: boolean = false;
 
   //---------------------------------------
   

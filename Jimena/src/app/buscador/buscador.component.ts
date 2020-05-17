@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {MockAPIService} from '../mock-api.service';
+import {APIService} from '../api.service';
 import {Tree} from '../tree';
 
 
@@ -10,7 +10,7 @@ import {Tree} from '../tree';
 })
 export class BuscadorComponent implements OnInit {
 
-  constructor(private api: MockAPIService) { }
+  constructor(private api: APIService) { }
 
   ngOnInit(): void {
   }

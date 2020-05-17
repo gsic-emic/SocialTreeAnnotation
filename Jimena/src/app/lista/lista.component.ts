@@ -19,11 +19,10 @@ export class ListaComponent implements OnInit {
 
   ngOnInit(): void {
      //esto es de prueba.... luego lo obtendré con una consulta a la api
-     this.annotations[0] = {id: "http://timber.gsic.uva.es/sta/data/annotation/001", creator: "Jimena", date: "28/04/2020", type:{ image: "./../assets/images/pino1.png"}};    
-    this.annotations[1] = {id: "http://timber.gsic.uva.es/sta/data/annotation/002", creator: "Cristina", date: "27/04/2020", type: {image: "./../assets/images/abeto1.png"}};
-    this.annotations[2] = {id: "http://timber.gsic.uva.es/sta/data/annotation/003", creator: "Jimena", date: "27/04/2020", type: {specie: "Pino"}};
-    this.annotations[3] = {id: "http://timber.gsic.uva.es/sta/data/annotation/004", creator: "Juan", date: "20/04/2020", type: {hoja: "Acícula"}};
-    this.annotations[4] = {id: "http://timber.gsic.uva.es/sta/data/annotation/005", creator: "Maria", date: "06/05/2020", type: {fruto: "Castaña"}};
+    //this.annotations[0] = {id: "http://timber.gsic.uva.es/sta/data/annotation/002", creator: "Cristina", date: "27/04/2020", type: {image: "./../assets/images/abeto1.png"}};
+    this.annotations[0] = {id: "http://timber.gsic.uva.es/sta/data/annotation/003", creator: "Jimena", date: "27/04/2020", type: {specie: "Pino"}};
+    this.annotations[1] = {id: "http://timber.gsic.uva.es/sta/data/annotation/004", creator: "Juan", date: "20/04/2020", type: {hoja: "Acícula"}};
+    //this.annotations[2] = {id: "http://timber.gsic.uva.es/sta/data/annotation/005", creator: "Maria", date: "06/05/2020", type: {fruto: "Castaña"}};
   }
   //Variables de control -------------------------
   public submitted = false;

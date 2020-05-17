@@ -2,7 +2,7 @@
     padding: 12px;
 }
 .titulo{
-    font-size: 4vw;
+    font-size: 45px;
     text-align: center;
 }
 .contenedor_filtros{
@@ -11,9 +11,6 @@
     padding: 1px;
     flex-flow: row wrap;
     justify-content: space-around;
-}
-.principal{
-    margin: 3px;
 }
 .container{
     display: flex;

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 //--------------------------
-import {MockAPIService} from '../mock-api.service';
+import {APIService} from '../api.service';
 import {Tree} from '.././tree';
 import { Specie } from '../species';
 //-----------------------------
@@ -13,7 +13,7 @@ import { Specie } from '../species';
 })
 export class InicioComponent implements OnInit {
 
-  constructor(private api: MockAPIService) { }
+  constructor(private api: APIService) { }
 
   //-----------------------------
   mapa: boolean = true;
@@ -25,7 +25,6 @@ export class InicioComponent implements OnInit {
   error: boolean = false;
   terminado: boolean = false;
   terminado_species: boolean = false;
-  especies: Specie[] = [];
   objSpecies: object[]=[];
   buscadorSpecies: string = "http://crossforest.eu/ifn/ontology/vulgarName";
   buscadorUri: string = "uri";
@@ -75,8 +74,8 @@ export class InicioComponent implements OnInit {
       );
   }
   // método que  crea un objeto de tipo Tree
-  createTree(id: string, latitud: number, longitud: number, specie: string, creator: string, image: string, date: string){
-    let tree = { id: id, lat: latitud, long: longitud, species: specie, creator:  creator, image: image, date: date};
+  createTree(id: string, latitud: number, longitud: number, specie: string, creator: string, date: string){
+    let tree = { id: id, lat: latitud, long: longitud, species: specie, creator:  creator, date: date};
     //console.log("Se ha creado el siguiente árbol: "+ tree.id +":"+tree.lat, tree.long);
     return tree;
   }
@@ -88,16 +87,15 @@ export class InicioComponent implements OnInit {
         { 
           this.objTrees[clave].creator = "IFN"
         } 
+      // añado nombre vulgar a la especie
       for (let clav in this.objSpecies){
         if(this.objTrees[clave].species == this.objSpecies[clav]["uri"]){
           this.objTrees[clave].species = this.objSpecies[clav][this.buscadorSpecies]["lits"].es;
           break;
         }
       }
-      // LA IMAGEN LA TENDRÉ QUE BUSCAR EN UNA ANOTACIÓN ---> de momento pongo que no hay
-      this.objTrees[clave].image = "./../assets/images/no-image.png";
       this.objTrees[clave].date = "1/1/2020";
-      this.trees[i] = this.createTree(clave, this.objTrees[clave].lat, this.objTrees[clave].long, this.objTrees[clave].species, this.objTrees[clave].creator, this.objTrees[clave].image, this.objTrees[clave].date);
+      this.trees[i] = this.createTree(clave, this.objTrees[clave].lat, this.objTrees[clave].long, this.objTrees[clave].species, this.objTrees[clave].creator, this.objTrees[clave].date);
       i++;
     }
   }
