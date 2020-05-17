@@ -1,36 +1,29 @@
 <app-menu-usuarios></app-menu-usuarios>
 <div class="contenedor">
-  <div class="titulo">MIS ANOTACIONES</div>
-<!--
-  <div *ngIf="existen; else mostrarAviso">
-    
-    <div class="d-flex flex-wrap p-2 m-1">
-      <div class="card mb-3" style="max-width: 540px;" *ngFor="let arbol of misArboles; index as i">
-        <div class="row no-gutters">
-          <div class="col-md-4">
-            <img src="{{arbol.imagen}}" class="card-img" alt="imagen de un pino">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h1 class="card-title">{{arbol.especie}}</h1>
-              <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{arbol.creador}}</small></h5>
-              <p class="card-text"> <i class="fas fa-map-marker-alt"></i> {{arbol.ubicacion}}</p>
-              <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creado hace {{arbol.creacion}}</small></p>
-              <a [routerLink]="['/mi_info']" class="btn btn-success"><i class="far fa-chart-bar"></i> Ver más</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <br>
+  <div class="btn-group" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-success" (click)="arboles=true"><i class="fas fa-tree"></i> Árboles</button>
+    <button type="button" class="btn btn-outline-success" (click)="arboles=false"><i class="fas fa-list-ul"></i> Anotaciones</button>
   </div>
-
-
-  <ng-template class="aviso" #mostrarAviso>
-    <div class="aviso">
-      <div class="alert alert-warning" role="alert">
-        ¡Aún no has creado ninguna anotación!
+  <div *ngIf="arboles; else mostrarAnotaciones">
+    <div class="titulo">MIS ÁRBOLES</div>
+    <div class="d-flex justify-content-center mt-10" *ngIf="!terminado; else mostrarResultado">
+      <div class="spinner-grow text-success" role="status">
+        <span class="sr-only">Loading...</span>
       </div>
     </div>
-  </ng-template>-->
+
+    <ng-template #mostrarResultado>
+      <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error">
+        <i class="fas fa-exclamation-circle"></i>
+          Ha habido un error al intentar cargar tus árboles. Por favor, inténtelo de nuevo más tarde
+      </div>
+      <app-milista [trees]="trees"></app-milista>
+    </ng-template>
+  </div>
+  <ng-template #mostrarAnotaciones>
+    <div class="titulo">MIS ANOTACIONES</div>
+  </ng-template>
+  
+
+  
 </div>
