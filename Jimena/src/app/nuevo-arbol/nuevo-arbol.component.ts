@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Tree } from './../tree';
+import { Tree } from '../tree';
 
 @Component({
-  selector: 'app-nueva-anotacion',
-  templateUrl: './nueva-anotacion.component.html',
-  styleUrls: ['./nueva-anotacion.component.css']
+  selector: 'app-nuevo-arbol',
+  templateUrl: './nuevo-arbol.component.html',
+  styleUrls: ['./nuevo-arbol.component.css']
 })
-export class NuevaAnotacionComponent implements OnInit {
+export class NuevoArbolComponent implements OnInit {
 
   // Variables para recoger los datos del cuestionario
   public newTree: Tree;
