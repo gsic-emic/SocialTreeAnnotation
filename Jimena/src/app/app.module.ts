@@ -16,7 +16,7 @@ import { RegistroComponent } from './registro/registro.component';
 import { MenuComponent } from './menu/menu.component';
 import { PrincipalComponent } from './principal/principal.component';
 import { MenuUsuariosComponent } from './menu-usuarios/menu-usuarios.component';
-import { NuevaAnotacionComponent } from './nueva-anotacion/nueva-anotacion.component';
+import { NuevoArbolComponent } from './nuevo-arbol/nuevo-arbol.component';
 import { MisAnotacionesComponent } from './mis-anotaciones/mis-anotaciones.component';
 import { BusquedaComponent } from './busqueda/busqueda.component';
 import { AjustesComponent } from './ajustes/ajustes.component';
@@ -37,7 +37,7 @@ const routes: Routes = [
   { path: 'confirm', component: ConfirmAnotComponent },
   { path: 'contacto', component: ContactoComponent },
   { path: 'buscador', component: BuscadorComponent },
-  { path: 'nuevaAnot', component: NuevaAnotacionComponent },
+  { path: 'nuevo_arbol', component: NuevoArbolComponent },
   { path: 'comunidad', component: ComunidadComponent },
   { path: 'ajustes', component: AjustesComponent },
   { path: 'busqueda', component: BusquedaComponent },
@@ -62,7 +62,7 @@ const routes: Routes = [
     MenuComponent,
     PrincipalComponent,
     MenuUsuariosComponent,
-    NuevaAnotacionComponent,
+    NuevoArbolComponent,
     MisAnotacionesComponent,
     BusquedaComponent,
     AjustesComponent,
