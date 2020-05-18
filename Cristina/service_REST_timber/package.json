@@ -10,6 +10,7 @@
     "express"
   ],
   "dependencies": {
+    "btoa": "^1.2.1",
     "express": "^4.17.1",
     "mustache": "^4.0.1",
     "underscore": "^1.9.2",

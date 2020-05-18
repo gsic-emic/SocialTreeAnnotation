@@ -77,6 +77,8 @@ function getTrees(req, res) {
                                 //Si le falta algún dato considero que no está cacheado y consulto
                                 else {
                                     treesNoCache.push(tree);
+                                    cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
+                                    response[tree] == undefined ? response[tree] = {} : response[tree];
                                 }
                             }
                             else {
@@ -292,6 +294,8 @@ function getTrees(req, res) {
                                     //Si le falta algún dato considero que no está cacheado y consulto
                                     else {
                                         treesNoCache.push(tree);
+                                        cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
+                                        response[tree] == undefined ? response[tree] = {} : response[tree];
                                     }
                                 }
                                 else {
@@ -423,10 +427,11 @@ function getTrees(req, res) {
                                     //Si le falta algún dato considero que no está cacheado y consulto
                                     else {
                                         treesNoCache.push(tree);
+                                        cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
+                                        response[tree] == undefined ? response[tree] = {} : response[tree];
                                     }
                                 }
                                 else {
-                                    //console.log("Árbol " + tree + " no cacheado");
                                     treesNoCache.push(tree);
                                     cache.trees[tree] = {};
                                     response[tree] = {};
@@ -483,7 +488,6 @@ function getTrees(req, res) {
                                         setTrees = data[j];
                                         parametro = namesParamsJson[j];
                                         Object.keys(setTrees).forEach(tree => {
-                                            //console.log(tree)
                                             cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
                                             response[tree] == undefined ? response[tree] = {} : response[tree];
                                             cache.trees[tree][parametro] = {};
@@ -566,6 +570,8 @@ function getTrees(req, res) {
                                 //Si le falta algún dato considero que no está cacheado y consulto
                                 else {
                                     treesNoCache.push(tree);
+                                    cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
+                                    response[tree] == undefined ? response[tree] = {} : response[tree];
                                 }
                             }
                             else {
@@ -778,6 +784,14 @@ function getTree(req, res) {
         });
 }
 
+function deleteTree(req,res){
+    var id = req.params.treeId;
+    console.log(id)
+    sparqlClient.setDefaultGraph('http://timber.gsic.uva.es');
+
+    res.send('DELETE request')
+}
+
 
 //NO LA ESTOY USANDO
 function testParam(response, e, tree, params) {
@@ -806,5 +820,6 @@ function setQuerys(params, propAnn, arg) {
 
 module.exports = {
     getTrees,
-    getTree
+    getTree,
+    deleteTree
 }

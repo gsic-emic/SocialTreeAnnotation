@@ -51,8 +51,9 @@ api.delete('/users/:userId', auth, userController.deleteUser)*/
 api.get(urls.trees, treeController.getTrees);
 //api.post(urls.trees, treeController.createTree);
 api.get(urls.tree, treeController.getTree);
-/*api.put(urls.tree, treeController.updateTree);
 api.delete(urls.tree, treeController.deleteTree); 
+
+/*api.put(urls.tree, treeController.updateTree);
 */
 
 //Anotaciones
