@@ -428,6 +428,8 @@ function getTrees(req, res) {
                                 else {
                                     //console.log("Árbol " + tree + " no cacheado");
                                     treesNoCache.push(tree);
+                                    cache.trees[tree] = {};
+                                    response[tree] = {};
                                 }
                             })
                             // Si hay algún árbol no cacheado consulto al virtuoso sobre él
