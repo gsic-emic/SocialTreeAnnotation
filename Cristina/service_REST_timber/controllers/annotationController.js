@@ -62,7 +62,6 @@ function getAnnotations(req, res) {
                                 .then((data) => {
                                     data.results.bindings.forEach(element => {
                                         id = element.iri.value;
-                                        console.log(cache.annotations[id])
                                         cache.annotations[id] = cache.annotations[id] == undefined ? {} : cache.annotations[id];
                                         response[id] = response[id] == undefined ? {} : response[id];
                                         cache.annotations[id][element.prop.value] = element.value;
