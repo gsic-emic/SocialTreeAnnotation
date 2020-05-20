@@ -1,3 +1,6 @@
+const { uuid } = require('uuidv4');
+const config = require('../config/config');
+
 /* ================================================================ */
 /* Helper functions. */
 /* ================================================================ */
@@ -31,6 +34,27 @@ function setupTerminationHandlers() {
     });
 };
 
+function generateId(){
+    var id ="";
+    id = uuid();
+    id=id.substring(id.length-config.lenghtId); 
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    mm = (mm <10)? "0" + mm : mm;
+    dd = (dd <10)? "0" + dd : dd;
+    var yyyy = today.getFullYear();
+    var full_id = yyyy.toString() + mm.toString() + dd.toString() + "-" + id;
+    return {"full_id": full_id, "id": id};
+}
+
+function getDateCreated(){
+    var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+    var dateISO = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
+    return dateISO;
+}
 module.exports = {
-    setupTerminationHandlers
+    setupTerminationHandlers,
+    generateId,
+    getDateCreated
 };

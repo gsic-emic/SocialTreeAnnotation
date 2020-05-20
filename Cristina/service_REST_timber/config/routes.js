@@ -49,7 +49,7 @@ api.delete('/users/:userId', auth, userController.deleteUser)*/
 
 //Árboles
 api.get(urls.trees, treeController.getTrees);
-//api.post(urls.trees, treeController.createTree);
+api.post(urls.trees, treeController.createTree);
 api.get(urls.tree, treeController.getTree);
 api.delete(urls.tree, treeController.deleteTree); 
 
