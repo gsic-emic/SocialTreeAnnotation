@@ -25,7 +25,7 @@ export class APIService {
     return this.http.get<string>(this.apiUrl+urlComplete); 
   }
   
-  /** GET a tree from the server */
+  // Recuepera el árbol con el id que se le pase
   getTree (id): Observable<any[]> {
     var urlComplete = "data/tree/"+id;
     return this.http.get<any[]>(this.apiUrl+urlComplete);
@@ -40,6 +40,11 @@ export class APIService {
   // Me devuelve todos los árboles creados por un usuario
   getUserTrees (userId): Observable<any[]> {
     var urlComplete = "data/tree?creator="+userId;
+    return this.http.get<any[]>(this.apiUrl+urlComplete);
+  }
+
+  getUserAnnotatios (userId): Observable<any[]> {
+    var urlComplete = "data/annotation?creator="+userId;
     return this.http.get<any[]>(this.apiUrl+urlComplete);
   }
 
