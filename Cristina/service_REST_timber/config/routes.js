@@ -51,14 +51,15 @@ api.delete('/users/:userId', auth, userController.deleteUser)*/
 api.get(urls.trees, treeController.getTrees);
 //api.post(urls.trees, treeController.createTree);
 api.get(urls.tree, treeController.getTree);
-/*api.put(urls.tree, treeController.updateTree);
 api.delete(urls.tree, treeController.deleteTree); 
+
+/*api.put(urls.tree, treeController.updateTree);
 */
 
 //Anotaciones
 api.get(urls.annotations, annotationController.getAnnotations);
-/* api.post(urls.annotations, annotationController.createAnnotation);
 api.get(urls.annotation, annotationController.getAnnotation);
+/* api.post(urls.annotations, annotationController.createAnnotation);
 api.put(urls.annotation, annotationController.updateAnnotation);
 api.delete(urls.annotation, annotationController.deleteAnnotation);
 
