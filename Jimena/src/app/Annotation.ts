@@ -5,6 +5,7 @@ export interface Annotation {
     id: string;
     creator: string;
     date: string;
+    primary?: boolean; // para controlar si es la anotacion  primaria del arbol
     type: {
       image?: string; //el caracter '?' me indica que estas propiedades son opcionales
       location?: {

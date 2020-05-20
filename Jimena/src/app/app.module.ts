@@ -30,6 +30,7 @@ import { ListaComponent } from './lista/lista.component';
 import { ListaCompletaComponent } from './lista-completa/lista-completa.component';
 import { AddAnnotComponent } from './add-annot/add-annot.component';
 import { MilistaComponent } from './milista/milista.component';
+import { MilistaAnnotComponent } from './milista-annot/milista-annot.component';
 
 const routes: Routes = [ 
   { path: 'inicio_sesion', component: IniciarSesionComponent },
@@ -75,7 +76,8 @@ const routes: Routes = [
     ListaComponent,
     ListaCompletaComponent,
     AddAnnotComponent,
-    MilistaComponent
+    MilistaComponent,
+    MilistaAnnotComponent
   ],
   imports: [
     BrowserModule,

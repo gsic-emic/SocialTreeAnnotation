@@ -1,0 +1,32 @@
+<div class="anotaciones">
+    <div class="card border-primary m-3 flex-fill" style="max-width: 18rem;" *ngFor="let anot of annot;">
+        <div class="card-header d-flex justify-content-around">
+            <div><a title="Editar"><i class="fas fa-edit"> </i></a></div> <!--de momento es un enlace vacío-->
+            <div><a title="Eliminar"><i class="far fa-trash-alt"></i></a></div>
+        </div>
+      <!-- Distingo el tipo de anotación para mostrarlo de una manera u otra-->
+        <div class="card-body text-primary">
+          <div class="tipo_anot" *ngIf="anot.type.image">
+            <p class="card-text"><small class="text-muted">Has añadido una anotación de tipo imagen: </small></p>
+            <img src="{{anot.type.image}}" class="d-block w-100 h-50" alt="imagen no disponible">
+          </div>
+          <div class="tipo_anot" *ngIf="anot.type.specie">
+            <p class="card-text"><small class="text-muted">Has añadido una anotación de tipo especie: </small></p>
+            <h5 class="card-title"><i class="fab fa-pagelines"></i> {{anot.type.specie}}</h5>
+          </div>
+          <div class="tipo_anot" *ngIf="anot.type.location">
+            <p class="card-text"><small class="text-muted">Has añadido una anotación de tipo ubicación: </small></p>
+            <h5 class="card-title"><i class="fas fa-map-marker-alt"></i> </h5>
+          </div>
+          <div class="tipo_anot" *ngIf="anot.type.hoja">
+            <p class="card-text"><small class="text-muted">Has añadido una anotación de tipo hoja: </small></p>
+            <h5 class="card-title"><i class="fas fa-leaf"></i> {{anot.type.hoja}}</h5>
+          </div>
+          <div class="tipo_anot" *ngIf="anot.type.fruto">
+            <p class="card-text"><small class="text-muted">Has añadido una anotación de tipo fruto: </small></p>
+            <h5 class="card-title"><i class="fas fa-apple-alt"></i> {{anot.type.fruto}}</h5>
+          </div>
+          <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creación: {{anot.date}}</small></p>
+        </div>
+    </div>
+  </div>
