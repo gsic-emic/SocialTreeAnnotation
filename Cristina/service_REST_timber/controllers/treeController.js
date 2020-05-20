@@ -2,9 +2,9 @@ const _ = require('underscore');
 const queryInterface = require('../helpers/queryInterface');
 var onturis = require('../config/onturis');
 var Mustache = require('mustache');
-//var trees = require('../models/tree');
+var cache = require('../models/cache');
 
-var trees = {};
+
 var treesNoCache = [];
 
 /**
@@ -66,28 +66,30 @@ function getTrees(req, res) {
                         }
                         //COMPROBAR SI ESTÁN CACHEADOS, PARA CADA ÁRBOL
                         irisTrees.forEach(tree => {
-                            if (trees[tree] != undefined) {
+                            if (cache.trees[tree] != undefined) {
                                 //console.log("Árbol cacheado, hay que ver si tengo guardados los datos que necesito devolver")
                                 //¿Si tengo un árbol cacheado tendré todos sus datos? Puede que tenga algunos sí y otros no cacheados y tenga que hacer las consultas de los que me faltan... PDTE IMPLEMENTAR
-                                if (trees[tree].creator != undefined && trees[tree].lat != undefined && trees[tree].long != undefined) {
+                                if (cache.trees[tree].creator != undefined && cache.trees[tree].lat != undefined && cache.trees[tree].long != undefined) {
                                     //console.log("Arbol " + tree + " cacheado");
                                     treesNoCache = treesNoCache.filter(e => e !== tree); //Elimino el árbol del array de árboles no cacheados
-                                    response[tree] = trees[tree];
+                                    response[tree] = cache.trees[tree];
                                 }
                                 //Si le falta algún dato considero que no está cacheado y consulto
                                 else {
                                     treesNoCache.push(tree);
+                                    cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
+                                    response[tree] == undefined ? response[tree] = {} : response[tree];
                                 }
                             }
                             else {
                                 //console.log("Árbol " + tree + " no cacheado");
                                 //Almaceno en cache y en el objeto de respuesta la posición
-                                trees[tree] = {};
+                                cache.trees[tree] = {};
                                 response[tree] = {};
-                                trees[tree]["lat"] = data_trees[tree][onturis.geo_lat][0].value;
-                                trees[tree]["long"] = data_trees[tree][onturis.geo_long][0].value;
-                                response[tree]["lat"] = trees[tree]["lat"];
-                                response[tree]["long"] = trees[tree]["long"];
+                                cache.trees[tree]["lat"] = data_trees[tree][onturis.geo_lat][0].value;
+                                cache.trees[tree]["long"] = data_trees[tree][onturis.geo_long][0].value;
+                                response[tree]["lat"] = cache.trees[tree]["lat"];
+                                response[tree]["long"] = cache.trees[tree]["long"];
                                 treesNoCache.push(tree);
                             }
                         })
@@ -130,12 +132,12 @@ function getTrees(req, res) {
                                     parametro = namesParamsJson[j];
                                     Object.keys(setTrees).forEach(tree => {
                                         //console.log(tree)
-                                        trees[tree] == undefined ? trees[tree] = {} : trees[tree];
+                                        cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
                                         response[tree] == undefined ? response[tree] = {} : response[tree];
-                                        trees[tree][parametro] = {};
+                                        cache.trees[tree][parametro] = {};
                                         response[tree][parametro] = {};
-                                        trees[tree][parametro] = setTrees[tree][Object.keys(propIrisFull[i])[0]][0].value;
-                                        response[tree][parametro] = trees[tree][parametro];
+                                        cache.trees[tree][parametro] = setTrees[tree][Object.keys(propIrisFull[i])[0]][0].value;
+                                        response[tree][parametro] = cache.trees[tree][parametro];
                                         treesNoCache = treesNoCache.filter(e => e !== tree);
                                     })
                                     i = i + 1;
@@ -281,26 +283,28 @@ function getTrees(req, res) {
                             }
                             //COMPROBAR SI ESTÁN CACHEADOS, PARA CADA ÁRBOL
                             irisTrees.forEach(tree => {
-                                if (trees[tree] != undefined) {
+                                if (cache.trees[tree] != undefined) {
                                     //console.log("Árbol cacheado, hay que ver si tengo guardados los datos que necesito devolver")
                                     //¿Si tengo un árbol cacheado tendré todos sus datos? Puede que tenga algunos sí y otros no cacheados y tenga que hacer las consultas de los que me faltan... PDTE IMPLEMENTAR
-                                    if (trees[tree].creator != undefined && trees[tree].lat != undefined && trees[tree].long != undefined) {
+                                    if (cache.trees[tree].creator != undefined && cache.trees[tree].lat != undefined && cache.trees[tree].long != undefined) {
                                         //console.log("Arbol " + tree + " cacheado");
                                         treesNoCache = treesNoCache.filter(e => e !== tree); //Elimino el árbol del array de árboles no cacheados
-                                        response[tree] = trees[tree];
+                                        response[tree] = cache.trees[tree];
                                     }
                                     //Si le falta algún dato considero que no está cacheado y consulto
                                     else {
                                         treesNoCache.push(tree);
+                                        cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
+                                        response[tree] == undefined ? response[tree] = {} : response[tree];
                                     }
                                 }
                                 else {
                                     //console.log("Árbol " + tree + " no cacheado");
                                     //Almaceno en cache y en el objeto de respuesta la posición
-                                    trees[tree] = {};
+                                    cache.trees[tree] = {};
                                     response[tree] = {};
-                                    trees[tree][namesParamsJson[3]] = data_trees[tree][onturis.prHasTaxon][0].value;
-                                    response[tree][namesParamsJson[3]] = trees[tree][namesParamsJson[3]]
+                                    cache.trees[tree][namesParamsJson[3]] = data_trees[tree][onturis.prHasTaxon][0].value;
+                                    response[tree][namesParamsJson[3]] = cache.trees[tree][namesParamsJson[3]]
                                     treesNoCache.push(tree);
                                 }
                             })
@@ -346,12 +350,12 @@ function getTrees(req, res) {
                                         parametro = namesParamsJson[j];
                                         Object.keys(setTrees).forEach(tree => {
                                             //console.log(tree)
-                                            trees[tree] == undefined ? trees[tree] = {} : trees[tree];
+                                            cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
                                             response[tree] == undefined ? response[tree] = {} : response[tree];
-                                            trees[tree][parametro] = {};
+                                            cache.trees[tree][parametro] = {};
                                             response[tree][parametro] = {};
-                                            trees[tree][parametro] = setTrees[tree][Object.keys(propIrisFull[i])[0]][0].value;
-                                            response[tree][parametro] = trees[tree][parametro];
+                                            cache.trees[tree][parametro] = setTrees[tree][Object.keys(propIrisFull[i])[0]][0].value;
+                                            response[tree][parametro] = cache.trees[tree][parametro];
                                             treesNoCache = treesNoCache.filter(e => e !== tree);
                                         })
                                         i = i + 1;
@@ -394,7 +398,7 @@ function getTrees(req, res) {
             else {
                 namesParamsJson = ["lat", "long", "species"];
                 fullUrl = req.protocol + '://' + req.hostname + req.originalUrl.split('&page')[0];
-                arg.uri_creator = (queryParameters.creator == "ifn") ? "http://crossforest.eu/ifn/ontology/" : "http://timber.gsic.uva.es/users/" + queryParameters.creator;
+                arg.uri_creator = (queryParameters.creator == "ifn") ? onturis.ifn_ontology : onturis.users + queryParameters.creator;
                 // Paso 1, siempre se consulta al Virutoso para obtener las IRIs de los árboles solicitados. Obtengo la página correspondiente de todos los árboles del sistema
                 queryInterface.getData("trees_uris_creator", arg, sparqlClient)
                     .then((data_trees) => {
@@ -412,22 +416,25 @@ function getTrees(req, res) {
 
                             //COMPROBAR SI ESTÁN CACHEADOS, PARA CADA ÁRBOL
                             irisTrees.forEach(tree => {
-                                if (trees[tree] != undefined) {
+                                if (cache.trees[tree] != undefined) {
                                     //console.log("Árbol cacheado, hay que ver si tengo guardados los datos que necesito devolver")
                                     //¿Si tengo un árbol cacheado tendré todos sus datos? Puede que tenga algunos sí y otros no cacheados y tenga que hacer las consultas de los que me faltan... PDTE IMPLEMENTAR
-                                    if (trees[tree].creator != undefined && trees[tree].lat != undefined && trees[tree].long != undefined) {
+                                    if (cache.trees[tree].creator != undefined && cache.trees[tree].lat != undefined && cache.trees[tree].long != undefined) {
                                         //console.log("Arbol " + tree + " cacheado");
                                         treesNoCache = treesNoCache.filter(e => e !== tree); //Elimino el árbol del array de árboles no cacheados
-                                        response[tree] = trees[tree];
+                                        response[tree] = cache.trees[tree];
                                     }
                                     //Si le falta algún dato considero que no está cacheado y consulto
                                     else {
                                         treesNoCache.push(tree);
+                                        cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
+                                        response[tree] == undefined ? response[tree] = {} : response[tree];
                                     }
                                 }
                                 else {
-                                    //console.log("Árbol " + tree + " no cacheado");
                                     treesNoCache.push(tree);
+                                    cache.trees[tree] = {};
+                                    response[tree] = {};
                                 }
                             })
                             // Si hay algún árbol no cacheado consulto al virtuoso sobre él
@@ -481,13 +488,12 @@ function getTrees(req, res) {
                                         setTrees = data[j];
                                         parametro = namesParamsJson[j];
                                         Object.keys(setTrees).forEach(tree => {
-                                            //console.log(tree)
-                                            trees[tree] == undefined ? trees[tree] = {} : trees[tree];
+                                            cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
                                             response[tree] == undefined ? response[tree] = {} : response[tree];
-                                            trees[tree][parametro] = {};
+                                            cache.trees[tree][parametro] = {};
                                             response[tree][parametro] = {};
-                                            trees[tree][parametro] = setTrees[tree][Object.keys(propIrisFull[i])[0]][0].value;
-                                            response[tree][parametro] = trees[tree][parametro];
+                                            cache.trees[tree][parametro] = setTrees[tree][Object.keys(propIrisFull[i])[0]][0].value;
+                                            response[tree][parametro] = cache.trees[tree][parametro];
                                             treesNoCache = treesNoCache.filter(e => e !== tree);
                                         })
                                         i = i + 1;
@@ -553,17 +559,19 @@ function getTrees(req, res) {
 
                         //COMPROBAR SI ESTÁN CACHEADOS, PARA CADA ÁRBOL
                         irisTrees.forEach(tree => {
-                            if (trees[tree] != undefined) {
+                            if (cache.trees[tree] != undefined) {
                                 //console.log("Árbol cacheado, hay que ver si tengo guardados los datos que necesito devolver")
                                 //¿Si tengo un árbol cacheado tendré todos sus datos? Puede que tenga algunos sí y otros no cacheados y tenga que hacer las consultas de los que me faltan... PDTE IMPLEMENTAR
-                                if (trees[tree].creator != undefined && trees[tree].lat != undefined && trees[tree].long != undefined) {
+                                if (cache.trees[tree].creator != undefined && cache.trees[tree].lat != undefined && cache.trees[tree].long != undefined) {
                                     //console.log("Arbol " + tree + " cacheado");
                                     treesNoCache = treesNoCache.filter(e => e !== tree); //Elimino el árbol del array de árboles no cacheados
-                                    response[tree] = trees[tree];
+                                    response[tree] = cache.trees[tree];
                                 }
                                 //Si le falta algún dato considero que no está cacheado y consulto
                                 else {
                                     treesNoCache.push(tree);
+                                    cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
+                                    response[tree] == undefined ? response[tree] = {} : response[tree];
                                 }
                             }
                             else {
@@ -628,12 +636,12 @@ function getTrees(req, res) {
                                     parametro = namesParamsJson[j];
                                     Object.keys(setTrees).forEach(tree => {
                                         //console.log(tree)
-                                        trees[tree] == undefined ? trees[tree] = {} : trees[tree];
+                                        cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
                                         response[tree] == undefined ? response[tree] = {} : response[tree];
-                                        trees[tree][parametro] = {};
+                                        cache.trees[tree][parametro] = {};
                                         response[tree][parametro] = {};
-                                        trees[tree][parametro] = setTrees[tree][Object.keys(propIrisFull[i])[0]][0].value;
-                                        response[tree][parametro] = trees[tree][parametro];
+                                        cache.trees[tree][parametro] = setTrees[tree][Object.keys(propIrisFull[i])[0]][0].value;
+                                        response[tree][parametro] = cache.trees[tree][parametro];
                                         treesNoCache = treesNoCache.filter(e => e !== tree);
                                     })
                                     i = i + 1;
@@ -755,12 +763,12 @@ function getTree(req, res) {
     queryInterface.getData("details_allprop", arg, sparqlClient)
         .then((data) => {
             var idTree = req.params.treeId;
-            trees[idTree] == undefined ? trees[idTree] = {} : trees[idTree];
+            cache.trees[idTree] == undefined ? cache.trees[idTree] = {} : cache.trees[idTree];
             response[idTree] ={};
 
             data.results.bindings.forEach(element => {
-                trees[idTree][element.prop.value]=element.value;
-                response[idTree][element.prop.value]=trees[idTree][element.prop.value];
+                cache.trees[idTree][element.prop.value]=element.value;
+                response[idTree][element.prop.value]=cache.trees[idTree][element.prop.value];
             });
             res.status(200).send({response});
         })
@@ -774,6 +782,14 @@ function getTree(req, res) {
                 res.status(500).send(err);
             }
         });
+}
+
+function deleteTree(req,res){
+    var id = req.params.treeId;
+    console.log(id)
+    sparqlClient.setDefaultGraph('http://timber.gsic.uva.es');
+
+    res.send('DELETE request')
 }
 
 
@@ -804,5 +820,6 @@ function setQuerys(params, propAnn, arg) {
 
 module.exports = {
     getTrees,
-    getTree
+    getTree,
+    deleteTree
 }
