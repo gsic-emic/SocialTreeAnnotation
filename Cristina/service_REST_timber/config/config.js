@@ -4,5 +4,6 @@ module.exports = {
     //defaultGraph: 'http://timber.gsic.uva.es',
     user: "demo",
     pwd: "d0Niq2VWmI",
-    authType: "Basic"
+    authType: "Basic",
+    lenghtId: 5
   }

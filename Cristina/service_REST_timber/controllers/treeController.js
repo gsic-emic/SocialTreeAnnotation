@@ -1,9 +1,7 @@
-const _ = require('underscore');
 const queryInterface = require('../helpers/queryInterface');
 var onturis = require('../config/onturis');
-var Mustache = require('mustache');
 var cache = require('../models/cache');
-
+const helpers = require('../helpers/helpers');
 
 var treesNoCache = [];
 
@@ -14,6 +12,8 @@ var treesNoCache = [];
  */
 
 function getTrees(req, res) {
+    sparqlClient.setDefaultGraph();
+
     var arg = {};
     let nextPage = undefined;
     var response = {};
@@ -23,6 +23,9 @@ function getTrees(req, res) {
     var querys = [];
     //var params = [];
     var propIrisFull = [];
+    var setTrees = {};
+    var parametro;
+    var propAnn = false;
 
     let queryParameters = req.query;
     arg.offset = 0; //por defecto
@@ -108,7 +111,7 @@ function getTrees(req, res) {
                             propIrisFull.push({ [onturis.prHasTaxon]: namesParamsJson[1] });
 
                             // Si es una propiedad del árbol
-                            var propAnn = false;
+                            propAnn = false;
                             params.propIris.push({ [onturis.dc_creator]: namesParamsJson[0] });
                             setQuerys(params, propAnn, arg);
 
@@ -325,7 +328,7 @@ function getTrees(req, res) {
 
 
                                 // Si es una propiedad del árbol
-                                var propAnn = false;
+                                propAnn = true;
                                 params.propIris.push({ [onturis.dc_creator]: namesParamsJson[0] });
                                 setQuerys(params, propAnn, arg);
 
@@ -575,6 +578,8 @@ function getTrees(req, res) {
                                 }
                             }
                             else {
+                                cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
+                                response[tree] == undefined ? response[tree] = {} : response[tree];
                                 //console.log("Árbol " + tree + " no cacheado");
                                 treesNoCache.push(tree);
                             }
@@ -756,21 +761,27 @@ function getTrees(req, res) {
 }
 
 function getTree(req, res) {
+    sparqlClient.setDefaultGraph();
     var arg = {};
     arg.uri = "http://timber.gsic.uva.es/sta/data/tree/" + req.params.treeId;
     var response = {};
 
     queryInterface.getData("details_allprop", arg, sparqlClient)
         .then((data) => {
-            var idTree = req.params.treeId;
-            cache.trees[idTree] == undefined ? cache.trees[idTree] = {} : cache.trees[idTree];
-            response[idTree] ={};
+            if (data.results.bindings.length == 0) {
+                res.status(404).send({ response: "El árbol no existe" });
+            }
+            else {
+                var idTree = req.params.treeId;
+                cache.trees[idTree] == undefined ? cache.trees[idTree] = {} : cache.trees[idTree];
+                response[idTree] = {};
 
-            data.results.bindings.forEach(element => {
-                cache.trees[idTree][element.prop.value]=element.value;
-                response[idTree][element.prop.value]=cache.trees[idTree][element.prop.value];
-            });
-            res.status(200).send({response});
+                data.results.bindings.forEach(element => {
+                    cache.trees[idTree][element.prop.value] = element.value;
+                    response[idTree][element.prop.value] = cache.trees[idTree][element.prop.value];
+                });
+                res.status(200).send({ response });
+            }
         })
         .catch((err) => {
             console.log("Error en conexión con endpoint");
@@ -784,12 +795,127 @@ function getTree(req, res) {
         });
 }
 
-function deleteTree(req,res){
+
+function createTree(req, res) {
+    var idTree = helpers.generateId().full_id;
+    var arg = {};
+    var parametersRequired = { creator: "creator", lat: "lat", long: "long" };
+    var parametersOptional = { image: "image", species: "species" };
+
+    var flag = true;
+
+    let bodyParameters = req.body;
+
+    sparqlClient.setDefaultGraph('http://timber.gsic.uva.es');
+
+    //Parámetros obligatorios (pdte la fecha)
+    Object.keys(parametersRequired).forEach(parametro => {
+        if (bodyParameters[parametro] != undefined) {
+            if (parametro == parametersRequired.creator) {
+                arg[parametersRequired.creator] = onturis.users + bodyParameters[parametersRequired.creator];
+            }
+            else {
+                arg[parametro] = bodyParameters[parametro];
+            }
+        }
+        else {
+            flag = false;
+        }
+    });
+
+    if (flag) {
+        console.log("Crear árbol y anotación de posición");
+        var dateISO;
+
+        arg.type = onturis.primaryPosition;
+        var idAnnot = helpers.generateId().id;
+        idAnnot = "p" + idTree + "-" + idAnnot;
+        arg.id = idAnnot;
+
+        //PDTE Crear todas las anotaciones de forma asíncrona y cuando se hayan creado crear el árbol (Promise.all, then)
+
+        //Si hay más de 3 parámetros, entonces incluye opcionales como la especie y/o una imagen
+        if (Object.keys(bodyParameters).length > 3) {
+            //Hay imagen
+            if (parametersOptional.image in bodyParameters) {
+                arg[parametersOptional.image] = bodyParameters[parametersOptional.image];
+                console.log("Crear anotación de imagen");
+            }
+            //Hay especie
+            if (parametersOptional.species in bodyParameters) {
+                arg[parametersOptional.species] = bodyParameters[parametersOptional.species];
+                console.log("Crear anotación de especie");
+            }
+        }
+        dateISO = helpers.getDateCreated();
+        arg.date = dateISO;
+
+        //Primero creo la anotación de posición de tipo Primaria para así asociársela al árbol en la creación
+        queryInterface.getData("create_annotation_position", arg, sparqlClient)
+            .then((data) => {
+                if (data.results.bindings.length > 0) {
+                    console.log("Anotación creada");
+                    arg.id = idTree;
+                    arg.annotation = onturis.data + "annotation/" + idAnnot;
+                    dateISO = helpers.getDateCreated();
+                    arg.date = dateISO;
+                    queryInterface.getData("create_tree", arg, sparqlClient)
+                        .then((data) => {
+                            if (data.results.bindings.length > 0) {
+                                // Redirijo al nuevo árbol si ha ido todo bien
+                                console.log("Árbol creado");
+                                res.redirect("tree/" + idTree)
+                            }
+                        })
+                        .catch((err) => {
+                            console.log("Error en conexión con endpoint");
+                            if (err.statusCode != null && err.statusCode != undefined) {
+                                res.status(err.statusCode).send({ message: err });
+                            }
+                            else {
+                                err = err.message;
+                                res.status(500).send(err);
+                            }
+                        });
+                }
+            })
+            .catch((err) => {
+                console.log("Error en conexión con endpoint");
+                if (err.statusCode != null && err.statusCode != undefined) {
+                    res.status(err.statusCode).send({ message: err });
+                }
+                else {
+                    err = err.message;
+                    res.status(500).send(err);
+                }
+            });
+    }
+    else {
+        res.status(400).send({ error: "Faltan campos obligatorios para la creación del árbol" });
+    }
+
+}
+
+
+function deleteTree(req, res) {
     var id = req.params.treeId;
     console.log(id)
     sparqlClient.setDefaultGraph('http://timber.gsic.uva.es');
-
-    res.send('DELETE request')
+    queryInterface.getData("test_delete", {}, sparqlClient)
+        .then((data) => {
+            console.log(data)
+            res.send(data)
+        })
+        .catch((err) => {
+            console.log("Error en conexión con endpoint");
+            if (err.statusCode != null && err.statusCode != undefined) {
+                res.status(err.statusCode).send({ message: err });
+            }
+            else {
+                err = err.message;
+                res.status(500).send(err);
+            }
+        });
 }
 
 
@@ -821,5 +947,6 @@ function setQuerys(params, propAnn, arg) {
 module.exports = {
     getTrees,
     getTree,
+    createTree,
     deleteTree
 }

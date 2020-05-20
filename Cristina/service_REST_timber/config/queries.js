@@ -17,6 +17,8 @@ var queryPrefixes = {
     //'epsg': 'http://epsg.w3id.org/ontology/',
     'sta': 'http://timber.gsic.uva.es/sta/ontology/',
     //'example': 'http://crossforest.eu/sta/data/example/'
+    'tree': 'http://timber.gsic.uva.es/sta/data/tree/',
+    'annotation': 'http://timber.gsic.uva.es/sta/data/annotation/'
 };
 
 // query array with all the queries
@@ -217,6 +219,49 @@ queriesArray.push({
             LIMIT {{limit}} \n \
             OFFSET {{offset}}'
 });
+
+
+queriesArray.push({
+    'name': 'create_tree',
+    'query': 'INSERT DATA \n \
+            { <'+ queryPrefixes.tree + '{{id}}> a <' + onturis.tree + '> ; \n \
+                                        dc:creator <{{{creator}}}> ; \n \
+                                        dc:created "{{date}}"^^xsd:date ;\n \
+                                        <' + onturis.prHasPrimaryPosition + '> <{{{annotation}}}> .\n \
+            }'
+});
+
+queriesArray.push({
+    'name': 'create_annotation_position',
+    'query': 'INSERT DATA \n \
+            { <'+ queryPrefixes.annotation + '{{id}}> a <{{{type}}}> ; \n \
+                                        dc:creator <{{{creator}}}> ; \n \
+                                        dc:created "{{date}}"^^xsd:date ;\n \
+                                        geo:lat {{lat}} ; \n \
+                                        geo:long {{long}} . \n \
+            }'
+});
+
+queriesArray.push({
+    'name': 'test_delete',
+    'query': 'DELETE { \n \
+                ?tree ?p ?o } \n \
+            WHERE { \n \
+                 ?tree a sta:Tree ; \n \
+                dc:creator  ?creator . \n \
+                FILTER ( ?creator IN (<http://timber.gsic.uva.es/sta/data/user/12345>) ) .\n \
+                ?tree ?p ?o .\n \
+                }'
+});
+
+queriesArray.push({
+    'name': 'test_create',
+    'query': 'INSERT DATA \n \
+    { <http://timber.gsic.uva.es/sta/data/tree/0001414> a sta:Tree ; \n \
+    dc:creator  <http://timber.gsic.uva.es/sta/data/user/12345> .\n \
+    }'
+});
+
 /**
  * Generales
  */

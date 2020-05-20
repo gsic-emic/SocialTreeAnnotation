@@ -58,6 +58,7 @@ var onturis = {
 
 
 	users: "http://timber.gsic.uva.es/sta/data/user/",
+	data: "http://timber.gsic.uva.es/sta/data/"
 
 
 };
