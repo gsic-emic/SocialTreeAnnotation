@@ -1,35 +1,51 @@
 <!-- Código para mostrar la información almacenada de un árbol concreto-->
 <div class="container">
   <div class="titulo"> Información del árbol </div>
-  <div class="card p-2 mb-3">
-    <div class="card-body">
-        <div class="row no-gutters">
-            <div class="col-md-4">
-              <div class="card-body">
-                <h1 class="card-title"><br><i class="fab fa-pagelines"></i> Especie: {{tree.species}}</h1>
-                <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{tree.creator}}</small></h5>
-                
-                <p class="card-text"><br><i class="fas fa-map-marker-alt"></i> [{{tree.lat}}, {{tree.long}}]</p> <span class="badge badge-success">Ver en el mapa</span>
-                <!--<app-mapa [arboles]="arbol"></app-mapa>-->
+    <div class="card p-2" >
+      <div class="card-body">
+          <div class="row no-gutters">
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h1 class="card-title"><br><i class="fab fa-pagelines"></i> Especie: {{tree.species}}</h1>
+                  <div class="card-body text-success" *ngIf="IsSpeciesAsserted">
+                    <p class="card-text">
+                      <i class="fas fa-certificate"></i> La especie de este árbol ha sido validada por expertos                    
+                    </p>
+                  </div>
+                  <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{tree.creator}}</small></h5>
+                  <p class="card-text"><br><i class="fas fa-map-marker-alt"></i> [{{tree.lat}}, {{tree.long}}]</p> 
+                  <div class="card-body text-success" *ngIf="IsPossitionAsserted">
+                    <p class="card-text">
+                      <i class="fas fa-certificate"></i> La localización de este árbol ha sido validada por expertos
+                    </p>
+                  </div>
+                  <span class="badge badge-success">Ver en el mapa</span>
+                </div>
+               </div>
+              <div class="col-md-4">
                 <p class="card-text"><small class="text-muted"><br><i class="fas fa-clock"></i> Creación: {{tree.date}}</small></p>
+                <div class="contenedor_mapa">
+                    <!--<app-mapa [trees]="tree"></app-mapa>-->
+                </div>
               </div>
-             </div>
-            <div class="col-md-8" style="max-width: 50rem; max-height: 50rem;">
-              <div class="contenedor_mapa">
-                <!--<app-mapa [trees]="tree"></app-mapa>-->
-              </div>
-            </div>
-          <br>
-        </div>
+            <br>
+          </div>
+      </div>
     </div>
-  </div>
+  
   <!-- ANOTACIONES -->
-  <div class="titulo"> Anotaciones del árbol</div>
+  <div class="titulo"> Anotaciones</div>
   <div class="anotaciones">
     <div class="card border-success m-3 flex-fill" style="max-width: 18rem;" *ngFor="let anot of annotations;">
       <div class="card-header"><i class="far fa-user"></i> {{anot.creator}} </div>
       <!-- Distingo el tipo de anotación para mostrarlo de una manera u otra-->
         <div class="card-body text-success">
+          <div class="card-body text-warning" *ngIf="anot.primary">
+            <p class="card-text font-weight-bolder text-center"><i class="fas fa-star"></i> Anotación más popular</p>
+          </div>
+          <div class="card-body text-success" *ngIf="anot.asserted">
+            <p class="card-text font-weight-bolder text-center"><i class="fas fa-certificate"></i> Anotación validada</p>
+          </div>
           <div class="tipo_anot" *ngIf="anot.type.image">
             <p class="card-text"><small class="text-muted">{{anot.creator}} añadió una anotación de tipo imagen: </small></p>
             <img src="{{anot.type.image}}" class="d-block w-100 h-50" alt="imagen no disponible">
@@ -40,19 +56,12 @@
           </div>
           <div class="tipo_anot" *ngIf="anot.type.location">
             <p class="card-text"><small class="text-muted">{{anot.creator}} añadió una anotación de tipo ubicación: </small></p>
-            <h5 class="card-title"><i class="fas fa-map-marker-alt"></i> </h5>
-          </div>
-          <div class="tipo_anot" *ngIf="anot.type.hoja">
-            <p class="card-text"><small class="text-muted">{{anot.creator}} añadió una anotación de tipo hoja: </small></p>
-            <h5 class="card-title"><i class="fas fa-leaf"></i> {{anot.type.hoja}}</h5>
-          </div>
-          <div class="tipo_anot" *ngIf="anot.type.fruto">
-            <p class="card-text"><small class="text-muted">{{anot.creator}} añadió una anotación de tipo fruto: </small></p>
-            <h5 class="card-title"><i class="fas fa-apple-alt"></i> {{anot.type.fruto}}</h5>
+            <h5 class="card-title"><i class="fas fa-map-marker-alt"></i> {{anot.type.location.lat}}, {{anot.type.location.long}}</h5>
           </div>
           <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creación: {{anot.date}}</small></p>
         </div>
-      <div class="card-footer bg-transparent border-success d-flex justify-content-between">
+      <div class="card-footer bg-transparent border-success d-flex justify-content-between" *ngIf="!anot.asserted">
+        <!--solo se puede dar la opinión en anotaciones que no estén validadas por expertos-->
         <div class="icono">
           <i class="fas fa-thumbs-up"></i> Estoy de acuerdo
         </div>

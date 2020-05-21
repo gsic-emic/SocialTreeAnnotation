@@ -5,7 +5,8 @@ export interface Annotation {
     id: string;
     creator: string;
     date: string;
-    primary?: boolean; // para controlar si es la anotacion  primaria del arbol
+    primary: boolean; // Controla si es la anotación más votada
+    asserted: boolean;
     type: {
       image?: string; //el caracter '?' me indica que estas propiedades son opcionales
       location?: {
@@ -13,7 +14,5 @@ export interface Annotation {
         long: number;
       }
       specie?: string;
-      hoja?: string;
-      fruto?: string;
     }
   }

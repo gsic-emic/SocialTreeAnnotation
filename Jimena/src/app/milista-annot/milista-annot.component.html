@@ -16,7 +16,7 @@
           </div>
           <div class="tipo_anot" *ngIf="anot.type.location">
             <p class="card-text"><small class="text-muted">Has añadido una anotación de tipo ubicación: </small></p>
-            <h5 class="card-title"><i class="fas fa-map-marker-alt"></i> </h5>
+            <h5 class="card-title"><i class="fas fa-map-marker-alt"></i>  {{anot.type.location.lat}}, {{anot.type.location.long}} </h5>
           </div>
           <div class="tipo_anot" *ngIf="anot.type.hoja">
             <p class="card-text"><small class="text-muted">Has añadido una anotación de tipo hoja: </small></p>

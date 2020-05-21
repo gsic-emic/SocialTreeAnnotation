@@ -113,7 +113,7 @@ export class MisAnotacionesComponent implements OnInit {
       (data: any) =>{
         //this.nextUrl = data.nextPage.url;
         this.objAnnotations = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
-        console.log(data);
+        //console.log(data);
         this.convertirAnnot();
       },
       (error) =>{
@@ -137,38 +137,38 @@ export class MisAnotacionesComponent implements OnInit {
   // creo un objeto TypeScritp de tipo Annotation[] con el objeto JSON devuelto para mostrarse en la pantalla adecuadamente
   convertirAnnot(){
     let i=0;
-    let primary = false;
+    let primary;
+    let asserted;
     let tipo: string;
     let date: string;
     let lat, long, especie, image;
 
     for (let clave in this.objAnnotations){
+      primary = false;
+      asserted = false;
       // Primero compruebo el tipo de anotacion que es
       switch (this.objAnnotations[clave][this.tipoAnnot].value){
         case "http://timber.gsic.uva.es/sta/ontology/PrimaryPosition":
           primary = true; //es una anotacion de tipo localización y ademas es una anotacion primaria
           tipo = "location";
-          lat = this.objAnnotations[clave][this.buscadorLat].value;
-          long = this.objAnnotations[clave][this.buscadorLong].value;
+          lat = Number(this.objAnnotations[clave][this.buscadorLat].value);
+          long = Number(this.objAnnotations[clave][this.buscadorLong].value);
           break;
         case "http://timber.gsic.uva.es/sta/ontology/AssertedSpecies":
-          primary = true; //es una anotacion de tipo especie y ademas es una anotacion primaria
+          asserted = true;
           tipo = "specie";
           especie = this.objAnnotations[clave][this.buscador_taxon].value;
           break;
         case "http://timber.gsic.uva.es/sta/ontology/ImageAnnotation":
-            primary = false; //es una anotacion de tipo imagen 
             tipo = "image";
             image = this.objAnnotations[clave][this.buscador_image].value;
             break;
         case "http://timber.gsic.uva.es/sta/ontology/PositionAnnotation":
-            primary = false; //es una anotacion de tipo localizacion, pero no es la primaria
             tipo = "location";
-            lat = this.objAnnotations[clave][this.buscadorLat].value;
-            long = this.objAnnotations[clave][this.buscadorLong].value;
+            lat = Number(this.objAnnotations[clave][this.buscadorLat].value);
+            long = Number(this.objAnnotations[clave][this.buscadorLong].value);
             break;
         case "http://timber.gsic.uva.es/sta/ontology/SpeciesAnnotation":
-            primary = false; //es una anotacion de tipo especie, pero no es la primaria
             tipo = "specie";
             especie = this.objAnnotations[clave][this.buscador_taxon].value;
             break;
@@ -177,22 +177,28 @@ export class MisAnotacionesComponent implements OnInit {
       if(!this.objAnnotations[clave][this.buscadorFecha]){
         date = "01/01/2020";
       } else{
-        date = this.objAnnotations[clave][this.buscadorFecha].value;
+        date = this.formatearFecha(this.objAnnotations[clave][this.buscadorFecha].value);
       }
       //creo la anotacion en funcion del tipo
       switch (tipo){
         case "location":
-          this.annotations[i] = {id: clave, creator: this.user, date: date, type: {location: {lat: lat, long: long}}};
+          this.annotations[i] = {id: clave, creator: this.user, date: date, primary: primary, asserted: asserted, type: {location: {lat: lat, long: long}}};
           break;
         case "specie":
-          this.annotations[i] = {id: clave, creator: this.user, date: date, type: {specie: especie}};
+          this.annotations[i] = {id: clave, creator: this.user, date: date, primary: primary, asserted: asserted, type: {specie: especie}};
           break;
         case "image":
-          this.annotations[i] = {id: clave, creator: this.user, date: date, type: {image: image}};
+          this.annotations[i] = {id: clave, creator: this.user, date: date, primary: primary, asserted: asserted, type: {image: image}};
           break;
       }
       i++;
     }
+  }
+  formatearFecha(date: string): string{
+    let nueva_fecha = date.split("T", 2); // Me quedo con el AAAA/MM/DD
+    let Arrayfecha = nueva_fecha[0].split("-"); // Genera un array con el dia, mes y año por separado
+    let fecha = Arrayfecha[2]+"/"+Arrayfecha[1]+"/"+Arrayfecha[0]; //reordeno para tener DD/MM/AAAA
+    return fecha;
   }
 
   
