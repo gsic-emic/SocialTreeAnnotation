@@ -19,13 +19,15 @@ export class InicioComponent implements OnInit {
   mapa: boolean = true;
   actualUrl: string = "http://localhost:8888/sta/data/tree";
   url_zona: string = "http://localhost:8888/sta/data/tree?lat0=41.7&long0=-5.4&lat1=41.8&long1=-4.9"
+  //url_zona: string = "http://localhost:8888/sta/data/tree?lat0=43.2&long0=-2.9&lat1=43.3&long1=-2.7"
+
   nextUrl: string;
   objTrees: Tree[]; // Objeto JSON que almacena todos los árboles devueltos
   trees: Tree[]=[]; // Array con todos los árboles del sistema con formato adecuado para visualización
   error: boolean = false;
   terminado: boolean = false;
   terminado_species: boolean = false;
-  objSpecies: object[]=[];
+  objSpecies: object=[];
   buscadorSpecies: string = "http://crossforest.eu/ifn/ontology/vulgarName";
   buscadorUri: string = "uri";
   

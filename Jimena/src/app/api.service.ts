@@ -43,6 +43,14 @@ export class APIService {
     return this.http.get<any[]>(this.apiUrl+urlComplete);
   }
 
+  getInfoTree (urlTree): Observable<any[]> {
+    return this.http.get<any[]>(urlTree);
+  }
+
+  getAnnotation(urlAnnot): Observable<object> {
+    return this.http.get<object>(urlAnnot);
+  }
+
   getUserAnnotatios (userId): Observable<any[]> {
     var urlComplete = "data/annotation?creator="+userId;
     return this.http.get<any[]>(this.apiUrl+urlComplete);

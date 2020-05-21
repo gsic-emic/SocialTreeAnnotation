@@ -41,10 +41,12 @@
 
 <div [hidden]="!submitted">
   <div class="atras">
-    <button class="btn btn-outline-success" (click)="submitted=false"><i class="fas fa-angle-left"></i></button>
+    <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
     <div class="alert alert-warning m-1" role="alert">
       Para poder colaborar en las anotaciones necesitas estar <a [routerLink]="['/inicio_sesion']" class="alert-link">registrado</a>. 
     </div>
   </div>
-  <app-info-anotacion [tree]="tree_selected" [annotations]="annotations"></app-info-anotacion>
+  <app-info-anotacion [tree]="tree_selected" [annotations]="annotations" [IsPossitionAsserted]="IsPossitionAsserted" [IsSpeciesAsserted]="IsSpeciesAsserted">
+    <!--Componente que muestra toda la informacion del arbol que se ha selecionado-->
+  </app-info-anotacion>
 </div>

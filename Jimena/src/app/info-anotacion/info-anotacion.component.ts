@@ -12,6 +12,8 @@ export class InfoAnotacionComponent implements OnInit {
 
   @Input() tree: Tree; // El árbol que va a mostrar le llega como parámetro de entrada desde la lista completa
   @Input() annotations: Annotation[];
+  @Input () IsPossitionAsserted: boolean;
+  @Input() IsSpeciesAsserted: boolean;
 
   constructor() { }
 
