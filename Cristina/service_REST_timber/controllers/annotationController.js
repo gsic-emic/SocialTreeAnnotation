@@ -93,6 +93,8 @@ function getAnnotation(req, res) {
     arg.uri = "http://timber.gsic.uva.es/sta/data/annotation/" + req.params.annotationId;
     var response = {};
 
+    //No uso la caché
+    //if(cache.annotations[arg.uri] == undefined || cache.annotations[arg.uri] == {}){
     queryInterface.getData("details_allprop", arg, sparqlClient)
         .then((data) => {
             if (data.results.bindings.length == 0) {
@@ -100,12 +102,12 @@ function getAnnotation(req, res) {
             }
             else {
                 var id = req.params.annotationId;
-                cache.annotations[id] == undefined ? cache.annotations[id] = {} : cache.annotations[id];
-                response[id] = {};
+                cache.annotations[arg.uri] == undefined ? cache.annotations[arg.uri] = {} : cache.annotations[arg.uri];
+                response[arg.uri] = {};
 
                 data.results.bindings.forEach(element => {
-                    cache.annotations[id][element.prop.value] = element.value;
-                    response[id][element.prop.value] = cache.annotations[id][element.prop.value];
+                    cache.annotations[arg.uri][element.prop.value] = element.value;
+                    response[arg.uri][element.prop.value] = cache.annotations[arg.uri][element.prop.value];
                 });
                 res.status(200).send({ response });
             }
@@ -121,8 +123,18 @@ function getAnnotation(req, res) {
                 res.status(500).send(err);
             }
         });
+    /*}
+    else{
+        //Anotación cacheada
+        response[arg.uri] = {};
+        response[arg.uri]=cache.annotations[arg.uri];
+        res.status(200).send({ response });
+    }*/
 }
+
+
+
 module.exports = {
     getAnnotations,
-    getAnnotation
+    getAnnotation,
 }

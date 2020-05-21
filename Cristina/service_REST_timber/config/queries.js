@@ -243,6 +243,33 @@ queriesArray.push({
 });
 
 queriesArray.push({
+    'name': 'create_annotation_image',
+    'query': 'INSERT DATA \n \
+            { <'+ queryPrefixes.annotation + '{{id}}> a <{{{type}}}> ; \n \
+                                        dc:creator <{{{creator}}}> ; \n \
+                                        dc:created "{{date}}"^^xsd:date ;\n \
+                                        <'+ onturis.prHasImage + '> <{{{image}}}> . \n \
+            }'
+});
+
+queriesArray.push({
+    'name': 'create_annotation_species',
+    'query': 'INSERT DATA \n \
+            { <'+ queryPrefixes.annotation + '{{id}}> a <{{{type}}}> ; \n \
+                                        dc:creator <{{{creator}}}> ; \n \
+                                        dc:created "{{date}}"^^xsd:date ;\n \
+                                        <'+ onturis.prHasTaxon + '> <{{{species}}}> . \n \
+            }'
+});
+
+queriesArray.push({
+    'name': 'add_annotation_tree',
+    'query': 'INSERT DATA \n \
+            { <'+ queryPrefixes.tree + '{{id}}> <{{{hasAnnotation}}}> <{{{annotation}}}> .\n \
+            }'
+});
+
+queriesArray.push({
     'name': 'test_delete',
     'query': 'DELETE { \n \
                 ?tree ?p ?o } \n \
