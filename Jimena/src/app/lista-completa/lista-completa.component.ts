@@ -20,14 +20,7 @@ export class ListaCompletaComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    //esto es de prueba.... luego lo obtendré con una consulta a la api
-    this.annotations[0] = {id: "http://timber.gsic.uva.es/sta/data/annotation/003", creator: "Jimena", date: "27/04/2020", type: {specie: "Pino"}};
-    this.annotations[1] = {id: "http://timber.gsic.uva.es/sta/data/annotation/004", creator: "Juan", date: "20/04/2020", type: {hoja: "Acícula"}};
-    this.annotations[2] = {id: "http://timber.gsic.uva.es/sta/data/annotation/005", creator: "Maria", date: "06/05/2020", type: {fruto: "Castaña"}};
 
-
-
-    console.log(this.annotations);
   }
 
   // Variables de control

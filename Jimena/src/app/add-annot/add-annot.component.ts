@@ -16,22 +16,20 @@ export class AddAnnotComponent implements OnInit {
   
   //--------------------------------
   // Variables recogidas en el formulario
-  public tipo: Array<string> = ["Imagen", "Ubicación", "Especie", "Hoja", "Fruto"];
-  public type: string;
-  public imagen: string;
-  public lat: number;
-  public long: number;
-  public especie: string;
-  public hoja: string;
-  public fruto: string;
+   tipo: Array<string> = ["Imagen", "Ubicación", "Especie"];
+   type: string;
+   imagen: string;
+   lat: number;
+   long: number;
+   especie: string;
 
   //-----------------------------------
   // Variables de control
-  public submitted: boolean = false;
-  public submitted2: boolean = false;
+   submitted: boolean = false;
+   submitted2: boolean = false;
 
   //-----------------------------------
-  public newAnnot: Annotation;
+   newAnnot: Annotation;
 
 
   //-------------------------------------
@@ -39,11 +37,11 @@ export class AddAnnotComponent implements OnInit {
     this.submitted = true;
   }
   public onSubmit2(){
-    this.crearAnotacion();
+    //this.crearAnotacion();
     this.submitted2 = true;
     console.log(this.newAnnot);
   }
-  crearAnotacion(){
+  /*crearAnotacion(){
     let especTipo: string;
     // Diferencio el tipo de anotacion que se ha seleccionado
     switch (this.type){
@@ -56,14 +54,8 @@ export class AddAnnotComponent implements OnInit {
       case 'Especie': 
         this.newAnnot = {id: "????????", creator: "Jimena", date: "28/04/2020", type:{ specie: this.especie}};
         break;
-      case 'Hoja': 
-        this.newAnnot = {id: "????????", creator: "Jimena", date: "28/04/2020", type:{ hoja: this.hoja}};
-        break;
-      case 'Fruto': 
-        this.newAnnot = {id: "????????", creator: "Jimena", date: "28/04/2020", type:{ fruto: this.fruto}};
-        break; 
     }   
-  }
+  }*/
   //acción que vuelve al formulario CON los datos que se han introducido
   volver(){
     this.submitted = false;
@@ -74,9 +66,7 @@ export class AddAnnotComponent implements OnInit {
     this.lat = null;
     this.long = null;
     this.especie = null;
-    this.hoja = null;
     this.imagen = null;
-    this.fruto = null;
 
     this.volver();
   }
