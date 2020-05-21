@@ -11,9 +11,12 @@
 
   <!--Código para que se muestre el mapa-->
   <div *ngIf="mapa; else mostrarLista">
-    <div class="spinner-grow text-success" role="status" *ngIf="!terminado; else mostrarResultado">
-      <span class="sr-only">Loading...</span>
+    <div class="d-flex justify-content-center mt-10" *ngIf="!terminado; else mostrarResultado">
+      <div class="spinner-grow text-success" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
     </div>
+  
     <ng-template #mostrarResultado>
       <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error">
         <i class="fas fa-exclamation-circle"></i>
@@ -26,9 +29,12 @@
   <!--Código para que se muestren las anotaciones en formato de lista-->
   <!--Con ngFor recorro todos los elementos almacenados en la variable arboles[] -->
   <ng-template #mostrarLista>
-      <div class="spinner-grow text-success" role="status" *ngIf="!terminado; else mostrarResult">
+    <div class="d-flex justify-content-center mt-10" *ngIf="!terminado; else mostrarResult">
+      <div class="spinner-grow text-success" role="status">
         <span class="sr-only">Loading...</span>
       </div>
+    </div>
+      
       <ng-template #mostrarResult>
         <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error; else mostrarLista">
           <i class="fas fa-exclamation-circle"></i>
