@@ -75,7 +75,11 @@ function getTrees(req, res) {
                                 if (cache.trees[tree].creator != undefined && cache.trees[tree].lat != undefined && cache.trees[tree].long != undefined) {
                                     //console.log("Arbol " + tree + " cacheado");
                                     treesNoCache = treesNoCache.filter(e => e !== tree); //Elimino el árbol del array de árboles no cacheados
-                                    response[tree] = cache.trees[tree];
+                                    response[tree] = (response[tree]==undefined) ? {} : response[tree];
+                                    response[tree].creator = cache.trees[tree].creator;
+                                    response[tree].lat = cache.trees[tree].lat;
+                                    response[tree].long = cache.trees[tree].long;
+                                    response[tree].species = cache.trees[tree].species;
                                 }
                                 //Si le falta algún dato considero que no está cacheado y consulto
                                 else {
@@ -286,13 +290,22 @@ function getTrees(req, res) {
                             }
                             //COMPROBAR SI ESTÁN CACHEADOS, PARA CADA ÁRBOL
                             irisTrees.forEach(tree => {
+                                cache.trees[tree] = (cache.trees[tree]==undefined) ? {} : cache.trees[tree];
+                                cache.trees[tree].species = data_trees[tree][onturis.prHasTaxon][0].value;
                                 if (cache.trees[tree] != undefined) {
+                                    response[tree] = (response[tree]==undefined) ? {} : response[tree];
+                                    response[tree].species = cache.trees[tree].species;
+
                                     //console.log("Árbol cacheado, hay que ver si tengo guardados los datos que necesito devolver")
                                     //¿Si tengo un árbol cacheado tendré todos sus datos? Puede que tenga algunos sí y otros no cacheados y tenga que hacer las consultas de los que me faltan... PDTE IMPLEMENTAR
                                     if (cache.trees[tree].creator != undefined && cache.trees[tree].lat != undefined && cache.trees[tree].long != undefined) {
                                         //console.log("Arbol " + tree + " cacheado");
                                         treesNoCache = treesNoCache.filter(e => e !== tree); //Elimino el árbol del array de árboles no cacheados
-                                        response[tree] = cache.trees[tree];
+                                        response[tree] = (response[tree]==undefined) ? {} : response[tree];
+                                        response[tree].creator = cache.trees[tree].creator;
+                                        response[tree].lat = cache.trees[tree].lat;
+                                        response[tree].long = cache.trees[tree].long;
+                                        response[tree].species = cache.trees[tree].species;
                                     }
                                     //Si le falta algún dato considero que no está cacheado y consulto
                                     else {
@@ -328,7 +341,7 @@ function getTrees(req, res) {
 
 
                                 // Si es una propiedad del árbol
-                                propAnn = true;
+                                propAnn = false;
                                 params.propIris.push({ [onturis.dc_creator]: namesParamsJson[0] });
                                 setQuerys(params, propAnn, arg);
 
@@ -419,13 +432,23 @@ function getTrees(req, res) {
 
                             //COMPROBAR SI ESTÁN CACHEADOS, PARA CADA ÁRBOL
                             irisTrees.forEach(tree => {
+                                cache.trees[tree] = (cache.trees[tree]==undefined) ? {} : cache.trees[tree];
+                                cache.trees[tree].creator = data_trees[tree][onturis.dc_creator][0].value;
                                 if (cache.trees[tree] != undefined) {
+                                    response[tree] = (response[tree]==undefined) ? {} : response[tree];
+                                    response[tree].creator = cache.trees[tree].creator;
+
                                     //console.log("Árbol cacheado, hay que ver si tengo guardados los datos que necesito devolver")
                                     //¿Si tengo un árbol cacheado tendré todos sus datos? Puede que tenga algunos sí y otros no cacheados y tenga que hacer las consultas de los que me faltan... PDTE IMPLEMENTAR
                                     if (cache.trees[tree].creator != undefined && cache.trees[tree].lat != undefined && cache.trees[tree].long != undefined) {
-                                        //console.log("Arbol " + tree + " cacheado");
+                                        console.log("Arbol " + tree + " cacheado");
                                         treesNoCache = treesNoCache.filter(e => e !== tree); //Elimino el árbol del array de árboles no cacheados
-                                        response[tree] = cache.trees[tree];
+                                        response[tree] = (response[tree]==undefined) ? {} : response[tree];
+                                        response[tree].creator = cache.trees[tree].creator;
+                                        response[tree].lat = cache.trees[tree].lat;
+                                        response[tree].long = cache.trees[tree].long;
+                                        response[tree].species = cache.trees[tree].species;
+
                                     }
                                     //Si le falta algún dato considero que no está cacheado y consulto
                                     else {
@@ -491,8 +514,8 @@ function getTrees(req, res) {
                                         setTrees = data[j];
                                         parametro = namesParamsJson[j];
                                         Object.keys(setTrees).forEach(tree => {
-                                            cache.trees[tree] == undefined ? cache.trees[tree] = {} : cache.trees[tree];
-                                            response[tree] == undefined ? response[tree] = {} : response[tree];
+                                            cache.trees[tree] = (cache.trees[tree] == undefined) ? {} : cache.trees[tree];
+                                            response[tree] = (response[tree] == undefined) ? {} : response[tree];
                                             cache.trees[tree][parametro] = {};
                                             response[tree][parametro] = {};
                                             cache.trees[tree][parametro] = setTrees[tree][Object.keys(propIrisFull[i])[0]][0].value;
@@ -568,7 +591,11 @@ function getTrees(req, res) {
                                 if (cache.trees[tree].creator != undefined && cache.trees[tree].lat != undefined && cache.trees[tree].long != undefined) {
                                     //console.log("Arbol " + tree + " cacheado");
                                     treesNoCache = treesNoCache.filter(e => e !== tree); //Elimino el árbol del array de árboles no cacheados
-                                    response[tree] = cache.trees[tree];
+                                    response[tree] = (response[tree]==undefined) ? {} : response[tree];
+                                    response[tree].creator = cache.trees[tree].creator;
+                                    response[tree].lat = cache.trees[tree].lat;
+                                    response[tree].long = cache.trees[tree].long;
+                                    response[tree].species = cache.trees[tree].species;
                                 }
                                 //Si le falta algún dato considero que no está cacheado y consulto
                                 else {
@@ -766,33 +793,40 @@ function getTree(req, res) {
     arg.uri = "http://timber.gsic.uva.es/sta/data/tree/" + req.params.treeId;
     var response = {};
 
-    queryInterface.getData("details_allprop", arg, sparqlClient)
-        .then((data) => {
-            if (data.results.bindings.length == 0) {
-                res.status(404).send({ response: "El árbol no existe" });
-            }
-            else {
-                var idTree = req.params.treeId;
-                cache.trees[idTree] == undefined ? cache.trees[idTree] = {} : cache.trees[idTree];
-                response[idTree] = {};
+    //No uso la caché recupero siempre todos los datos
+    //if (cache.trees[arg.uri] == undefined || cache.trees[arg.uri] == {}) {
+        queryInterface.getData("details_allprop", arg, sparqlClient)
+            .then((data) => {
+                if (data.results.bindings.length == 0) {
+                    res.status(404).send({ response: "El árbol no existe" });
+                }
+                else {
+                    cache.trees[arg.uri] == undefined ? cache.trees[arg.uri] = {} : cache.trees[arg.uri];
+                    response[arg.uri] = {};
 
-                data.results.bindings.forEach(element => {
-                    cache.trees[idTree][element.prop.value] = element.value;
-                    response[idTree][element.prop.value] = cache.trees[idTree][element.prop.value];
-                });
-                res.status(200).send({ response });
-            }
-        })
-        .catch((err) => {
-            console.log("Error en conexión con endpoint");
-            if (err.statusCode != null && err.statusCode != undefined) {
-                res.status(err.statusCode).send({ message: err });
-            }
-            else {
-                err = err.message;
-                res.status(500).send(err);
-            }
-        });
+                    data.results.bindings.forEach(element => {
+                        cache.trees[arg.uri][element.prop.value] = element.value;
+                        response[arg.uri][element.prop.value] = cache.trees[arg.uri][element.prop.value];
+                    });
+                    res.status(200).send({ response });
+                }
+            })
+            .catch((err) => {
+                console.log("Error en conexión con endpoint");
+                if (err.statusCode != null && err.statusCode != undefined) {
+                    res.status(err.statusCode).send({ message: err });
+                }
+                else {
+                    err = err.message;
+                    res.status(500).send(err);
+                }
+            });
+    /*}
+    else {
+        response[arg.uri] = {};
+        response[arg.uri] = cache.trees[arg.uri];
+        res.status(200).send({ response });
+    }*/
 }
 
 
@@ -801,7 +835,10 @@ function createTree(req, res) {
     var arg = {};
     var parametersRequired = { creator: "creator", lat: "lat", long: "long" };
     var parametersOptional = { image: "image", species: "species" };
-
+    var querys = [];
+    var nameQuery = "";
+    var idsAnnotation = [];
+    var idAnnPosition;
     var flag = true;
 
     let bodyParameters = req.body;
@@ -811,12 +848,10 @@ function createTree(req, res) {
     //Parámetros obligatorios (pdte la fecha)
     Object.keys(parametersRequired).forEach(parametro => {
         if (bodyParameters[parametro] != undefined) {
-            if (parametro == parametersRequired.creator) {
+            if (parametro == parametersRequired.creator)
                 arg[parametersRequired.creator] = onturis.users + bodyParameters[parametersRequired.creator];
-            }
-            else {
+            else
                 arg[parametro] = bodyParameters[parametro];
-            }
         }
         else {
             flag = false;
@@ -825,32 +860,134 @@ function createTree(req, res) {
 
     if (flag) {
         console.log("Crear árbol y anotación de posición");
-        var dateISO;
-
-        arg.type = onturis.primaryPosition;
-        var idAnnot = helpers.generateId().id;
-        idAnnot = "p" + idTree + "-" + idAnnot;
-        arg.id = idAnnot;
-
-        //PDTE Crear todas las anotaciones de forma asíncrona y cuando se hayan creado crear el árbol (Promise.all, then)
 
         //Si hay más de 3 parámetros, entonces incluye opcionales como la especie y/o una imagen
         if (Object.keys(bodyParameters).length > 3) {
             //Hay imagen
             if (parametersOptional.image in bodyParameters) {
-                arg[parametersOptional.image] = bodyParameters[parametersOptional.image];
+                var imageBlob = bodyParameters[parametersOptional.image];
+
+                //Tengo que guardar el binario en el sistema de ficheros (escribo un fichero y lo guardo). Genero una uri para la imagen que será la que se almacena en el virtuoso.
+                var idImage = helpers.generateId().id;
+                arg[parametersOptional.image] = onturis.data + "image/" + idImage; //PENDIENTE PDTE
+
                 console.log("Crear anotación de imagen");
+                nameQuery = "create_annotation_image";
+                idsAnnotation.push(createAnnotation(arg, idTree, onturis.imageAnnotation, querys, nameQuery));
             }
             //Hay especie
             if (parametersOptional.species in bodyParameters) {
-                arg[parametersOptional.species] = bodyParameters[parametersOptional.species];
+                arg[parametersOptional.species] = onturis.ifn_ontology + bodyParameters[parametersOptional.species];
                 console.log("Crear anotación de especie");
+                nameQuery = "create_annotation_species";
+                idsAnnotation.push(createAnnotation(arg, idTree, onturis.primarySpecies, querys, nameQuery));
             }
         }
-        dateISO = helpers.getDateCreated();
-        arg.date = dateISO;
 
-        //Primero creo la anotación de posición de tipo Primaria para así asociársela al árbol en la creación
+        //Primero creo las anotaciones necesarias para así asociárselas al árbol en la creación
+        console.log("Crear anotación de posición");
+        nameQuery = "create_annotation_position";
+        idAnnPosition = createAnnotation(arg, idTree, onturis.primaryPosition, querys, nameQuery);
+        idsAnnotation.push(idAnnPosition);
+        Promise.all(querys).then((data) => {
+            var i = 0;
+            data.forEach(ann => {
+                //Compruebo que todas las anotaciones se han creado. Esta comprobación no es muy exhaustiva.
+                if (ann.results.bindings.length > 0) {
+                    console.log("Anotación " + idsAnnotation[i] + " creada");
+                    //Cachéo la anotación recién creada
+                    cache.putNewCreationInCache(idsAnnotation[i], onturis.annotation, cache.annotations).then((id) => {
+                        console.log("Anotación " + id + " cacheada");
+                    }).catch((err) => {
+                        console.log("Error cacheando anotación");
+                        if (err.statusCode != null && err.statusCode != undefined) {
+                            res.status(err.statusCode).send({ message: err });
+                        }
+                        else {
+                            err = err.message;
+                            res.status(500).send(err);
+                        }
+                    });
+                }
+                else {
+                    res.status(500).send({ error: "Error en la creación de la anotación " + idsAnnotation[i] });
+                }
+                i++;
+            })
+
+            //Creo el árbol y le asocio su anotación primaria de posición
+            arg.annotation = onturis.data + "annotation/" + idAnnPosition;
+            var dateISO = helpers.getDateCreated();
+            arg.date = dateISO;
+            arg.id = idTree;
+            queryInterface.getData("create_tree", arg, sparqlClient)
+                .then((data) => {
+                    if (data.results.bindings.length > 0) {
+                        console.log("Árbol creado");
+
+                        querys = [];
+                        arg = {};
+                        arg.id = idTree;
+
+                        //Si hay más anotaciones se las asocio como un UPDATE una vez creado el árbol
+                        idsAnnotation.forEach((ann) => {
+                            if (ann != idAnnPosition) {
+                                arg.annotation = onturis.data + "annotation/" + ann;
+                                if (ann.split("-")[0] == "s") {
+                                    arg.hasAnnotation = onturis.prHasPrimarySpecies;
+                                }
+                                else if (ann.split("-")[0] == "i") {
+                                    arg.hasAnnotation = onturis.prHasImageAnnotation;
+                                }
+                                querys.push(queryInterface.getData("add_annotation_tree", arg, sparqlClient));
+                            }
+                        });
+
+                        Promise.all(querys).then((data) => {
+                            // Redirijo al nuevo árbol si ha ido todo bien
+                            console.log("Árbol actualizado: se han asociado las anotaciones");
+                            res.redirect("tree/" + idTree)
+
+                            // Cachear información del árbol
+                            cache.putNewCreationInCache(idTree, onturis.tree, cache.trees).then((id) => {
+                                console.log("Árbol " + id + " cacheado");
+                            }).catch((err) => {
+                                console.log("Error cacheando árbol");
+                                if (err.statusCode != null && err.statusCode != undefined) {
+                                    res.status(err.statusCode).send({ message: err });
+                                }
+                                else {
+                                    err = err.message;
+                                    res.status(500).send(err);
+                                }
+                            });
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.log("Error en conexión con endpoint");
+                    if (err.statusCode != null && err.statusCode != undefined) {
+                        res.status(err.statusCode).send({ message: err });
+                    }
+                    else {
+                        err = err.message;
+                        res.status(500).send(err);
+                    }
+                });
+
+        })
+            .catch((err) => {
+                console.log("Error en conexión con endpoint");
+                if (err.statusCode != null && err.statusCode != undefined) {
+                    res.status(err.statusCode).send({ message: err });
+                }
+                else {
+                    err = err.message;
+                    res.status(500).send(err);
+                }
+            });
+
+        /*//Primero creo la anotación de posición de tipo Primaria para así asociársela al árbol en la creación
         queryInterface.getData("create_annotation_position", arg, sparqlClient)
             .then((data) => {
                 if (data.results.bindings.length > 0) {
@@ -888,7 +1025,8 @@ function createTree(req, res) {
                     err = err.message;
                     res.status(500).send(err);
                 }
-            });
+            });*/
+
     }
     else {
         res.status(400).send({ error: "Faltan campos obligatorios para la creación del árbol" });
@@ -943,6 +1081,28 @@ function setQuerys(params, propAnn, arg) {
     params.propIris = [];
 }
 
+
+function createAnnotation(arg, idTree, type, querys, nameQuery) {
+    var dateISO = helpers.getDateCreated();
+    arg.date = dateISO;
+    arg.type = type;
+    var idAnnot = helpers.generateId().id;
+    var stringType = "";
+    if (type == onturis.imageAnnotation)
+        stringType = "i";
+    else if (type == onturis.positionAnnotation || type == onturis.primaryPosition || type == onturis.assertedPosition)
+        stringType = "p";
+    else if (type == onturis.speciesAnnotation || type == onturis.primarySpecies || type == onturis.assertedSpecies)
+        stringType = "s";
+    else // No se debería dar nunca
+        stringType = "a";
+
+    idAnnot = stringType + "-" + idTree + "_" + idAnnot;
+    arg.id = idAnnot;
+
+    querys.push(queryInterface.getData(nameQuery, arg, sparqlClient));
+    return idAnnot;
+}
 
 module.exports = {
     getTrees,
