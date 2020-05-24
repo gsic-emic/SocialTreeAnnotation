@@ -17,13 +17,14 @@ function putNewCreationInCache(id, type, object){
         message="El árbol";
     }
 
-    arg.uri = "http://timber.gsic.uva.es/sta/data/"+string_url+"/" + id;
+    arg.uri = onturis.data + string_url + "/"+ id;
 
     var getInfo = function (resolve,reject){
         queryInterface.getData("details_allprop", arg, sparqlClient)
         .then((data) => {
             if (data.results.bindings.length == 0) {
-                res.status(404).send({ response: message + "no existe" });
+                //res.status(404).send({ response: message + "no existe" });
+                reject(arg.uri);
             }
             else {
                 object[arg.uri] == undefined ? object[arg.uri] = {} : object[arg.uri];
@@ -50,8 +51,16 @@ function putNewCreationInCache(id, type, object){
     return new Promise (getInfo);
 }
 
+function clearCache() {
+    console.log("\n#################################################################################################\n")
+    console.log("Limpieza de la caché: \n", Object.keys(trees).length, " árboles" + "\n" , Object.keys(annotations).length, " anotaciones" );
+    console.log("\n#################################################################################################\n")
+    trees = {};
+    annotations = {};
+}
 module.exports = {
     trees,
     annotations,
-    putNewCreationInCache
+    putNewCreationInCache,
+    clearCache
 }
