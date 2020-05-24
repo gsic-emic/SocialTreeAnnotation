@@ -2,6 +2,7 @@ const queryInterface = require('../helpers/queryInterface');
 var onturis = require('../config/onturis');
 var cache = require('../models/cache');
 const helpers = require('../helpers/helpers');
+const config = require('../config/config');
 
 var treesNoCache = [];
 
@@ -75,7 +76,7 @@ function getTrees(req, res) {
                                 if (cache.trees[tree].creator != undefined && cache.trees[tree].lat != undefined && cache.trees[tree].long != undefined) {
                                     //console.log("Arbol " + tree + " cacheado");
                                     treesNoCache = treesNoCache.filter(e => e !== tree); //Elimino el árbol del array de árboles no cacheados
-                                    response[tree] = (response[tree]==undefined) ? {} : response[tree];
+                                    response[tree] = (response[tree] == undefined) ? {} : response[tree];
                                     response[tree].creator = cache.trees[tree].creator;
                                     response[tree].lat = cache.trees[tree].lat;
                                     response[tree].long = cache.trees[tree].long;
@@ -290,10 +291,10 @@ function getTrees(req, res) {
                             }
                             //COMPROBAR SI ESTÁN CACHEADOS, PARA CADA ÁRBOL
                             irisTrees.forEach(tree => {
-                                cache.trees[tree] = (cache.trees[tree]==undefined) ? {} : cache.trees[tree];
+                                cache.trees[tree] = (cache.trees[tree] == undefined) ? {} : cache.trees[tree];
                                 cache.trees[tree].species = data_trees[tree][onturis.prHasTaxon][0].value;
                                 if (cache.trees[tree] != undefined) {
-                                    response[tree] = (response[tree]==undefined) ? {} : response[tree];
+                                    response[tree] = (response[tree] == undefined) ? {} : response[tree];
                                     response[tree].species = cache.trees[tree].species;
 
                                     //console.log("Árbol cacheado, hay que ver si tengo guardados los datos que necesito devolver")
@@ -301,7 +302,7 @@ function getTrees(req, res) {
                                     if (cache.trees[tree].creator != undefined && cache.trees[tree].lat != undefined && cache.trees[tree].long != undefined) {
                                         //console.log("Arbol " + tree + " cacheado");
                                         treesNoCache = treesNoCache.filter(e => e !== tree); //Elimino el árbol del array de árboles no cacheados
-                                        response[tree] = (response[tree]==undefined) ? {} : response[tree];
+                                        response[tree] = (response[tree] == undefined) ? {} : response[tree];
                                         response[tree].creator = cache.trees[tree].creator;
                                         response[tree].lat = cache.trees[tree].lat;
                                         response[tree].long = cache.trees[tree].long;
@@ -432,10 +433,10 @@ function getTrees(req, res) {
 
                             //COMPROBAR SI ESTÁN CACHEADOS, PARA CADA ÁRBOL
                             irisTrees.forEach(tree => {
-                                cache.trees[tree] = (cache.trees[tree]==undefined) ? {} : cache.trees[tree];
+                                cache.trees[tree] = (cache.trees[tree] == undefined) ? {} : cache.trees[tree];
                                 cache.trees[tree].creator = data_trees[tree][onturis.dc_creator][0].value;
                                 if (cache.trees[tree] != undefined) {
-                                    response[tree] = (response[tree]==undefined) ? {} : response[tree];
+                                    response[tree] = (response[tree] == undefined) ? {} : response[tree];
                                     response[tree].creator = cache.trees[tree].creator;
 
                                     //console.log("Árbol cacheado, hay que ver si tengo guardados los datos que necesito devolver")
@@ -443,7 +444,7 @@ function getTrees(req, res) {
                                     if (cache.trees[tree].creator != undefined && cache.trees[tree].lat != undefined && cache.trees[tree].long != undefined) {
                                         console.log("Arbol " + tree + " cacheado");
                                         treesNoCache = treesNoCache.filter(e => e !== tree); //Elimino el árbol del array de árboles no cacheados
-                                        response[tree] = (response[tree]==undefined) ? {} : response[tree];
+                                        response[tree] = (response[tree] == undefined) ? {} : response[tree];
                                         response[tree].creator = cache.trees[tree].creator;
                                         response[tree].lat = cache.trees[tree].lat;
                                         response[tree].long = cache.trees[tree].long;
@@ -591,7 +592,7 @@ function getTrees(req, res) {
                                 if (cache.trees[tree].creator != undefined && cache.trees[tree].lat != undefined && cache.trees[tree].long != undefined) {
                                     //console.log("Arbol " + tree + " cacheado");
                                     treesNoCache = treesNoCache.filter(e => e !== tree); //Elimino el árbol del array de árboles no cacheados
-                                    response[tree] = (response[tree]==undefined) ? {} : response[tree];
+                                    response[tree] = (response[tree] == undefined) ? {} : response[tree];
                                     response[tree].creator = cache.trees[tree].creator;
                                     response[tree].lat = cache.trees[tree].lat;
                                     response[tree].long = cache.trees[tree].long;
@@ -790,11 +791,15 @@ function getTrees(req, res) {
 function getTree(req, res) {
     sparqlClient.setDefaultGraph();
     var arg = {};
-    arg.uri = "http://timber.gsic.uva.es/sta/data/tree/" + req.params.treeId;
+    arg.uri = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
     var response = {};
 
-    //No uso la caché recupero siempre todos los datos
-    //if (cache.trees[arg.uri] == undefined || cache.trees[arg.uri] == {}) {
+    if (cache.trees[arg.uri] != undefined &&  cache.trees[arg.uri][onturis.dc_created] != undefined) {
+        response[arg.uri] = (response[arg.uri] == undefined)? {}: response[arg.uri];
+        response[arg.uri] = cache.trees[arg.uri];
+        res.status(200).send({ response });
+    }
+    else {
         queryInterface.getData("details_allprop", arg, sparqlClient)
             .then((data) => {
                 if (data.results.bindings.length == 0) {
@@ -802,7 +807,7 @@ function getTree(req, res) {
                 }
                 else {
                     cache.trees[arg.uri] == undefined ? cache.trees[arg.uri] = {} : cache.trees[arg.uri];
-                    response[arg.uri] = {};
+                    response[arg.uri] = cache.trees[arg.uri];
 
                     data.results.bindings.forEach(element => {
                         cache.trees[arg.uri][element.prop.value] = element.value;
@@ -821,12 +826,7 @@ function getTree(req, res) {
                     res.status(500).send(err);
                 }
             });
-    /*}
-    else {
-        response[arg.uri] = {};
-        response[arg.uri] = cache.trees[arg.uri];
-        res.status(200).send({ response });
-    }*/
+    }
 }
 
 
@@ -842,8 +842,9 @@ function createTree(req, res) {
     var flag = true;
 
     let bodyParameters = req.body;
+    console.log(bodyParameters)
 
-    sparqlClient.setDefaultGraph('http://timber.gsic.uva.es');
+    sparqlClient.setDefaultGraph(config.defaultGraph);
 
     //Parámetros obligatorios (pdte la fecha)
     Object.keys(parametersRequired).forEach(parametro => {
@@ -946,7 +947,7 @@ function createTree(req, res) {
                         Promise.all(querys).then((data) => {
                             // Redirijo al nuevo árbol si ha ido todo bien
                             console.log("Árbol actualizado: se han asociado las anotaciones");
-                            res.redirect("tree/" + idTree)
+                            res.redirect(idTree)
 
                             // Cachear información del árbol
                             cache.putNewCreationInCache(idTree, onturis.tree, cache.trees).then((id) => {
@@ -1038,7 +1039,7 @@ function createTree(req, res) {
 function deleteTree(req, res) {
     var id = req.params.treeId;
     console.log(id)
-    sparqlClient.setDefaultGraph('http://timber.gsic.uva.es');
+    sparqlClient.setDefaultGraph(config.defaultGraph);
     queryInterface.getData("test_delete", {}, sparqlClient)
         .then((data) => {
             console.log(data)
