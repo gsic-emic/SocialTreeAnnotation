@@ -10,8 +10,7 @@
   <!-- La variable mapa está inicializada a true, en el momento que se pinche a lista, cambia a false y se muestra la lista-->
 
   <!--Código para que se muestre el mapa-->
-  <div *ngIf="mapa; else mostrarLista">
-    <div class="d-flex justify-content-center mt-10" *ngIf="!terminado; else mostrarResultado">
+    <div class="d-flex justify-content-center mt-10" *ngIf="!terminado_species; else mostrarResultado">
       <div class="spinner-grow text-success" role="status">
         <span class="sr-only">Loading...</span>
       </div>
@@ -22,27 +21,10 @@
         <i class="fas fa-exclamation-circle"></i>
         Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde
       </div>
-      <app-mapa [trees]="trees"></app-mapa>
+      <app-mapa [objSpecies]="objSpecies" [mapa]="mapa"></app-mapa>
     </ng-template>
-  </div>
 
-  <!--Código para que se muestren las anotaciones en formato de lista-->
-  <!--Con ngFor recorro todos los elementos almacenados en la variable arboles[] -->
-  <ng-template #mostrarLista>
-    <div class="d-flex justify-content-center mt-10" *ngIf="!terminado; else mostrarResult">
-      <div class="spinner-grow text-success" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-    </div>
-      
-      <ng-template #mostrarResult>
-        <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error; else mostrarLista">
-          <i class="fas fa-exclamation-circle"></i>
-          Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde o recargue la página
-        </div>
-        <ng-template #mostrarLista>
-          <app-lista [trees]="trees" [SPECIES]="objSpecies"></app-lista> <!--Componente que contiene la lista para mostrar los arboles-->
-        </ng-template>
-    </ng-template>
-  </ng-template>
+
+  
+  
 </div>

@@ -1,60 +1,64 @@
-<div [hidden]="submitted">
-<div class="d-flex flex-wrap justify-content-center p-2 m-2">
-    <div class="card m-1 mb-3 flex-fill" style="max-width: 520px;" *ngFor="let tree of trees; index as i">
-      <div class="row no-gutters">
-        <div class="col-md-8">
-          <div class="card-body">
-            <h1 class="card-title">{{tree.species}}</h1>
-            <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{tree.creator}}</small></h5>
-            <p class="card-text"> <i class="fas fa-map-marker-alt"></i> [{{tree.lat}},  {{tree.long}}]</p>
-            <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i>{{tree.date}}</small></p>
+
+  <div [hidden]="submitted">
+    <!--Con ngFor recorro todos los elementos almacenados en la variable trees[] -->
+  <div class="d-flex flex-wrap justify-content-center p-2 m-2">
+      <div class="card m-1 mb-3 flex-fill" style="max-width: 520px;" *ngFor="let tree of trees; index as i">
+        <div class="row no-gutters">
+          <div class="col-md-8">
+            <div class="card-body">
+              <h1 class="card-title">{{tree.species}}</h1>
+              <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{tree.creator}}</small></h5>
+              <p class="card-text"> <i class="fas fa-map-marker-alt"></i> [{{tree.lat}},  {{tree.long}}]</p>
+              <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i>{{tree.date}}</small></p>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex justify-content-center align-items-center mb-1">
+            <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
+              <button type="submit" class="btn btn-success py-3" (click)="obtenerIdSelecionado(tree)" [disabled]="!listaForm.form.valid"><i class="fas fa-plus"></i> Ver más</button>
+            </form>
           </div>
         </div>
-        <div class="col-md-4 d-flex justify-content-center align-items-center mb-1">
-          <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
-            <button type="submit" class="btn btn-success py-3" (click)="obtenerIdSelecionado(tree)" [disabled]="!listaForm.form.valid"><i class="fas fa-plus"></i> Ver más</button>
-          </form>
+      </div>
+    </div>
+    <!--Paginación: de momento no lo pongo-->
+    <!--<nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a class="page-link" [routerLink]="['/']" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li> 
+        <li class="page-item"><a class="page-link" [routerLink]="['/']">1</a></li>
+        <li class="page-item"><a class="page-link" [routerLink]="['/']">2</a></li>
+        <li class="page-item"><a class="page-link" [routerLink]="['/']">3</a></li>
+        <li class="page-item">
+          <a class="page-link" [routerLink]="['/']" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>-->
+    <br><br>
+  </div>
+
+  <div [hidden]="!submitted">
+    <div class="d-flex justify-content-center mt-10" *ngIf="!terminado; else mostrarResult">
+      <div class="spinner-grow text-success" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+    <ng-template #mostrarResult>
+      <div class="atras">
+        <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
+        <div class="alert alert-warning m-1" role="alert">
+          Para poder colaborar en las anotaciones necesitas estar <a [routerLink]="['/inicio_sesion']" class="alert-link">registrado</a>. 
         </div>
       </div>
-    </div>
-  </div>
-  <!--Paginación-->
-  <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-      <li class="page-item">
-        <a class="page-link" [routerLink]="['/']" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li> <!--metiendo "active" en la clase hago que se pinte el actual-->
-      <li class="page-item"><a class="page-link" [routerLink]="['/']">1</a></li>
-      <li class="page-item"><a class="page-link" [routerLink]="['/']">2</a></li>
-      <li class="page-item"><a class="page-link" [routerLink]="['/']">3</a></li>
-      <li class="page-item">
-        <a class="page-link" [routerLink]="['/']" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
-  <br><br>
-</div>
-
-<div [hidden]="!submitted">
-  <div class="d-flex justify-content-center mt-10" *ngIf="!terminado; else mostrarResult">
-    <div class="spinner-grow text-success" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
+      <app-info-anotacion [tree]="tree_selected" [annotations]="annotations" [IsPossitionAsserted]="IsPossitionAsserted" [IsSpeciesAsserted]="IsSpeciesAsserted">
+        <!--Componente que muestra toda la informacion del arbol que se ha selecionado-->
+      </app-info-anotacion>
+    </ng-template>
   </div>
 
-  <ng-template #mostrarResult>
-    <div class="atras">
-      <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
-      <div class="alert alert-warning m-1" role="alert">
-        Para poder colaborar en las anotaciones necesitas estar <a [routerLink]="['/inicio_sesion']" class="alert-link">registrado</a>. 
-      </div>
-    </div>
-    <app-info-anotacion [tree]="tree_selected" [annotations]="annotations" [IsPossitionAsserted]="IsPossitionAsserted" [IsSpeciesAsserted]="IsSpeciesAsserted">
-      <!--Componente que muestra toda la informacion del arbol que se ha selecionado-->
-    </app-info-anotacion>
-  </ng-template>
-</div>
+

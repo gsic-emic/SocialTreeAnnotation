@@ -79,6 +79,7 @@ export class MisAnotacionesComponent implements OnInit {
       },
       () =>{
         this.terminado = true;
+        console.log("se han cargado todos los arboles");
       }
       );
   }

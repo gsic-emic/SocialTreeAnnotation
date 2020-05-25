@@ -13,6 +13,7 @@ export class ListaComponent implements OnInit {
 
   @Input() trees: Tree[]; // Los árboles a mostrar llegan como parámetro de entrada
   @Input() SPECIES: object;
+  
   tree_selected: Tree;
   objInfoTree: object = [];
   objAnnot: object = [];
