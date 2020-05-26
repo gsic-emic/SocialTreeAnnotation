@@ -4,9 +4,9 @@
 export interface Annotation {
     id: string;
     creator: string;
-    date: string;
-    primary: boolean; // Controla si es la anotación más votada
-    asserted: boolean;
+    date?: string;
+    primary?: boolean; // Controla si es la anotación más votada
+    asserted?: boolean;
     type: {
       image?: string; //el caracter '?' me indica que estas propiedades son opcionales
       location?: {

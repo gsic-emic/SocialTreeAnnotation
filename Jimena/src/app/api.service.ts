@@ -60,8 +60,8 @@ export class APIService {
 
   /*********************** CREACIÓN DE DATOS EN EL SERVIDOR ******************************/
   createTree(datos: string): Observable<string> {
-    //Construyo el JSON que necesita el backend
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+    // Cabecera necesaria
+    let headers = new HttpHeaders().set('Content-Type','application/json');
     return this.http.post<string>(this.url_postTree, datos, {headers: headers}); //¿necesito cabeceras?
   }
 

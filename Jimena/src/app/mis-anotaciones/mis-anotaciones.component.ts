@@ -18,7 +18,7 @@ export class MisAnotacionesComponent implements OnInit {
   terminado: boolean = false;
   terminado_species: boolean = false;
   terminado_anot: boolean = false;
-  user: string = "ifn";
+  user: string = "Jimena";
 
   // Variables de almacenamiento de los daros recuperados------------------------
   objSpecies: object[]=[];

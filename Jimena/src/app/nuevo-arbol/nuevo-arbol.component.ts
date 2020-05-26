@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Tree } from '../tree';
+import { Tree_complete } from '../tree_complete';
 import { APIService} from '../api.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { APIService} from '../api.service';
 export class NuevoArbolComponent implements OnInit {
 
   // Variables para recoger los datos del cuestionario
-  public newTree: Tree;
+  newTree: Tree_complete;
   public lat: number;
   public long: number;
   public especie: string;
@@ -55,15 +55,18 @@ export class NuevoArbolComponent implements OnInit {
   }
   //contstruyo el arbol, lo convierto a JSON y hago un POST a la api
   public createTree(){
-    this.newTree = {creator:  "Jimena", lat: this.lat, long: this.long };
-    //console.log(JSON.stringify(this.newTree));
-    let prueba = "{creator: Jimena, lat:56, long:3}";
-    console.log(prueba);
+    this.newTree = {creator:  this.creador, lat: this.lat, long: this.long };
 
+    // Compruebo si también mete la especie y la añado a la cadena
+    if (this.especie != null){
+        this.newTree.species = this.especie;
+    }
 
+    console.log(JSON.stringify(this.newTree));
     // POST a la api
-    this.api.createTree(prueba).subscribe(
+    this.api.createTree(JSON.stringify(this.newTree)).subscribe(
       (data) =>{
+        console.log(data);
       },
       (error) =>{
         console.error(error);
