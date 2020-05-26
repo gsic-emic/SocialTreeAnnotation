@@ -9,10 +9,12 @@ import { Tree } from './tree';
 })
 export class APIService {
 
-  private apiUrl = 'http://localhost:8888/sta/';  // URL to web api 
+  apiUrl = 'http://localhost:8888/sta/';  // URL to web api 
+  url_postTree = 'http://localhost:8888/sta/data/tree';
                                       
 
   constructor( private http: HttpClient) { }
+  /*********************** RECUPERACIÓN DE DATOS DEL SERVIDOR *****************************+*/
 
   /* GET all the trees storaged on the system */
   getTrees(url: string): Observable<string>{
@@ -55,5 +57,13 @@ export class APIService {
     var urlComplete = "data/annotation?creator="+userId;
     return this.http.get<any[]>(this.apiUrl+urlComplete);
   }
+
+  /*********************** CREACIÓN DE DATOS EN EL SERVIDOR ******************************/
+  createTree(datos: string): Observable<string> {
+    //Construyo el JSON que necesita el backend
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+    return this.http.post<string>(this.url_postTree, datos, {headers: headers}); //¿necesito cabeceras?
+  }
+
 
 }

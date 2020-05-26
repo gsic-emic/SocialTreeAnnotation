@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Tree } from '../tree';
+import { APIService} from '../api.service';
 
 @Component({
   selector: 'app-nuevo-arbol',
@@ -23,7 +24,7 @@ export class NuevoArbolComponent implements OnInit {
   public submitted: boolean = false;
   public confirmacion: boolean = false;
 
-  constructor() { }
+  constructor(private api: APIService) { }
 
   ngOnInit(): void {
   }
@@ -52,14 +53,26 @@ export class NuevoArbolComponent implements OnInit {
     this.volver();
     this.confirmacion = false;
   }
-  public createTree(id: string, latitud: number, longitud: number, specie: string, creator: string, image: string, date: string){
-    let tree = { id: id, lat: latitud, long: longitud, species: specie, creator:  creator, image: image, date: date};
-    console.log("Se ha creado el siguiente árbol: "+ tree.id +":"+tree.lat, tree.long + "especie:"+tree.species);
-    return tree;
+  //contstruyo el arbol, lo convierto a JSON y hago un POST a la api
+  public createTree(){
+    this.newTree = {creator:  "Jimena", lat: this.lat, long: this.long };
+    //console.log(JSON.stringify(this.newTree));
+    let prueba = "{creator: Jimena, lat:56, long:3}";
+    console.log(prueba);
+
+
+    // POST a la api
+    this.api.createTree(prueba).subscribe(
+      (data) =>{
+      },
+      (error) =>{
+        console.error(error);
+      },
+      () =>{
+      }
+      );
   }
-  public saveNewTree(){
-    this.newTree = this.createTree('', this.lat, this.long, this.especie, this.creador, this.imagen, this.fecha);
-  }
+  
   public construirFecha(): string{
     var f = new Date();
     var fecha;
