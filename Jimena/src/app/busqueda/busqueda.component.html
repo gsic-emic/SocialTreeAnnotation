@@ -37,10 +37,10 @@
                 Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde
             </div>
             <div *ngIf="! activar_filtro; else filtrar"> <!--se muestran todos los arboles en el mapa-->
-                <app-mapa ></app-mapa>
+                <app-mapa [objSpecies]="objSpecies"></app-mapa>
             </div>
             <ng-template #filtrar>
-                <app-mapa ></app-mapa> <!-- se muestran los arboles filtrados en el mapa-->
+                <app-mapa [objSpecies]="objSpecies"></app-mapa> <!-- se muestran los arboles filtrados en el mapa-->
             </ng-template>
         </ng-template>  
     </div>
