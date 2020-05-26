@@ -12,8 +12,8 @@ const api = express.Router();
 
 var urls = {
     root: '/',
-    users: '/user',
-    user: '/user/:userId',
+    users: '/data/user',
+    user: '/data/user/:userId',
     trees: '/data/tree',
     tree: '/data/tree/:treeId',
     annotations: '/data/annotation',
@@ -53,8 +53,7 @@ api.post(urls.trees, treeController.createTree);
 api.get(urls.tree, treeController.getTree);
 api.delete(urls.tree, treeController.deleteTree); 
 
-/*api.put(urls.tree, treeController.updateTree);
-*/
+
 
 //Anotaciones
 api.get(urls.annotations, annotationController.getAnnotations);
@@ -62,8 +61,10 @@ api.get(urls.annotation, annotationController.getAnnotation);
 /* api.post(urls.annotations, annotationController.createAnnotation);
 api.put(urls.annotation, annotationController.updateAnnotation);
 api.delete(urls.annotation, annotationController.deleteAnnotation);
-
+*/
 //Imágenes y partes
+api.post(urls.images, imageController.createImageAnnotation);
+/*
 api.get(urls.images, imageController.getImages);
 api.post(urls.images, imageController.createImage);
 api.get(urls.image, imageController.getImage);

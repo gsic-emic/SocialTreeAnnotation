@@ -3,6 +3,7 @@ var onturis = require('../config/onturis');
 var cache = require('../models/cache');
 const helpers = require('../helpers/helpers');
 const config = require('../config/config');
+const imageController = require ('./imageController');
 
 var treesNoCache = [];
 
@@ -841,6 +842,8 @@ function createTree(req, res) {
     var idAnnPosition;
     var flag = true;
 
+    var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl ;
+
     let bodyParameters = req.body;
     console.log(bodyParameters)
 
@@ -850,7 +853,7 @@ function createTree(req, res) {
     Object.keys(parametersRequired).forEach(parametro => {
         if (bodyParameters[parametro] != undefined) {
             if (parametro == parametersRequired.creator)
-                arg[parametersRequired.creator] = onturis.users + bodyParameters[parametersRequired.creator];
+                arg[parametersRequired.creator] = bodyParameters[parametersRequired.creator];
             else
                 arg[parametro] = bodyParameters[parametro];
         }
@@ -867,18 +870,17 @@ function createTree(req, res) {
             //Hay imagen
             if (parametersOptional.image in bodyParameters) {
                 var imageBlob = bodyParameters[parametersOptional.image];
-
-                //Tengo que guardar el binario en el sistema de ficheros (escribo un fichero y lo guardo). Genero una uri para la imagen que será la que se almacena en el virtuoso.
-                var idImage = helpers.generateId().id;
-                arg[parametersOptional.image] = onturis.data + "image/" + idImage; //PENDIENTE PDTE
+                var idImage = imageController.uploadImage2SF(idTree,imageBlob);
+                arg[parametersOptional.image] = config.uri_images + idImage;
 
                 console.log("Crear anotación de imagen");
                 nameQuery = "create_annotation_image";
+
                 idsAnnotation.push(createAnnotation(arg, idTree, onturis.imageAnnotation, querys, nameQuery));
             }
             //Hay especie
             if (parametersOptional.species in bodyParameters) {
-                arg[parametersOptional.species] = onturis.ifn_ontology + bodyParameters[parametersOptional.species];
+                arg[parametersOptional.species] = bodyParameters[parametersOptional.species];
                 console.log("Crear anotación de especie");
                 nameQuery = "create_annotation_species";
                 idsAnnotation.push(createAnnotation(arg, idTree, onturis.primarySpecies, querys, nameQuery));
@@ -947,7 +949,7 @@ function createTree(req, res) {
                         Promise.all(querys).then((data) => {
                             // Redirijo al nuevo árbol si ha ido todo bien
                             console.log("Árbol actualizado: se han asociado las anotaciones");
-                            res.redirect(idTree)
+                            res.redirect("tree/"+idTree)
 
                             // Cachear información del árbol
                             cache.putNewCreationInCache(idTree, onturis.tree, cache.trees).then((id) => {
@@ -1038,7 +1040,7 @@ function createTree(req, res) {
 
 function deleteTree(req, res) {
     var id = req.params.treeId;
-    console.log(id)
+    /*console.log(id)
     sparqlClient.setDefaultGraph(config.defaultGraph);
     queryInterface.getData("test_delete", {}, sparqlClient)
         .then((data) => {
@@ -1055,6 +1057,8 @@ function deleteTree(req, res) {
                 res.status(500).send(err);
             }
         });
+        */
+    res.status(200).send({"response": "Se eliminaría el árbol " +id});
 }
 
 
