@@ -42,54 +42,12 @@ var TimberApp = function () {
 		/**
 		 * Middlewares 
 		 */
-		self.app.use(bodyParser.json());// Para crear objeto body en la petición y admitir métodos HTTP con Content-Type json
+		self.app.use(bodyParser.json({limit: '10mb', extended: true}))
+		//self.app.use(bodyParser.urlencoded({limit: '10mb', extended: true}))
+
+		//self.app.use(bodyParser.json());// Para crear objeto body en la petición y admitir métodos HTTP con Content-Type json
 		self.app.use('/sta', api);
-
-		//BORRAR 
-
-		/*self.app.get('/', (req, res) => {
-			//Devuelve una promise, se usa then(), catch() para consumir la promesa
-			queryInterface.getData("test",{},sparqlClient).then((data) => {
-				console.log("Conexión con endpoint OK");
-				res.status(200).send(data.results.bindings);
-			})
-			.catch((err) => { 
-				console.log("Error en conexión con endpoint");
-				if(err.statusCode!= null && err.statusCode!=undefined ){
-					res.status(err.statusCode).send({message: err});
-				}
-				else{ 
-					res.status(500).send({message: err});
-				}
-			});
-		}); 
-		/*self.app.get('/test/:testId', (req, res) => {	
-			res.send({ message: `Hola ${req.params.testId}` });
-		});*/
-		/*self.app.get('/test', (req, res) => { 
-			var data_return = [];
-			var variables = ["s", "p", "o"];
-			var query = 'SELECT ?' + variables[0] + ' ?' + variables[1] + ' ?' + variables[2] + ' WHERE { ?' + variables[0] + ' ?' + variables[1] + ' ?' + variables[2] + ' .} LIMIT 5';
-
-			sparqlClient.query(query)
-				.then((data) => { 
-					data.results.bindings.forEach(element => {
-						//console.log(element[variables[0]]);
-						data_return.push(element);
-					});
-					res.contentType('application/json');
-					res.json(data_return);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		});*/
 	};
-	/*self.initSPARQL = function () {
-		self.sparqlClient = new Client(config.endpoint);
-		self.sparqlClient.setOptions("application/json");
-		self.sparqlClient.setQueryGraph(config.defaultGraph);
-	};*/
 };
 
 //Main

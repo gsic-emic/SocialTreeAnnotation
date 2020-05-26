@@ -6,5 +6,6 @@ module.exports = {
     pwd: "d0Niq2VWmI",
     authType: "Basic",
     lenghtId: 5,
-    timeClearCache_ms: 24*3600*1000
+    timeClearCache_ms: 24*3600*1000,
+    directoryImage: '/home/ubuntu/nginx/html/data/images/'
   }

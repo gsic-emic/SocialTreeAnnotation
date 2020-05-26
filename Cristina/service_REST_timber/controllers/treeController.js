@@ -947,7 +947,7 @@ function createTree(req, res) {
                         Promise.all(querys).then((data) => {
                             // Redirijo al nuevo árbol si ha ido todo bien
                             console.log("Árbol actualizado: se han asociado las anotaciones");
-                            res.redirect(idTree)
+                            res.redirect("tree/"+idTree)
 
                             // Cachear información del árbol
                             cache.putNewCreationInCache(idTree, onturis.tree, cache.trees).then((id) => {
@@ -1038,7 +1038,7 @@ function createTree(req, res) {
 
 function deleteTree(req, res) {
     var id = req.params.treeId;
-    console.log(id)
+    /*console.log(id)
     sparqlClient.setDefaultGraph(config.defaultGraph);
     queryInterface.getData("test_delete", {}, sparqlClient)
         .then((data) => {
@@ -1055,6 +1055,8 @@ function deleteTree(req, res) {
                 res.status(500).send(err);
             }
         });
+        */
+    res.status(200).send({"response": "Se eliminaría el árbol " +id});
 }
 
 
