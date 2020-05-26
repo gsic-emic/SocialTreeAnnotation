@@ -7,7 +7,7 @@ function initSPARQL () {
     var auth = config.authType + " " + btoa(config.user + ':' + config.pwd);
     sparqlClient = new Client(config.endpoint, auth);
     sparqlClient.setDefaultFormat("application/json");
-    sparqlClient.setDefaultGraph(config.defaultGraph);
+    sparqlClient.setDefaultGraph();
     return sparqlClient;
 };
 module.exports = { initSPARQL }
