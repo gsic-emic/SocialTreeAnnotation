@@ -792,7 +792,7 @@ function getTrees(req, res) {
 function getTree(req, res) {
     sparqlClient.setDefaultGraph();
     var arg = {};
-    arg.uri = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
+    arg.uri = "http://timber.gsic.uva.es/sta/data/tree/" + req.params.treeId;;
     var response = {};
 
     if (cache.trees[arg.uri] != undefined &&  cache.trees[arg.uri][onturis.dc_created] != undefined) {
