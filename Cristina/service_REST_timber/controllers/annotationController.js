@@ -90,11 +90,15 @@ function getAnnotations(req, res) {
 }
 function getAnnotation(req, res) {
     var arg = {};
-    arg.uri = "http://timber.gsic.uva.es/sta/data/annotation/" + req.params.annotationId;
+    arg.uri = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
     var response = {};
 
-    //No uso la caché
-    //if(cache.annotations[arg.uri] == undefined || cache.annotations[arg.uri] == {}){
+    if (cache.annotations[arg.uri] != undefined &&  cache.annotations[arg.uri][onturis.dc_created] != undefined) {
+        response[arg.uri] = (response[arg.uri] == undefined)? {}: response[arg.uri];
+        response[arg.uri] = cache.annotations[arg.uri];
+        res.status(200).send({ response });
+    }
+    else {
     queryInterface.getData("details_allprop", arg, sparqlClient)
         .then((data) => {
             if (data.results.bindings.length == 0) {
@@ -123,13 +127,7 @@ function getAnnotation(req, res) {
                 res.status(500).send(err);
             }
         });
-    /*}
-    else{
-        //Anotación cacheada
-        response[arg.uri] = {};
-        response[arg.uri]=cache.annotations[arg.uri];
-        res.status(200).send({ response });
-    }*/
+    }
 }
 
 
