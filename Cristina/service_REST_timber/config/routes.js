@@ -63,7 +63,7 @@ api.put(urls.annotation, annotationController.updateAnnotation);
 api.delete(urls.annotation, annotationController.deleteAnnotation);
 */
 //Imágenes y partes
-api.post(urls.images, imageController.createImage);
+api.post(urls.images, imageController.createImageAnnotation);
 /*
 api.get(urls.images, imageController.getImages);
 api.post(urls.images, imageController.createImage);

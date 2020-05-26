@@ -7,5 +7,6 @@ module.exports = {
     authType: "Basic",
     lenghtId: 5,
     timeClearCache_ms: 24*3600*1000,
-    directoryImage: '/home/ubuntu/nginx/html/data/images/'
+    directorySaveImages: '/home/ubuntu/nginx/html/data/images/',
+    uri_images: 'http://timber.gsic.uva.es/data/images/'
   }

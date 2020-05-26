@@ -42,7 +42,7 @@ var TimberApp = function () {
 		/**
 		 * Middlewares 
 		 */
-		self.app.use(bodyParser.json({limit: '10mb', extended: true}))
+		self.app.use(bodyParser.json({limit: '50mb', extended: true}))
 		//self.app.use(bodyParser.urlencoded({limit: '10mb', extended: true}))
 
 		//self.app.use(bodyParser.json());// Para crear objeto body en la petición y admitir métodos HTTP con Content-Type json
