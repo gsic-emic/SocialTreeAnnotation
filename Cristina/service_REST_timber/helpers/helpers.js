@@ -53,8 +53,27 @@ function getDateCreated(){
     var dateISO = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
     return dateISO;
 }
+
+function ConvertDMSToDD(degrees, minutes, seconds, direction) {
+    var dd = Number(degrees) + Number(minutes)/60 + Number(seconds)/(60*60);
+
+    if (direction == "S" || direction == "W") {
+        dd = dd * -1;
+    } // Don't do anything for N or E
+    return dd;
+}
+
+
+function getCoordinates(gps){
+    var coord = [];
+    coord.push(ConvertDMSToDD(gps.GPSLatitude[0], gps.GPSLatitude[1], gps.GPSLatitude[2],gps.GPSLatitudeRef));
+    coord.push(ConvertDMSToDD(gps.GPSLongitude[0],gps.GPSLongitude[1],gps.GPSLongitude[2],gps.GPSLongitudeRef));
+    return coord
+}
 module.exports = {
     setupTerminationHandlers,
     generateId,
-    getDateCreated
+    getDateCreated,
+    getCoordinates
+
 };
