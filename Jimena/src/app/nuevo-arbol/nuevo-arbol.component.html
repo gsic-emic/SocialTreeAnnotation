@@ -1,8 +1,15 @@
 <app-menu-usuarios></app-menu-usuarios>
-
 <div class="container">
     <div [hidden]="confirmacion">
     <div class="titulo">NUEVO ÁRBOL</div>
+    <!-- Controlo que se hayan cargado todas las especies en el sistema -->
+    <div class="d-flex justify-content-center mt-10" *ngIf="!terminado; else mostrarResultado"> 
+        <div class="spinner-grow text-success" role="status">
+          <span class="sr-only">Loading...</span> <!--Mientras se recuperan todos los datos-->
+        </div>
+      </div>
+  
+    <ng-template #mostrarResultado>
     <div [hidden]="submitted">
         <form class="formulario" (ngSubmit)="onSubmit()" #ArbolForm="ngForm">
             <div class="d-flex justify-content-around flex-wrap">
@@ -26,19 +33,28 @@
             </div>
             
             <div class="d-flex justify-content-around flex-wrap">
-                <div class="card border-success m-3 flex-fill" style="max-width: 100rem;">
+                <div class="card border-success m-3 flex-fill" style="max-width: 100rem;" >
                     <div class="card-header"><i class="far fa-check-circle"></i> Más información</div>
                         <div class="form-group p-3">
                             <label class="entrada" for="especie"><i class="fab fa-pagelines"></i> Especie:</label>
-                            <input type="text" class="form-control" id="especie" placeholder="Especie"
-                                [(ngModel)]="especie" name="especie" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)">
+                            <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="especie" name="especie" *ngIf="!error; else mostrarError">
+                                <option  [value]="item" *ngFor="let item of ESPECIES">{{item}}</option>
+                            </select>
+                            <ng-template #mostrarError>
+                                <div class="alert alert-danger" role="alert">
+                                    Las especies no están disponibles en estos momentos.
+                                </div>
+                            </ng-template>
                         </div>
+
+
+                        
                 </div>
                 <div class="card border-success m-3 flex-fill" style="max-width: 100rem;">
                     <div class="card-header"><i class="far fa-check-circle"></i> Más información</div>
                     <div class="form-group p-3">
                         <label class="entrada" for="hoja"><i class="fas fa-leaf"></i> Tipo de hoja:</label>
-                        <input type="text" class="form-control" id="hoja" placeholder="Tipo de hoja"
+                        <input type="text" disabled class="form-control" id="hoja" placeholder="No disponible"
                             [(ngModel)]="hoja" name="hoja" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)">
                     </div>
                 </div>
@@ -46,7 +62,7 @@
                     <div class="card-header"><i class="far fa-check-circle"></i> Más información</div>
                     <div class="form-group p-3">
                         <label class="entrada" for="fruto"><i class="fas fa-apple-alt"></i> Tipo de fruto:</label>
-                        <input type="text" class="form-control" id="fruto" placeholder="Fruto"
+                        <input type="text"  disabled class="form-control" id="fruto" placeholder="No disponible"
                             [(ngModel)]="fruto" name="fruto" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)">
                     </div>
                 </div>
@@ -62,7 +78,7 @@
             </div>
         </form>
     </div>
-
+</ng-template>
 
 <!-- confirm-->
 <div class="recopilacion" [hidden]="!submitted">
@@ -111,5 +127,5 @@
             <button type="submit" class="btn btn-success" (click)="borrarDatos()"><i class="fas fa-check"></i> Crear nuevo árbol</button>
         </div>
     </div>
-</div>
+    </div>
 </div>
