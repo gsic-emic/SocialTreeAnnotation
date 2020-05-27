@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Tree_complete } from '../tree_complete';
 import { APIService} from '../api.service';
 
+
 @Component({
   selector: 'app-nuevo-arbol',
   templateUrl: './nuevo-arbol.component.html',
@@ -25,8 +26,9 @@ export class NuevoArbolComponent implements OnInit {
   hoja: string;
   fruto: string;
   imagen: string;
-  creador = "demo";
+  creador:string = "demo";
   fecha: string;
+  base64: string; // guarda la codificacion de la imagen
 
   //variables de control
   public submitted: boolean = false;
@@ -107,7 +109,7 @@ export class NuevoArbolComponent implements OnInit {
           }
         }
       }
-      this.newTree = {creator:  this.creador, lat: this.lat, long: this.long, image: this.imagen, species: especie_select };
+      this.newTree = {creator:  this.creador, lat: this.lat, long: this.long, image: this.base64, species: especie_select };
 
     } else{
       if (this.especie != null){
@@ -123,7 +125,8 @@ export class NuevoArbolComponent implements OnInit {
         }
       } else if (this.imagen != null){
         si = true;
-        this.newTree = {creator:  this.creador, lat: this.lat, long: this.long, image: this.imagen};
+        this.newTree = {creator:  this.creador, lat: this.lat, long: this.long, image: this.base64};
+        
       }
     }
       
@@ -135,7 +138,7 @@ export class NuevoArbolComponent implements OnInit {
     
     console.log(JSON.stringify(this.newTree));
     // POST a la api
-    /*this.api.createTree(JSON.stringify(this.newTree)).subscribe(
+    this.api.createTree(JSON.stringify(this.newTree)).subscribe(
       (data) =>{
         console.log(data);
       },
@@ -144,7 +147,7 @@ export class NuevoArbolComponent implements OnInit {
       },
       () =>{
       }
-      );*/
+      );
 
     // Tras mandar los datos al servidor, limpio las variables del formulario por si se crea otro
     this.lat = null;
@@ -152,6 +155,26 @@ export class NuevoArbolComponent implements OnInit {
     this.especie = null;
     this.imagen = null;
   }
+
+  /******* Conversión de las imágenes a base64 para madar al servidor */
+  selectFile(event){
+    var files = event.target.files;
+    var file = files[0];
+
+    if (files && file) {
+        var reader = new FileReader();
+        reader.onload =this.codeFile.bind(this);
+        reader.readAsBinaryString(file);
+    }
+  }
+
+codeFile(event) {
+    var binaryString = event.target.result;
+    this.base64= btoa(binaryString);
+    //console.log(this.base64);
+  }
+
+  //-----------------------------------------------------
   
   public construirFecha(): string{
     var f = new Date();
