@@ -12,7 +12,8 @@ export class MisAnotacionesComponent implements OnInit {
 
   // Variables de control -----------------------
   arboles: boolean = true;
-  existen: boolean = false;
+  existen: boolean = true; // variable que controla si el usuario tiene arboles creados
+  existen_anot: boolean = true;
   error: boolean = false;
   error_anot: boolean = false;
   terminado: boolean = false;
@@ -67,8 +68,11 @@ export class MisAnotacionesComponent implements OnInit {
     this.api.getUserTrees(user).subscribe(
       (data: any) =>{
         //this.nextUrl = data.nextPage.url;
-        this.objTrees = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
-        //console.log(data);
+        if(data == null){
+          this.existen = false; // no tiene arboles
+        } else{
+          this.objTrees = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
+        }
         this.convertirDato();
       },
       (error) =>{
@@ -79,7 +83,6 @@ export class MisAnotacionesComponent implements OnInit {
       },
       () =>{
         this.terminado = true;
-        console.log("se han cargado todos los arboles");
       }
       );
   }
@@ -112,8 +115,11 @@ export class MisAnotacionesComponent implements OnInit {
   getMyAnnotatios(user: string){
     this.api.getUserAnnotatios(user).subscribe(
       (data: any) =>{
-        //this.nextUrl = data.nextPage.url;
-        this.objAnnotations = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
+        if(data == null){
+          this.existen_anot = false; // no tiene arboles
+        } else {
+          this.objAnnotations = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
+        }
         //console.log(data);
         this.convertirAnnot();
       },
