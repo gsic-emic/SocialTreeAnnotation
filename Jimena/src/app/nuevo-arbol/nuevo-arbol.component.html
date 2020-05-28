@@ -23,16 +23,7 @@
                                 [(ngModel)]="long" name="long">
                     </div>
                 </div>
-                <div class="card border-success m-3 flex-fill" style="max-width: 100rem;">
-                    <div class="card-header"><i class="far fa-check-circle"></i> Más información</div>
-                        <div class="form-group p-3">
-                            <label class="entrada" for="imagen"><i class="fas fa-camera"></i> Insertar imagen </label>
-                            <input type="file" class="form-control" [(ngModel)]="imagen" name="imagen" (change)="selectFile($event)">
-                        </div>
-                </div>
-            </div>
-            
-            <div class="d-flex justify-content-around flex-wrap">
+
                 <div class="card border-success m-3 flex-fill" style="max-width: 100rem;" >
                     <div class="card-header"><i class="far fa-check-circle"></i> Más información</div>
                         <div class="form-group p-3">
@@ -45,11 +36,21 @@
                                     Las especies no están disponibles en estos momentos.
                                 </div>
                             </ng-template>
-                        </div>
-
-
-                        
+                        </div>    
                 </div>
+                
+            </div>
+            
+            <div class="d-flex justify-content-around flex-wrap">
+                <div class="card border-success m-3 flex-fill" style="max-width: 100rem;">
+                    <div class="card-header"><i class="far fa-check-circle"></i> Más información</div>
+                        <div class="form-group p-3">
+                            <label class="entrada" for="imagen"><i class="fas fa-camera"></i> Insertar imagen </label>
+                            <input type="file" class="form-control" [(ngModel)]="imagen" name="imagen" (change)="selectFile($event)">
+                        </div>
+                </div>
+                
+                <!--
                 <div class="card border-success m-3 flex-fill" style="max-width: 100rem;">
                     <div class="card-header"><i class="far fa-check-circle"></i> Más información</div>
                     <div class="form-group p-3">
@@ -66,6 +67,7 @@
                             [(ngModel)]="fruto" name="fruto" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)">
                     </div>
                 </div>
+                -->
             </div>
 
             <div class="botones">
@@ -113,19 +115,35 @@
 </div>
 
 <div [hidden]="!confirmacion">
-    <div class="aviso">
-        <div class="alert alert-warning" role="alert">
-          ¡El árbol se ha registrado correctamente en el sistema!
-        </div>
-      </div>
-   <!-- <app-info-anotacion [arbol]="arbol"></app-info-anotacion>-->
-   <div class="botones">
-        <div class="boton">
-            <button type="button" class="btn btn-primary"> <a [routerLink]="['/mis_anot']">Ver mis anotaciones</a></button>
-        </div>
-        <div class="boton">
-            <button type="submit" class="btn btn-success" (click)="borrarDatos()"><i class="fas fa-check"></i> Crear nuevo árbol</button>
+    <div class="d-flex justify-content-center mt-10" *ngIf="!terminado2; else result">
+        <div class="spinner-grow text-success" role="status">
+          <span class="sr-only">Loading...</span>
         </div>
     </div>
+    <ng-template #result>
+        <div class="aviso" *ngIf="error2; else mostrarConfirm">
+            <div class="alert alert-danger" role="alert">
+                <i class="far fa-frown"></i> {{mensajeError}} <i class="far fa-frown"></i>
+                <br> Inténtelo de nuevo más tarde
+            </div>
+        </div>
+    
+        <ng-template #mostrarConfirm>
+            <div class="aviso">
+                <div class="alert alert-warning" role="alert">
+                  ¡El árbol se ha registrado correctamente en el sistema!
+                </div>
+            </div>
+            <!-- <app-info-anotacion [arbol]="arbol"></app-info-anotacion>-->
+        </ng-template>
+           <div class="botones">
+                <div class="boton">
+                    <button type="button" class="btn btn-primary"> <a [routerLink]="['/mis_anot']">Ver mis anotaciones</a></button>
+                </div>
+                <div class="boton">
+                    <button type="submit" class="btn btn-success" (click)="borrarDatos()"><i class="fas fa-check"></i> Crear nuevo árbol</button>
+                </div>
+            </div>
+    </ng-template>
     </div>
 </div>

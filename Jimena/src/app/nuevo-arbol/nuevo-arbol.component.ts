@@ -11,8 +11,6 @@ import { APIService} from '../api.service';
 export class NuevoArbolComponent implements OnInit {
 
   // ESPCIES **************************
-  error: boolean = false;
-  terminado: boolean = false;
   objSpecies: object[]=[]; // Objeto JSON que almacena todas las especies/familias/generos existentes
   ESPECIES: Array<string> = [];
   buscadorSpecies: string = "http://crossforest.eu/ifn/ontology/vulgarName";
@@ -31,8 +29,13 @@ export class NuevoArbolComponent implements OnInit {
   base64: string; // guarda la codificacion de la imagen
 
   //variables de control
-  public submitted: boolean = false;
-  public confirmacion: boolean = false;
+  submitted: boolean = false;
+  confirmacion: boolean = false;
+  mensajeError: string;
+  error: boolean = false; // controla especies
+  terminado: boolean = false;
+  terminado2: boolean = false; // controla creacion arboles
+  error2: boolean = false;
 
   constructor(private api: APIService) { }
 
@@ -143,9 +146,18 @@ export class NuevoArbolComponent implements OnInit {
         console.log(data);
       },
       (error) =>{
+        this.error2 = true;
         console.error(error);
+        if (error.status == 0){
+          this.mensajeError = "Parece que tenemos problemas con el servidor ";
+        } else if (error.status == 413){
+          this.mensajeError = "La imagen seleccionada ocupa demasiado espacio. Por favor, comprima el archivo antes de subirlo"
+
+        }
+        this.terminado2 = true;
       },
       () =>{
+        this.terminado2 = true;
       }
       );
 
@@ -172,6 +184,13 @@ codeFile(event) {
     var binaryString = event.target.result;
     this.base64= btoa(binaryString);
     //console.log(this.base64);
+    
+    // Compruebo si la imagen ocupa menos de 10 Mb
+    if (this.base64.length > 9700000){
+      alert("La imagen seleccionada ocupa demasiado. Por favor, comprímala para que ocupe menos");
+      this.base64 = null;
+      this.imagen = null;
+    }
   }
 
   //-----------------------------------------------------
