@@ -7,41 +7,64 @@ const uri_images = require('../config/config').uri_images;
 var ExifImage = require('exif').ExifImage;
 const helpers = require('../helpers/helpers')
 const queryInterface = require('../helpers/queryInterface');
-
-
+var cache = require('../models/cache');
+const onturis = require('../config/onturis');
 
 function getImage(req, res) {
   var arg = {};
   var id = req.params.imageId;
   arg.uri = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
 
-  console.log(arg)
   var response = {};
 
-  queryInterface.getData("details_allprop", arg, sparqlClient)
-    .then((data) => {
-      if (data.results.bindings.length == 0) {
-        res.status(404).send({ response: "La imagen no existe" });
-      }
-      else {
-        response[arg.uri] = {};
-        data.results.bindings.forEach(element => {
-          response[arg.uri][element.prop.value] = element.value;
-        });
+
+  res.format({
+    'application/json': function () {
+      if (cache.images[arg.uri] != undefined && cache.images[arg.uri][onturis.dc_created] != undefined) {
+        response[arg.uri] = (response[arg.uri] == undefined) ? {} : response[arg.uri];
+        response[arg.uri] = cache.images[arg.uri];
         res.status(200).send({ response });
       }
-
-    })
-    .catch((err) => {
-      console.log("Error en conexión con endpoint");
-      if (err.statusCode != null && err.statusCode != undefined) {
-        res.status(err.statusCode).send({ message: err });
-      }
       else {
-        err = err.message;
-        res.status(500).send(err);
+        queryInterface.getData("details_allprop", arg, sparqlClient)
+          .then((data) => {
+            if (data.results.bindings.length == 0) {
+              res.status(404).send({ response: "La imagen no existe" });
+            }
+            else {
+              cache.images[arg.uri] == undefined ? cache.images[arg.uri] = {} : cache.images[arg.uri];
+              response[arg.uri] = {};
+
+              data.results.bindings.forEach(element => {
+                cache.images[arg.uri][element.prop.value] = element.value;
+                response[arg.uri][element.prop.value] = cache.images[arg.uri][element.prop.value];
+              });
+              res.status(200).send({ response });
+            }
+
+          })
+          .catch((err) => {
+            console.log("Error en conexión con endpoint");
+            if (err.statusCode != null && err.statusCode != undefined) {
+              res.status(err.statusCode).send({ message: err });
+            }
+            else {
+              err = err.message;
+              res.status(500).send(err);
+            }
+          });
       }
-    });
+    },
+    'image/jpeg': function () {
+      res.redirect(uri_images + id + ".jpg");
+      //res.redirect(uri_images+id+".jpg");
+    },
+    default: function () {
+      // log the request and respond with 406
+      res.status(406).send('Not Acceptable')
+    }
+
+  })
 }
 
 /* Para crear una anotación de tipo imagen, 1º creo la imagen en el sistema de ficheros, así tengo la uri y posteriormente creo la anotación de tipo imagen en el Virtuoso
@@ -128,7 +151,7 @@ function createImage(req, res) {
 function setDataImage(idImage, arg) {
   return new Promise((resolve, reject) => {
     var image_path = dirname + idImage;
-    console.log(image_path)
+    //console.log(image_path)
     getExifData(image_path).then((exif) => {
       //Aqui va en forma de promise o callbak 
       resolve(exif);
@@ -140,9 +163,10 @@ function getExifData(image_path) {
   return new Promise((resolve, reject) => {
     //try {
     new ExifImage({ image: image_path }, function (error, exifData) {
-      if (error)
-        console.log('Error: ' + error.message);
-      else
+      if (error) {
+        console.log('Error: ' + error.message);//Las imagenes solo pueden ser jpeg para recuperar sus exif data
+      }
+      else {
         //console.log(exifData)
         //Esto no rellenar coon 0s, dejar vacío.
         if (exifData.exif != undefined) {
@@ -164,6 +188,7 @@ function getExifData(image_path) {
             exif_metadata.longImg = coordenadas[1];
           }
         }
+      }
       resolve(exif_metadata);
 
 
@@ -196,5 +221,6 @@ module.exports = {
   createImage,
   uploadImage2SF,
   setDataImage,
-  getImage
+  getImage,
+  //getExifData
 }

@@ -2,8 +2,7 @@ const queryInterface = require('../helpers/queryInterface');
 var onturis = require('../config/onturis');
 const _ = require('underscore');
 const config = require('../config/onturis');
-
-var especies = {};
+var especies = require('../models/cache').species;
 
 function getSpecies(req, res) {
     var arg = {};
@@ -36,8 +35,6 @@ function getSpecies(req, res) {
         res.status(200).send({response , nextPage});
     }
    
-
-
 
     /*arg.cluri = onturis.ifn_species;
     queryInterface.getData("indivs", arg, sparqlClient)

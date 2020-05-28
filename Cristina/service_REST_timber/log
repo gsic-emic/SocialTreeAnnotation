@@ -1,0 +1,217 @@
+
+> nodejs-service-timber@1.0.0 start /home/ubuntu/SocialTreeAnnotation/Cristina/service_REST_timber
+> nodemon app.js
+
+[33m[nodemon] 2.0.2[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching dir(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node app.js`[39m
+Thu May 28 2020 19:45:09 GMT+0200 (Central European Summer Time): Node server started on 8888 ...
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?sup ?sub 
+ WHERE { 
+   ?sup rdfs:subClassOf* ifn:Class2 . 
+   ?sub rdfs:subClassOf ?sup . 
+ }
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?sup ?sub 
+ WHERE { 
+   ?sup rdfs:subClassOf* ifn:Class1 . 
+   ?sub rdfs:subClassOf ?sup . 
+ }
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?uri ?value 
+ WHERE { 
+ ?uri ifn:hasAcceptedName/ifn:name ?value . 
+ FILTER (?uri IN ( ifn:Class2,ifn:Genus211,ifn:Species20,ifn:Species21,ifn:Species22,ifn:Species25,ifn:Species27,ifn:Species28,ifn:Species29,ifn:Species23,ifn:Species24,ifn:Species26,ifn:Genus212,ifn:Species17,ifn:Species217,ifn:Species317,ifn:Species917,ifn:Genus213,ifn:Species31,ifn:Species32,ifn:Genus214,ifn:Species235,ifn:Species335,ifn:Species35,ifn:Species435,ifn:Genus215,ifn:Species33,ifn:Genus216,ifn:Species34,ifn:Genus221,ifn:Species336,ifn:Species436,ifn:Species936,ifn:Species236,ifn:Species36,ifn:Genus222,ifn:Species238,ifn:Species239,ifn:Species337,ifn:Species37,ifn:Species39,ifn:Species937,ifn:Species237,ifn:Species38,ifn:Genus223,ifn:Species219,ifn:Genus224,ifn:Species319,ifn:Genus231,ifn:Species14,ifn:Family21,ifn:Family22,ifn:Genus228,ifn:Family23,ifn:Species19,ifn:Species30,ifn:Class1,ifn:Family40,ifn:Species80,ifn:Species89,ifn:Genus401,ifn:Genus402,ifn:Genus403,ifn:Genus404,ifn:Genus111,ifn:Species256,ifn:Species356,ifn:Species956,ifn:Species56,ifn:Genus121,ifn:Species243,ifn:Species244,ifn:Species40,ifn:Species41,ifn:Species42,ifn:Species43,ifn:Species47,ifn:Species48,ifn:Species49,ifn:Species46,ifn:Species44,ifn:Species45,ifn:Genus122,ifn:Species71,ifn:Genus123,ifn:Species72,ifn:Genus131,ifn:Species52,ifn:Species51,ifn:Species258,ifn:Species58,ifn:Genus132,ifn:Species357,ifn:Species457,ifn:Species557,ifn:Species657,ifn:Species757,ifn:Species857,ifn:Species858,ifn:Species957 )) }
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?uri ?value 
+ WHERE { 
+ ?uri ifn:hasAcceptedName/ifn:name ?value . 
+ FILTER (?uri IN ( ifn:Species57,ifn:Species257,ifn:Genus141,ifn:Species207,ifn:Species307,ifn:Species7,ifn:Genus142,ifn:Species67,ifn:Genus143,ifn:Species392,ifn:Genus144,ifn:Species92,ifn:Genus145,ifn:Species292,ifn:Genus151,ifn:Species268,ifn:Species68,ifn:Genus152,ifn:Species283,ifn:Species83,ifn:Genus161,ifn:Species6,ifn:Genus162,ifn:Species264,ifn:Species364,ifn:Species60,ifn:Species61,ifn:Species62,ifn:Species63,ifn:Species64,ifn:Genus171,ifn:Species276,ifn:Species376,ifn:Species476,ifn:Species576,ifn:Species676,ifn:Species76,ifn:Species976,ifn:Genus181,ifn:Species293,ifn:Species93,ifn:Genus182,ifn:Species96,ifn:Genus191,ifn:Species273,ifn:Species373,ifn:Species73,ifn:Genus192,ifn:Species54,ifn:Genus193,ifn:Species98,ifn:Genus194,ifn:Species74,ifn:Genus311,ifn:Species297,ifn:Species997,ifn:Species97,ifn:Genus321,ifn:Species65,ifn:Species82,ifn:Species282,ifn:Genus331,ifn:Species369,ifn:Genus332,ifn:Species469,ifn:Species69,ifn:Genus341,ifn:Species569,ifn:Genus351,ifn:Species291,ifn:Species91,ifn:Genus361,ifn:Species13,ifn:Genus371,ifn:Species5,ifn:Genus381,ifn:Species9,ifn:Genus391,ifn:Species275,ifn:Species975,ifn:Species75,ifn:Species88,ifn:Species294,ifn:Species94,ifn:Species87,ifn:Species84,ifn:Genus411,ifn:Species277,ifn:Species377,ifn:Species77,ifn:Genus421,ifn:Species299,ifn:Genus422,ifn:Species399,ifn:Species499,ifn:Species599,ifn:Genus431,ifn:Species81,ifn:Genus441,ifn:Species255 )) }
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?uri ?value 
+ WHERE { 
+ ?uri ifn:hasAcceptedName/ifn:name ?value . 
+ FILTER (?uri IN ( ifn:Species355,ifn:Species955,ifn:Species55,ifn:Genus442,ifn:Species66,ifn:Genus443,ifn:Species8,ifn:Genus444,ifn:Species86,ifn:Genus451,ifn:Species489,ifn:Genus461,ifn:Species279,ifn:Species79,ifn:Genus471,ifn:Species1,ifn:Genus472,ifn:Species289,ifn:Genus481,ifn:Species3,ifn:Genus482,ifn:Species389,ifn:Species4,ifn:Genus491,ifn:Species2,ifn:Genus492,ifn:Species15,ifn:Species215,ifn:Species315,ifn:Species415,ifn:Species515,ifn:Genus493,ifn:Species12,ifn:Genus494,ifn:Species295,ifn:Species395,ifn:Species495,ifn:Species595,ifn:Species95,ifn:Genus495,ifn:Species16,ifn:Genus496,ifn:Species278,ifn:Species378,ifn:Species478,ifn:Species578,ifn:Species678,ifn:Species778,ifn:Species78,ifn:Genus501,ifn:Species85,ifn:Genus511,ifn:Species11,ifn:Genus521,ifn:Species253,ifn:Species53,ifn:Family11,ifn:Family12,ifn:Family13,ifn:Family14,ifn:Family15,ifn:Family16,ifn:Family17,ifn:Family18,ifn:Family19,ifn:Family31,ifn:Family32,ifn:Family33,ifn:Family34,ifn:Family35,ifn:Family36,ifn:Family37,ifn:Family38,ifn:Family39,ifn:Family41,ifn:Family42,ifn:Family43,ifn:Family44,ifn:Family45,ifn:Family46,ifn:Family47,ifn:Family48,ifn:Family49,ifn:Family50,ifn:Family51,ifn:Family52,ifn:Species50,ifn:Species59,ifn:Species70,ifn:Species90,ifn:Species99 )) }
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?uri ?value 
+ WHERE { 
+ ?uri ifn:vulgarName ?value . 
+ FILTER (?uri IN ( ifn:Class2,ifn:Genus211,ifn:Species20,ifn:Species21,ifn:Species22,ifn:Species25,ifn:Species27,ifn:Species28,ifn:Species29,ifn:Species23,ifn:Species24,ifn:Species26,ifn:Genus212,ifn:Species17,ifn:Species217,ifn:Species317,ifn:Species917,ifn:Genus213,ifn:Species31,ifn:Species32,ifn:Genus214,ifn:Species235,ifn:Species335,ifn:Species35,ifn:Species435,ifn:Genus215,ifn:Species33,ifn:Genus216,ifn:Species34,ifn:Genus221,ifn:Species336,ifn:Species436,ifn:Species936,ifn:Species236,ifn:Species36,ifn:Genus222,ifn:Species238,ifn:Species239,ifn:Species337,ifn:Species37,ifn:Species39,ifn:Species937,ifn:Species237,ifn:Species38,ifn:Genus223,ifn:Species219,ifn:Genus224,ifn:Species319,ifn:Genus231,ifn:Species14,ifn:Family21,ifn:Family22,ifn:Genus228,ifn:Family23,ifn:Species19,ifn:Species30,ifn:Class1,ifn:Family40,ifn:Species80,ifn:Species89,ifn:Genus401,ifn:Genus402,ifn:Genus403,ifn:Genus404,ifn:Genus111,ifn:Species256,ifn:Species356,ifn:Species956,ifn:Species56,ifn:Genus121,ifn:Species243,ifn:Species244,ifn:Species40,ifn:Species41,ifn:Species42,ifn:Species43,ifn:Species47,ifn:Species48,ifn:Species49,ifn:Species46,ifn:Species44,ifn:Species45,ifn:Genus122,ifn:Species71,ifn:Genus123,ifn:Species72,ifn:Genus131,ifn:Species52,ifn:Species51,ifn:Species258,ifn:Species58,ifn:Genus132,ifn:Species357,ifn:Species457,ifn:Species557,ifn:Species657,ifn:Species757,ifn:Species857,ifn:Species858,ifn:Species957 )) }
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?uri ?value 
+ WHERE { 
+ ?uri ifn:vulgarName ?value . 
+ FILTER (?uri IN ( ifn:Species57,ifn:Species257,ifn:Genus141,ifn:Species207,ifn:Species307,ifn:Species7,ifn:Genus142,ifn:Species67,ifn:Genus143,ifn:Species392,ifn:Genus144,ifn:Species92,ifn:Genus145,ifn:Species292,ifn:Genus151,ifn:Species268,ifn:Species68,ifn:Genus152,ifn:Species283,ifn:Species83,ifn:Genus161,ifn:Species6,ifn:Genus162,ifn:Species264,ifn:Species364,ifn:Species60,ifn:Species61,ifn:Species62,ifn:Species63,ifn:Species64,ifn:Genus171,ifn:Species276,ifn:Species376,ifn:Species476,ifn:Species576,ifn:Species676,ifn:Species76,ifn:Species976,ifn:Genus181,ifn:Species293,ifn:Species93,ifn:Genus182,ifn:Species96,ifn:Genus191,ifn:Species273,ifn:Species373,ifn:Species73,ifn:Genus192,ifn:Species54,ifn:Genus193,ifn:Species98,ifn:Genus194,ifn:Species74,ifn:Genus311,ifn:Species297,ifn:Species997,ifn:Species97,ifn:Genus321,ifn:Species65,ifn:Species82,ifn:Species282,ifn:Genus331,ifn:Species369,ifn:Genus332,ifn:Species469,ifn:Species69,ifn:Genus341,ifn:Species569,ifn:Genus351,ifn:Species291,ifn:Species91,ifn:Genus361,ifn:Species13,ifn:Genus371,ifn:Species5,ifn:Genus381,ifn:Species9,ifn:Genus391,ifn:Species275,ifn:Species975,ifn:Species75,ifn:Species88,ifn:Species294,ifn:Species94,ifn:Species87,ifn:Species84,ifn:Genus411,ifn:Species277,ifn:Species377,ifn:Species77,ifn:Genus421,ifn:Species299,ifn:Genus422,ifn:Species399,ifn:Species499,ifn:Species599,ifn:Genus431,ifn:Species81,ifn:Genus441,ifn:Species255 )) }
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?uri ?value 
+ WHERE { 
+ ?uri ifn:vulgarName ?value . 
+ FILTER (?uri IN ( ifn:Species355,ifn:Species955,ifn:Species55,ifn:Genus442,ifn:Species66,ifn:Genus443,ifn:Species8,ifn:Genus444,ifn:Species86,ifn:Genus451,ifn:Species489,ifn:Genus461,ifn:Species279,ifn:Species79,ifn:Genus471,ifn:Species1,ifn:Genus472,ifn:Species289,ifn:Genus481,ifn:Species3,ifn:Genus482,ifn:Species389,ifn:Species4,ifn:Genus491,ifn:Species2,ifn:Genus492,ifn:Species15,ifn:Species215,ifn:Species315,ifn:Species415,ifn:Species515,ifn:Genus493,ifn:Species12,ifn:Genus494,ifn:Species295,ifn:Species395,ifn:Species495,ifn:Species595,ifn:Species95,ifn:Genus495,ifn:Species16,ifn:Genus496,ifn:Species278,ifn:Species378,ifn:Species478,ifn:Species578,ifn:Species678,ifn:Species778,ifn:Species78,ifn:Genus501,ifn:Species85,ifn:Genus511,ifn:Species11,ifn:Genus521,ifn:Species253,ifn:Species53,ifn:Family11,ifn:Family12,ifn:Family13,ifn:Family14,ifn:Family15,ifn:Family16,ifn:Family17,ifn:Family18,ifn:Family19,ifn:Family31,ifn:Family32,ifn:Family33,ifn:Family34,ifn:Family35,ifn:Family36,ifn:Family37,ifn:Family38,ifn:Family39,ifn:Family41,ifn:Family42,ifn:Family43,ifn:Family44,ifn:Family45,ifn:Family46,ifn:Family47,ifn:Family48,ifn:Family49,ifn:Family50,ifn:Family51,ifn:Family52,ifn:Species50,ifn:Species59,ifn:Species70,ifn:Species90,ifn:Species99 )) }
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?uri ?value 
+ WHERE { 
+ ?uri ifn:hasWikipediaPage ?value . 
+ FILTER (?uri IN ( ifn:Class2,ifn:Genus211,ifn:Species20,ifn:Species21,ifn:Species22,ifn:Species25,ifn:Species27,ifn:Species28,ifn:Species29,ifn:Species23,ifn:Species24,ifn:Species26,ifn:Genus212,ifn:Species17,ifn:Species217,ifn:Species317,ifn:Species917,ifn:Genus213,ifn:Species31,ifn:Species32,ifn:Genus214,ifn:Species235,ifn:Species335,ifn:Species35,ifn:Species435,ifn:Genus215,ifn:Species33,ifn:Genus216,ifn:Species34,ifn:Genus221,ifn:Species336,ifn:Species436,ifn:Species936,ifn:Species236,ifn:Species36,ifn:Genus222,ifn:Species238,ifn:Species239,ifn:Species337,ifn:Species37,ifn:Species39,ifn:Species937,ifn:Species237,ifn:Species38,ifn:Genus223,ifn:Species219,ifn:Genus224,ifn:Species319,ifn:Genus231,ifn:Species14,ifn:Family21,ifn:Family22,ifn:Genus228,ifn:Family23,ifn:Species19,ifn:Species30,ifn:Class1,ifn:Family40,ifn:Species80,ifn:Species89,ifn:Genus401,ifn:Genus402,ifn:Genus403,ifn:Genus404,ifn:Genus111,ifn:Species256,ifn:Species356,ifn:Species956,ifn:Species56,ifn:Genus121,ifn:Species243,ifn:Species244,ifn:Species40,ifn:Species41,ifn:Species42,ifn:Species43,ifn:Species47,ifn:Species48,ifn:Species49,ifn:Species46,ifn:Species44,ifn:Species45,ifn:Genus122,ifn:Species71,ifn:Genus123,ifn:Species72,ifn:Genus131,ifn:Species52,ifn:Species51,ifn:Species258,ifn:Species58,ifn:Genus132,ifn:Species357,ifn:Species457,ifn:Species557,ifn:Species657,ifn:Species757,ifn:Species857,ifn:Species858,ifn:Species957 )) }
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?uri ?value 
+ WHERE { 
+ ?uri ifn:hasWikipediaPage ?value . 
+ FILTER (?uri IN ( ifn:Species57,ifn:Species257,ifn:Genus141,ifn:Species207,ifn:Species307,ifn:Species7,ifn:Genus142,ifn:Species67,ifn:Genus143,ifn:Species392,ifn:Genus144,ifn:Species92,ifn:Genus145,ifn:Species292,ifn:Genus151,ifn:Species268,ifn:Species68,ifn:Genus152,ifn:Species283,ifn:Species83,ifn:Genus161,ifn:Species6,ifn:Genus162,ifn:Species264,ifn:Species364,ifn:Species60,ifn:Species61,ifn:Species62,ifn:Species63,ifn:Species64,ifn:Genus171,ifn:Species276,ifn:Species376,ifn:Species476,ifn:Species576,ifn:Species676,ifn:Species76,ifn:Species976,ifn:Genus181,ifn:Species293,ifn:Species93,ifn:Genus182,ifn:Species96,ifn:Genus191,ifn:Species273,ifn:Species373,ifn:Species73,ifn:Genus192,ifn:Species54,ifn:Genus193,ifn:Species98,ifn:Genus194,ifn:Species74,ifn:Genus311,ifn:Species297,ifn:Species997,ifn:Species97,ifn:Genus321,ifn:Species65,ifn:Species82,ifn:Species282,ifn:Genus331,ifn:Species369,ifn:Genus332,ifn:Species469,ifn:Species69,ifn:Genus341,ifn:Species569,ifn:Genus351,ifn:Species291,ifn:Species91,ifn:Genus361,ifn:Species13,ifn:Genus371,ifn:Species5,ifn:Genus381,ifn:Species9,ifn:Genus391,ifn:Species275,ifn:Species975,ifn:Species75,ifn:Species88,ifn:Species294,ifn:Species94,ifn:Species87,ifn:Species84,ifn:Genus411,ifn:Species277,ifn:Species377,ifn:Species77,ifn:Genus421,ifn:Species299,ifn:Genus422,ifn:Species399,ifn:Species499,ifn:Species599,ifn:Genus431,ifn:Species81,ifn:Genus441,ifn:Species255 )) }
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?uri ?value 
+ WHERE { 
+ ?uri ifn:hasWikipediaPage ?value . 
+ FILTER (?uri IN ( ifn:Species355,ifn:Species955,ifn:Species55,ifn:Genus442,ifn:Species66,ifn:Genus443,ifn:Species8,ifn:Genus444,ifn:Species86,ifn:Genus451,ifn:Species489,ifn:Genus461,ifn:Species279,ifn:Species79,ifn:Genus471,ifn:Species1,ifn:Genus472,ifn:Species289,ifn:Genus481,ifn:Species3,ifn:Genus482,ifn:Species389,ifn:Species4,ifn:Genus491,ifn:Species2,ifn:Genus492,ifn:Species15,ifn:Species215,ifn:Species315,ifn:Species415,ifn:Species515,ifn:Genus493,ifn:Species12,ifn:Genus494,ifn:Species295,ifn:Species395,ifn:Species495,ifn:Species595,ifn:Species95,ifn:Genus495,ifn:Species16,ifn:Genus496,ifn:Species278,ifn:Species378,ifn:Species478,ifn:Species578,ifn:Species678,ifn:Species778,ifn:Species78,ifn:Genus501,ifn:Species85,ifn:Genus511,ifn:Species11,ifn:Genus521,ifn:Species253,ifn:Species53,ifn:Family11,ifn:Family12,ifn:Family13,ifn:Family14,ifn:Family15,ifn:Family16,ifn:Family17,ifn:Family18,ifn:Family19,ifn:Family31,ifn:Family32,ifn:Family33,ifn:Family34,ifn:Family35,ifn:Family36,ifn:Family37,ifn:Family38,ifn:Family39,ifn:Family41,ifn:Family42,ifn:Family43,ifn:Family44,ifn:Family45,ifn:Family46,ifn:Family47,ifn:Family48,ifn:Family49,ifn:Family50,ifn:Family51,ifn:Family52,ifn:Species50,ifn:Species59,ifn:Species70,ifn:Species90,ifn:Species99 )) }
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?uri ?value 
+ WHERE { 
+ ?uri <http://schema.org/sameAs> ?value . 
+ FILTER (?uri IN ( ifn:Class2,ifn:Genus211,ifn:Species20,ifn:Species21,ifn:Species22,ifn:Species25,ifn:Species27,ifn:Species28,ifn:Species29,ifn:Species23,ifn:Species24,ifn:Species26,ifn:Genus212,ifn:Species17,ifn:Species217,ifn:Species317,ifn:Species917,ifn:Genus213,ifn:Species31,ifn:Species32,ifn:Genus214,ifn:Species235,ifn:Species335,ifn:Species35,ifn:Species435,ifn:Genus215,ifn:Species33,ifn:Genus216,ifn:Species34,ifn:Genus221,ifn:Species336,ifn:Species436,ifn:Species936,ifn:Species236,ifn:Species36,ifn:Genus222,ifn:Species238,ifn:Species239,ifn:Species337,ifn:Species37,ifn:Species39,ifn:Species937,ifn:Species237,ifn:Species38,ifn:Genus223,ifn:Species219,ifn:Genus224,ifn:Species319,ifn:Genus231,ifn:Species14,ifn:Family21,ifn:Family22,ifn:Genus228,ifn:Family23,ifn:Species19,ifn:Species30,ifn:Class1,ifn:Family40,ifn:Species80,ifn:Species89,ifn:Genus401,ifn:Genus402,ifn:Genus403,ifn:Genus404,ifn:Genus111,ifn:Species256,ifn:Species356,ifn:Species956,ifn:Species56,ifn:Genus121,ifn:Species243,ifn:Species244,ifn:Species40,ifn:Species41,ifn:Species42,ifn:Species43,ifn:Species47,ifn:Species48,ifn:Species49,ifn:Species46,ifn:Species44,ifn:Species45,ifn:Genus122,ifn:Species71,ifn:Genus123,ifn:Species72,ifn:Genus131,ifn:Species52,ifn:Species51,ifn:Species258,ifn:Species58,ifn:Genus132,ifn:Species357,ifn:Species457,ifn:Species557,ifn:Species657,ifn:Species757,ifn:Species857,ifn:Species858,ifn:Species957 )) }
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?uri ?value 
+ WHERE { 
+ ?uri <http://schema.org/sameAs> ?value . 
+ FILTER (?uri IN ( ifn:Species57,ifn:Species257,ifn:Genus141,ifn:Species207,ifn:Species307,ifn:Species7,ifn:Genus142,ifn:Species67,ifn:Genus143,ifn:Species392,ifn:Genus144,ifn:Species92,ifn:Genus145,ifn:Species292,ifn:Genus151,ifn:Species268,ifn:Species68,ifn:Genus152,ifn:Species283,ifn:Species83,ifn:Genus161,ifn:Species6,ifn:Genus162,ifn:Species264,ifn:Species364,ifn:Species60,ifn:Species61,ifn:Species62,ifn:Species63,ifn:Species64,ifn:Genus171,ifn:Species276,ifn:Species376,ifn:Species476,ifn:Species576,ifn:Species676,ifn:Species76,ifn:Species976,ifn:Genus181,ifn:Species293,ifn:Species93,ifn:Genus182,ifn:Species96,ifn:Genus191,ifn:Species273,ifn:Species373,ifn:Species73,ifn:Genus192,ifn:Species54,ifn:Genus193,ifn:Species98,ifn:Genus194,ifn:Species74,ifn:Genus311,ifn:Species297,ifn:Species997,ifn:Species97,ifn:Genus321,ifn:Species65,ifn:Species82,ifn:Species282,ifn:Genus331,ifn:Species369,ifn:Genus332,ifn:Species469,ifn:Species69,ifn:Genus341,ifn:Species569,ifn:Genus351,ifn:Species291,ifn:Species91,ifn:Genus361,ifn:Species13,ifn:Genus371,ifn:Species5,ifn:Genus381,ifn:Species9,ifn:Genus391,ifn:Species275,ifn:Species975,ifn:Species75,ifn:Species88,ifn:Species294,ifn:Species94,ifn:Species87,ifn:Species84,ifn:Genus411,ifn:Species277,ifn:Species377,ifn:Species77,ifn:Genus421,ifn:Species299,ifn:Genus422,ifn:Species399,ifn:Species499,ifn:Species599,ifn:Genus431,ifn:Species81,ifn:Genus441,ifn:Species255 )) }
+PREFIX ifn: <http://crossforest.eu/ifn/ontology/>
+SELECT DISTINCT ?uri ?value 
+ WHERE { 
+ ?uri <http://schema.org/sameAs> ?value . 
+ FILTER (?uri IN ( ifn:Species355,ifn:Species955,ifn:Species55,ifn:Genus442,ifn:Species66,ifn:Genus443,ifn:Species8,ifn:Genus444,ifn:Species86,ifn:Genus451,ifn:Species489,ifn:Genus461,ifn:Species279,ifn:Species79,ifn:Genus471,ifn:Species1,ifn:Genus472,ifn:Species289,ifn:Genus481,ifn:Species3,ifn:Genus482,ifn:Species389,ifn:Species4,ifn:Genus491,ifn:Species2,ifn:Genus492,ifn:Species15,ifn:Species215,ifn:Species315,ifn:Species415,ifn:Species515,ifn:Genus493,ifn:Species12,ifn:Genus494,ifn:Species295,ifn:Species395,ifn:Species495,ifn:Species595,ifn:Species95,ifn:Genus495,ifn:Species16,ifn:Genus496,ifn:Species278,ifn:Species378,ifn:Species478,ifn:Species578,ifn:Species678,ifn:Species778,ifn:Species78,ifn:Genus501,ifn:Species85,ifn:Genus511,ifn:Species11,ifn:Genus521,ifn:Species253,ifn:Species53,ifn:Family11,ifn:Family12,ifn:Family13,ifn:Family14,ifn:Family15,ifn:Family16,ifn:Family17,ifn:Family18,ifn:Family19,ifn:Family31,ifn:Family32,ifn:Family33,ifn:Family34,ifn:Family35,ifn:Family36,ifn:Family37,ifn:Family38,ifn:Family39,ifn:Family41,ifn:Family42,ifn:Family43,ifn:Family44,ifn:Family45,ifn:Family46,ifn:Family47,ifn:Family48,ifn:Family49,ifn:Family50,ifn:Family51,ifn:Family52,ifn:Species50,ifn:Species59,ifn:Species70,ifn:Species90,ifn:Species99 )) }
+Info de especies cargada
+Info de especies cacheada
+Info de especies cacheada
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX sta: <http://timber.gsic.uva.es/sta/ontology/>
+CONSTRUCT { 
+                 ?tree dc:creator ?creator .  
+                 }  
+             WHERE { 
+                 ?tree a sta:Tree . 
+                 ?tree dc:creator ?creator. 
+                 FILTER ( ?creator IN ( <http://timber.gsic.uva.es/sta/data/user/12345> )). 
+             } 
+             LIMIT 1000 
+             OFFSET 0
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX sta: <http://timber.gsic.uva.es/sta/ontology/>
+PREFIX tree: <http://timber.gsic.uva.es/sta/data/tree/>
+CONSTRUCT { 
+                 ?iri geo:lat ?value . 
+             } 
+             WHERE { 
+                 ?iri sta:hasPrimaryPosition/geo:lat ?value . 
+                 FILTER ( ?iri IN ( tree:20200528-74c18, tree:20200528-ba681 )). 
+             }
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX sta: <http://timber.gsic.uva.es/sta/ontology/>
+PREFIX tree: <http://timber.gsic.uva.es/sta/data/tree/>
+CONSTRUCT { 
+                 ?iri geo:long ?value . 
+             } 
+             WHERE { 
+                 ?iri sta:hasPrimaryPosition/geo:long ?value . 
+                 FILTER ( ?iri IN ( tree:20200528-74c18, tree:20200528-ba681 )). 
+             }
+PREFIX sta: <http://timber.gsic.uva.es/sta/ontology/>
+PREFIX tree: <http://timber.gsic.uva.es/sta/data/tree/>
+CONSTRUCT { 
+                 ?iri sta:hasTaxon ?value . 
+             } 
+             WHERE { 
+                 ?iri sta:hasPrimarySpecies/sta:hasTaxon ?value . 
+                 FILTER ( ?iri IN ( tree:20200528-74c18, tree:20200528-ba681 )). 
+             }
+PREFIX tree: <http://timber.gsic.uva.es/sta/data/tree/>
+SELECT * 
+             WHERE { 
+                 ?iri ?prop ?value . 
+                 FILTER (  ?iri IN ( tree:20200528-74c18 )). 
+             }
+PREFIX tree: <http://timber.gsic.uva.es/sta/data/tree/>
+SELECT * 
+             WHERE { 
+                 ?iri ?prop ?value . 
+                 FILTER (  ?iri IN ( tree:20200528-ba681 )). 
+             }
+PREFIX annotation: <http://timber.gsic.uva.es/sta/data/annotation/>
+SELECT * 
+             WHERE { 
+                 ?iri ?prop ?value . 
+                 FILTER (  ?iri IN ( annotation:p-20200528-74c18_c24ec )). 
+             }
+PREFIX annotation: <http://timber.gsic.uva.es/sta/data/annotation/>
+SELECT * 
+             WHERE { 
+                 ?iri ?prop ?value . 
+                 FILTER (  ?iri IN ( annotation:i-20200528-74c18_aa80f )). 
+             }
+PREFIX annotation: <http://timber.gsic.uva.es/sta/data/annotation/>
+SELECT * 
+             WHERE { 
+                 ?iri ?prop ?value . 
+                 FILTER (  ?iri IN ( annotation:i-20200528-74c18_20c46 )). 
+             }
+SELECT * 
+             WHERE { 
+                 ?iri ?prop ?value . 
+                 FILTER (  ?iri IN ( <http://timber.gsic.uva.es/sta/data/image/20200528-74c18-7755e> )). 
+             }
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX sta: <http://timber.gsic.uva.es/sta/ontology/>
+CONSTRUCT { 
+                 ?tree geo:lat ?lat ;  
+                       geo:long ?long .  
+                 }  
+             WHERE { 
+                 ?tree a sta:Tree . 
+                 ?tree sta:hasPrimaryPosition ?ann. 
+                 ?ann geo:lat ?lat ; 
+                      geo:long ?long . 
+                      FILTER (?lat > 42) . 
+                      FILTER (?lat < 50) . 
+                      FILTER (?long > -5.1708) . 
+                      FILTER (?long < 0) . 
+             } 
+             LIMIT 1000 
+             OFFSET 0
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX tree: <http://timber.gsic.uva.es/sta/data/tree/>
+CONSTRUCT { 
+                 ?iri dc:creator ?value . 
+             }  
+             WHERE { 
+                 ?iri dc:creator ?value . 
+                 FILTER (  ?iri IN ( tree:001, tree:47-2006-N-N-1, tree:47-2007-N-N-1, tree:47-2007-N-N-10, tree:47-2007-N-N-11, tree:47-2007-N-N-12, tree:47-2007-N-N-15, tree:47-2007-N-N-16, tree:47-2007-N-N-18, tree:47-2007-N-N-2, tree:47-2007-N-N-3, tree:47-2007-N-N-30, tree:47-2007-N-N-31, tree:47-2007-N-N-32, tree:47-2007-N-N-33, tree:47-2007-N-N-34, tree:47-2007-N-N-35, tree:47-2007-N-N-36, tree:47-2007-N-N-37, tree:47-2007-N-N-38, tree:47-2007-N-N-39, tree:47-2007-N-N-4, tree:47-2007-N-N-40, tree:47-2007-N-N-5, tree:47-2007-N-N-6, tree:47-2007-N-N-7, tree:47-2007-N-N-8, tree:47-2007-N-N-9 )). 
+             }
+PREFIX sta: <http://timber.gsic.uva.es/sta/ontology/>
+PREFIX tree: <http://timber.gsic.uva.es/sta/data/tree/>
+CONSTRUCT { 
+                 ?iri sta:hasTaxon ?value . 
+             } 
+             WHERE { 
+                 ?iri sta:hasPrimarySpecies/sta:hasTaxon ?value . 
+                 FILTER ( ?iri IN ( tree:001, tree:47-2006-N-N-1, tree:47-2007-N-N-1, tree:47-2007-N-N-10, tree:47-2007-N-N-11, tree:47-2007-N-N-12, tree:47-2007-N-N-15, tree:47-2007-N-N-16, tree:47-2007-N-N-18, tree:47-2007-N-N-2, tree:47-2007-N-N-3, tree:47-2007-N-N-30, tree:47-2007-N-N-31, tree:47-2007-N-N-32, tree:47-2007-N-N-33, tree:47-2007-N-N-34, tree:47-2007-N-N-35, tree:47-2007-N-N-36, tree:47-2007-N-N-37, tree:47-2007-N-N-38, tree:47-2007-N-N-39, tree:47-2007-N-N-4, tree:47-2007-N-N-40, tree:47-2007-N-N-5, tree:47-2007-N-N-6, tree:47-2007-N-N-7, tree:47-2007-N-N-8, tree:47-2007-N-N-9 )). 
+             }
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX sta: <http://timber.gsic.uva.es/sta/ontology/>
+CONSTRUCT { 
+                 ?tree geo:lat ?lat ;  
+                       geo:long ?long .  
+                 }  
+             WHERE { 
+                 ?tree a sta:Tree . 
+                 ?tree sta:hasPrimaryPosition ?ann. 
+                 ?ann geo:lat ?lat ; 
+                      geo:long ?long . 
+                      FILTER (?lat > 47) . 
+                      FILTER (?lat < 51) . 
+                      FILTER (?long > -5.1708) . 
+                      FILTER (?long < 10) . 
+             } 
+             LIMIT 1000 
+             OFFSET 0
