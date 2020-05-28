@@ -22,7 +22,7 @@ export class AjustesComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.user = {id: "user001", nombre: "Jimena", apellidos: "Andrade", username: "jandrade", email: "jimena@hotmail.com"};
+    this.user = {nombre: "Jimena", apellidos: "Andrade", username: "jandrade", email: "jimena@hotmail.com"};
   }
 
   public onSubmit() {
