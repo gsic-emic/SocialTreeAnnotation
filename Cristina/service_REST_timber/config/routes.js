@@ -8,6 +8,7 @@ const annotationController = require('../controllers/annotationController');
 const imageController = require('../controllers/imageController');
 const speciesController = require('../controllers/speciesController');
 
+
 const api = express.Router();
 
 var urls = {
@@ -19,12 +20,16 @@ var urls = {
     annotations: '/data/annotation',
     annotation: '/data/annotation/:annotationId',
     images: '/data/image',
-    image: '/data/image/:imagesId',
+    image: '/data/image/:imageId',
     species: '/data/species'
 };
 
 //Root
 api.get(urls.root, (req, res) => {
+    /*imageController.getExifData("//home/ubuntu/SocialTreeAnnotation/Cristina/complementos/flor_exif.jpg")
+    imageController.getExifData("/home/ubuntu/SocialTreeAnnotation/Cristina/complementos/20200527_134437.jpg")
+    */
+
     queryInterface.getData("test", {}, sparqlClient)
         .then(() => {
             res.status(200).send(urls);
@@ -66,9 +71,9 @@ api.delete(urls.annotation, annotationController.deleteAnnotation);
 api.post(urls.images, imageController.createImageAnnotation);
 /*
 api.get(urls.images, imageController.getImages);
-api.post(urls.images, imageController.createImage);
+api.post(urls.images, imageController.createImage);*/
 api.get(urls.image, imageController.getImage);
-api.put(urls.image, imageController.updateImage);
+/*api.put(urls.image, imageController.updateImage);
 api.delete(urls.image, imageController.deleteImage);
 api.get('/images/:imagesId/parts', imageController.getImageParts);
 api.post('/images/:imagesId/parts', imageController.createImagePart);
@@ -79,5 +84,6 @@ api.delete('/images/:imagesId/parts/:partId', imageController.deleteImagePart);
 
 //Especies
 api.get(urls.species, speciesController.getSpecies);
+
 
 module.exports = api

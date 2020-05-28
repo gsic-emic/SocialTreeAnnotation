@@ -15,6 +15,7 @@ var queryPrefixes = {
     //'mfe': 'http://crossforest.eu/mfe/ontology/',
     //'spo': 'http://crossforest.eu/position/ontology/',
     //'epsg': 'http://epsg.w3id.org/ontology/',
+    'exif': 'http://www.w3.org/2003/12/exif/ns#',
     'sta': 'http://timber.gsic.uva.es/sta/ontology/',
     //'example': 'http://crossforest.eu/sta/data/example/'
     'tree': 'http://timber.gsic.uva.es/sta/data/tree/',
@@ -248,7 +249,18 @@ queriesArray.push({
             { <'+ queryPrefixes.annotation + '{{id}}> a <{{{type}}}> ; \n \
                                         dc:creator <{{{creator}}}> ; \n \
                                         dc:created "{{date}}"^^xsd:date ;\n \
-                                        <'+ onturis.prHasImage + '> <{{{image}}}> . \n \
+                                        <'+ onturis.prHasImage + '> <{{{imageId}}}> . \n \
+            }'
+});
+
+queriesArray.push({
+    'name': 'create_image',
+    'query': 'INSERT DATA \n \
+            { <{{{imageId}}}> a <'+onturis.image+ '> ; \n \
+                dc:subject <{{{image}}}> ; \n \
+                dc:type <http://purl.org/dc/dcmitype/Image> ; \n \
+                {{{varTriplesImg}}} \n \
+                dc:created "{{date}}"^^xsd:date .\n \
             }'
 });
 

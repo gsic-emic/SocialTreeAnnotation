@@ -1,10 +1,12 @@
 idTree="http://timber.gsic.uva.es/sta/data/tree/20200524-9e297"
-image="/home/ubuntu/SocialTreeAnnotation/Cristina/complementos/tronco.jpg"
-creator="http://http://timber.gsic.uva.es/sta/data/user/12345"
+image="/home/ubuntu/SocialTreeAnnotation/Cristina/complementos/20200527_134437.jpg"
+creator="http://timber.gsic.uva.es/sta/data/user/12345"
 species="http://crossforest.eu/ifn/ontology/Species20"
 lat="45.34"
 long="-0.32"
-
+depicts="http://timber.gsic.uva.es/sta/ontology/Flower"
+title="Foto cactus"
+description="Foto de test"
 #base64_img="$(base64 $image)"
 #data='{"creator": "'$creator'", "lat": "'$lat'", "long":"'$long'", "species":"'$species'", "image":"'$base64_img'"}'
 #data_species='{"creator": "'$creator'", "lat": "'$lat'", "long":"'$long'", "species":"'$species'"}'
@@ -16,5 +18,5 @@ long="-0.32"
 #echo -e "\n"
 
 
-(echo -n '{"creator": "'$creator'", "species":"'$species'", "lat": "'$lat'", "long":"'$long'", "image": "'; base64 "$image"; echo '"}')  | curl -H "Content-Type: application/json" -d @-  http://timber.gsic.uva.es/sta/data/tree/
+(echo -n '{"creator": "'$creator'", "species":"'$species'", "lat": "'$lat'", "long":"'$long'", "depicts":"'$depicts'","title":"'$title'", "description":"'$description'", "image": "'; base64 "$image"; echo '"}')  | curl -H "Content-Type: application/json" -d @-  http://timber.gsic.uva.es/sta/data/tree/
 echo -e "\n"
