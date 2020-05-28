@@ -3,7 +3,7 @@ var onturis = require('../config/onturis');
 var cache = require('../models/cache');
 const helpers = require('../helpers/helpers');
 const config = require('../config/config');
-const imageController = require ('./imageController');
+const imageController = require('./imageController');
 
 var treesNoCache = [];
 
@@ -792,11 +792,11 @@ function getTrees(req, res) {
 function getTree(req, res) {
     sparqlClient.setDefaultGraph();
     var arg = {};
-    arg.uri = "http://timber.gsic.uva.es/sta/data/tree/" + req.params.treeId;;
+    arg.uri = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
     var response = {};
 
-    if (cache.trees[arg.uri] != undefined &&  cache.trees[arg.uri][onturis.dc_created] != undefined) {
-        response[arg.uri] = (response[arg.uri] == undefined)? {}: response[arg.uri];
+    if (cache.trees[arg.uri] != undefined && cache.trees[arg.uri][onturis.dc_created] != undefined) {
+        response[arg.uri] = (response[arg.uri] == undefined) ? {} : response[arg.uri];
         response[arg.uri] = cache.trees[arg.uri];
         res.status(200).send({ response });
     }
@@ -842,10 +842,10 @@ function createTree(req, res) {
     var idAnnPosition;
     var flag = true;
 
-    var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl ;
+    var url_Base_sta = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl.split("tree")[0];
 
     let bodyParameters = req.body;
-    console.log(bodyParameters)
+    //console.log(bodyParameters.depicts)
 
     sparqlClient.setDefaultGraph(config.defaultGraph);
 
@@ -870,25 +870,73 @@ function createTree(req, res) {
             //Hay imagen
             if (parametersOptional.image in bodyParameters) {
                 var imageBlob = bodyParameters[parametersOptional.image];
-                var idImage = imageController.uploadImage2SF(idTree,imageBlob);
+                var idImage = imageController.uploadImage2SF(idTree, imageBlob);
                 arg[parametersOptional.image] = config.uri_images + idImage;
+                arg.imageId = onturis.data + "image/" + idImage.split('.')[0];//quito la extensión
+                arg.varTriplesImg = "";
+                if (bodyParameters.title != undefined) {
+                    arg.varTriplesImg = "dc:title \"" + bodyParameters.title + "\";";
+                }
+                if (bodyParameters.description != undefined) {
+                    arg.varTriplesImg += "dc:description \"" + bodyParameters.description + "\";";
+                }
+                if (bodyParameters.depicts != undefined) {
+                    arg.varTriplesImg += "foaf:depicts <" + bodyParameters.depicts + ">;";
+                }
 
-                console.log("Crear anotación de imagen");
+
+
+                imageController.setDataImage(idImage, arg).then((exif) => {
+                    Object.keys(exif).forEach((prop) => {
+                        arg[prop] = exif[prop];
+                    }
+                    )
+
+                    if (arg.width != 0) {
+                        arg.varTriplesImg += "exif:imageWidth " + arg.width + ";";
+                    }
+                    if (arg.height != 0) {
+                        arg.varTriplesImg += "exif:imageLength " + arg.height + ";";
+                    }
+                    if (arg.latImg != 0) {
+                        arg.varTriplesImg += "geo:lat " + arg.latImg + ";";
+                    }
+                    if (arg.longImg != 0) {
+                        arg.varTriplesImg += "geo:long " + arg.longImg + ";";
+                    }
+
+                    //elimiar arg.varTriplesImg si esta vacio
+                    console.log(arg)
+                    queryInterface.getData("create_image", arg, sparqlClient)
+                        .then((data) => {
+                            if (data.results.bindings.length > 0) {
+                                console.log("Imagen creada correctamente en Virtuoso")
+                            }
+                        }).catch((err) => {
+                            console.log("Error creando imagen en virtuoso");
+                            if (err.statusCode != null && err.statusCode != undefined) {
+                                res.status(err.statusCode).send({ message: err });
+                            }
+                            else {
+                                err = err.message;
+                                res.status(500).send(err);
+                            }
+                        });
+                })
+
+
                 nameQuery = "create_annotation_image";
-
                 idsAnnotation.push(createAnnotation(arg, idTree, onturis.imageAnnotation, querys, nameQuery));
             }
             //Hay especie
             if (parametersOptional.species in bodyParameters) {
                 arg[parametersOptional.species] = bodyParameters[parametersOptional.species];
-                console.log("Crear anotación de especie");
                 nameQuery = "create_annotation_species";
                 idsAnnotation.push(createAnnotation(arg, idTree, onturis.primarySpecies, querys, nameQuery));
             }
         }
 
         //Primero creo las anotaciones necesarias para así asociárselas al árbol en la creación
-        console.log("Crear anotación de posición");
         nameQuery = "create_annotation_position";
         idAnnPosition = createAnnotation(arg, idTree, onturis.primaryPosition, querys, nameQuery);
         idsAnnotation.push(idAnnPosition);
@@ -926,7 +974,7 @@ function createTree(req, res) {
             queryInterface.getData("create_tree", arg, sparqlClient)
                 .then((data) => {
                     if (data.results.bindings.length > 0) {
-                        console.log("Árbol creado");
+                        console.log("Árbol " + idTree + " creado");
 
                         querys = [];
                         arg = {};
@@ -945,11 +993,10 @@ function createTree(req, res) {
                                 querys.push(queryInterface.getData("add_annotation_tree", arg, sparqlClient));
                             }
                         });
-
                         Promise.all(querys).then((data) => {
                             // Redirijo al nuevo árbol si ha ido todo bien
                             console.log("Árbol actualizado: se han asociado las anotaciones");
-                            res.redirect("tree/"+idTree)
+                            res.redirect("tree/" + idTree)
 
                             // Cachear información del árbol
                             cache.putNewCreationInCache(idTree, onturis.tree, cache.trees).then((id) => {
@@ -977,7 +1024,6 @@ function createTree(req, res) {
                         res.status(500).send(err);
                     }
                 });
-
         })
             .catch((err) => {
                 console.log("Error en conexión con endpoint");
@@ -989,47 +1035,6 @@ function createTree(req, res) {
                     res.status(500).send(err);
                 }
             });
-
-        /*//Primero creo la anotación de posición de tipo Primaria para así asociársela al árbol en la creación
-        queryInterface.getData("create_annotation_position", arg, sparqlClient)
-            .then((data) => {
-                if (data.results.bindings.length > 0) {
-                    console.log("Anotación creada");
-                    arg.id = idTree;
-                    arg.annotation = onturis.data + "annotation/" + idAnnot;
-                    dateISO = helpers.getDateCreated();
-                    arg.date = dateISO;
-                    queryInterface.getData("create_tree", arg, sparqlClient)
-                        .then((data) => {
-                            if (data.results.bindings.length > 0) {
-                                // Redirijo al nuevo árbol si ha ido todo bien
-                                console.log("Árbol creado");
-                                res.redirect("tree/" + idTree)
-                            }
-                        })
-                        .catch((err) => {
-                            console.log("Error en conexión con endpoint");
-                            if (err.statusCode != null && err.statusCode != undefined) {
-                                res.status(err.statusCode).send({ message: err });
-                            }
-                            else {
-                                err = err.message;
-                                res.status(500).send(err);
-                            }
-                        });
-                }
-            })
-            .catch((err) => {
-                console.log("Error en conexión con endpoint");
-                if (err.statusCode != null && err.statusCode != undefined) {
-                    res.status(err.statusCode).send({ message: err });
-                }
-                else {
-                    err = err.message;
-                    res.status(500).send(err);
-                }
-            });*/
-
     }
     else {
         res.status(400).send({ error: "Faltan campos obligatorios para la creación del árbol" });
@@ -1058,7 +1063,7 @@ function deleteTree(req, res) {
             }
         });
         */
-    res.status(200).send({"response": "Se eliminaría el árbol " +id});
+    res.status(200).send({ "response": "Se eliminaría el árbol " + id });
 }
 
 
@@ -1104,6 +1109,7 @@ function createAnnotation(arg, idTree, type, querys, nameQuery) {
 
     idAnnot = stringType + "-" + idTree + "_" + idAnnot;
     arg.id = idAnnot;
+    console.log(arg)
 
     querys.push(queryInterface.getData(nameQuery, arg, sparqlClient));
     return idAnnot;

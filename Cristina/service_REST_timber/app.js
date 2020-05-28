@@ -42,7 +42,9 @@ var TimberApp = function () {
 		/**
 		 * Middlewares 
 		 */
-		self.app.use(bodyParser.json({limit: '10mb', extended: true}))
+
+		 //Límite en bytes del json. Se utiliza principalmente para los POST de las imágenes (hasta 10MB aprox) 15*0.75 (6/8) relacion base64 = 11.25 MB
+		self.app.use(bodyParser.json({limit: '15mb', extended: true}));
 		//self.app.use(bodyParser.urlencoded({limit: '10mb', extended: true}))
 
 		//self.app.use(bodyParser.json());// Para crear objeto body en la petición y admitir métodos HTTP con Content-Type json
