@@ -842,7 +842,9 @@ function createTree(req, res) {
     var idAnnPosition;
     var flag = true;
 
-    var url_Base_sta = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl.split("tree")[0];
+    var url_Base_sta = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
+    if (url_Base_sta.slice(-1) != "/")
+        url_Base_sta += "/";
 
     let bodyParameters = req.body;
     //console.log(bodyParameters.depicts)
@@ -888,20 +890,22 @@ function createTree(req, res) {
 
                 imageController.setDataImage(idImage, arg).then((exif) => {
                     Object.keys(exif).forEach((prop) => {
-                        arg[prop] = exif[prop];
+                        if(prop != undefined){
+                            arg[prop] = exif[prop];
+                        }
                     }
                     )
 
-                    if (arg.width != 0) {
+                    if (arg.width != 0 && arg.width != undefined) {
                         arg.varTriplesImg += "exif:imageWidth " + arg.width + ";";
                     }
-                    if (arg.height != 0) {
+                    if (arg.height != 0  && arg.width != undefined) {
                         arg.varTriplesImg += "exif:imageLength " + arg.height + ";";
                     }
-                    if (arg.latImg != 0) {
+                    if (arg.latImg != 0  && arg.width != undefined) {
                         arg.varTriplesImg += "geo:lat " + arg.latImg + ";";
                     }
-                    if (arg.longImg != 0) {
+                    if (arg.longImg != 0  && arg.width != undefined) {
                         arg.varTriplesImg += "geo:long " + arg.longImg + ";";
                     }
 
@@ -996,7 +1000,7 @@ function createTree(req, res) {
                         Promise.all(querys).then((data) => {
                             // Redirijo al nuevo árbol si ha ido todo bien
                             console.log("Árbol actualizado: se han asociado las anotaciones");
-                            res.redirect("tree/" + idTree)
+                            res.status(201).send({"response": url_Base_sta + idTree});
 
                             // Cachear información del árbol
                             cache.putNewCreationInCache(idTree, onturis.tree, cache.trees).then((id) => {

@@ -3,6 +3,7 @@ const queryInterface = require('../helpers/queryInterface');
 
 var trees = {};
 var annotations = {};
+var users = { "http://timber.gsic.uva.es/sta/data/user/12345":{}};
 
 function putNewCreationInCache(id, type, object){
     var arg = {};
@@ -61,6 +62,7 @@ function clearCache() {
 module.exports = {
     trees,
     annotations,
+    users,
     putNewCreationInCache,
     clearCache
 }
