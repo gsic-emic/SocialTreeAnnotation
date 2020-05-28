@@ -1,5 +1,5 @@
 idTree="http://timber.gsic.uva.es/sta/data/tree/20200524-9e297"
-image="/home/ubuntu/SocialTreeAnnotation/Cristina/complementos/20200527_134437.jpg"
+image="/home/ubuntu/SocialTreeAnnotation/Cristina/complementos/icons.png"
 creator="http://timber.gsic.uva.es/sta/data/user/12345"
 species="http://crossforest.eu/ifn/ontology/Species20"
 lat="45.34"
