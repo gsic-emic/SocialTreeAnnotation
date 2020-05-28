@@ -31,6 +31,8 @@ var onturis = {
 
 	//Imagen
 	prHasPart: 'http://timber.gsic.uva.es/sta/ontology/hasPart',
+	prResource: 'http://timber.gsic.uva.es/sta/ontology/resource',
+
 	//Árbol
 	prHasAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasAnnotation',
 	prHasSpeciesAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasSpeciesAnnotation',

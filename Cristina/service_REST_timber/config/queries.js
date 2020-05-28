@@ -257,7 +257,7 @@ queriesArray.push({
     'name': 'create_image',
     'query': 'INSERT DATA \n \
             { <{{{imageId}}}> a <'+onturis.image+ '> ; \n \
-                dc:subject <{{{image}}}> ; \n \
+            <'+onturis.prResource+ '><{{{image}}}> ; \n \
                 dc:type <http://purl.org/dc/dcmitype/Image> ; \n \
                 {{{varTriplesImg}}} \n \
                 dc:created "{{date}}"^^xsd:date .\n \
@@ -341,6 +341,7 @@ WHERE { \n \
   ?sub rdfs:subClassOf ?sup . \n \
 }'
 });
+
 
 // get values for properties
 queriesArray.push({'name': 'propvalues',

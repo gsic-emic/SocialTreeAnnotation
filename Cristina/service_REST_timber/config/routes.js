@@ -17,6 +17,7 @@ var urls = {
     user: '/data/user/:userId',
     trees: '/data/tree',
     tree: '/data/tree/:treeId',
+    treePart: '/data/treePart',
     annotations: '/data/annotation',
     annotation: '/data/annotation/:annotationId',
     images: '/data/image',
@@ -26,7 +27,7 @@ var urls = {
 
 //Root
 api.get(urls.root, (req, res) => {
-    /*imageController.getExifData("//home/ubuntu/SocialTreeAnnotation/Cristina/complementos/flor_exif.jpg")
+    /*imageController.getExifData("//home/ubuntu/SocialTreeAnnotation/Cristina/complementos/forest.png")
     imageController.getExifData("/home/ubuntu/SocialTreeAnnotation/Cristina/complementos/20200527_134437.jpg")
     */
 
@@ -58,6 +59,8 @@ api.post(urls.trees, treeController.createTree);
 api.get(urls.tree, treeController.getTree);
 api.delete(urls.tree, treeController.deleteTree); 
 
+// Partes de árbol para identificar en la imagen
+api.get(urls.treePart, treeController.getTreeParts);
 
 
 //Anotaciones

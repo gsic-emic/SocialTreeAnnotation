@@ -260,3 +260,10 @@ sta:hasAssertedSpecies a owl:ObjectProperty , rdf:Property ;
   rdfs:domain sta:Tree ;
   rdfs:range sta:AssertedSpecies ;
   rdfs:isDefinedBy sta: .
+
+# Para linkar el jpg con la imagen
+sta:resource a owl:ObjectProperty , rdf:Property ;
+  rdfs:label "resource"@en , "recurso"@es ;
+  rdfs:comment ""@en , ""@es ;
+  rdfs:domain sta:Image ;
+  rdfs:isDefinedBy sta: .
