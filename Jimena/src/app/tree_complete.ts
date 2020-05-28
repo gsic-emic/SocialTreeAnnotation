@@ -5,4 +5,7 @@ export interface Tree_complete {
     long: number;
     species?: string;
     image?: string;
+    title?: string; // titulo de la foto
+    description?: string;
+    depicts?: string;
 }

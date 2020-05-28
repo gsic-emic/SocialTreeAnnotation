@@ -26,7 +26,7 @@ export class NuevoArbolComponent implements OnInit {
   imagen: string;
   creador:string = "demo";
   fecha: string;
-  base64: string; // guarda la codificacion de la imagen
+  
 
   //variables de control
   submitted: boolean = false;
@@ -36,6 +36,13 @@ export class NuevoArbolComponent implements OnInit {
   terminado: boolean = false;
   terminado2: boolean = false; // controla creacion arboles
   error2: boolean = false;
+
+  // Imágenes
+  base64: string; // guarda la codificacion de la imagen
+  title: string;
+  description: string;
+  PARTES: Array<string> = ["Parte del árbol", "Tronco", "Otra parte", "Hoja", "Vista general", "Fruto", "Flor", "Copa", "Rama"]
+  depicts: string;
 
   constructor(private api: APIService) { }
 
@@ -60,9 +67,11 @@ export class NuevoArbolComponent implements OnInit {
     this.lat = null;
     this.long = null;
     this.especie = null;
-    //this.hoja = null;
     this.imagen = null;
-    //this.fruto = null;
+    this.title = null;
+    this.description = null;
+    this.depicts = null;
+    this.error2 = null;
 
     this.volver();
     this.confirmacion = false;
@@ -100,10 +109,36 @@ export class NuevoArbolComponent implements OnInit {
   //contstruyo el arbol, lo convierto a JSON y hago un POST a la api
   public createTree(){
     let si = false;
+    
+    // creo el campo depics para no tener que repetir codigo en los if
+    if (this.depicts != null){
+      // Creo el campo de depics
+      switch (this.depicts){
+        case "Parte del árbol": this.depicts = "http://timber.gsic.uva.es/sta/ontology/TreePart";
+          break;
+        case "Tronco": this.depicts = "http://timber.gsic.uva.es/sta/ontology/Trunk";
+          break;
+        case "Otra parte": this.depicts = "http://timber.gsic.uva.es/sta/ontology/OtherPart";
+          break;
+        case "Hoja": this.depicts = "http://timber.gsic.uva.es/sta/ontology/Leaf";
+          break;
+        case "Vista general": this.depicts = "http://timber.gsic.uva.es/sta/ontology/GeneralView";
+          break;
+        case "Fruto": this.depicts = "http://timber.gsic.uva.es/sta/ontology/Fruit";
+          break;
+        case "Flor": this.depicts = "http://timber.gsic.uva.es/sta/ontology/Flower";
+          break;
+        case "Copa": this.depicts = "http://timber.gsic.uva.es/sta/ontology/Crown";
+          break;
+        case "Rama": this.depicts = "http://timber.gsic.uva.es/sta/ontology/Branch";
+          break;
+      }
+    }
     // Compruebo si rellena todos los campos
     if (this.especie != null && this.imagen != null){
       let especie_select;
       si = true;
+      // Compruebo la especie seleccionada y busco su uri
       for (let clave in this.objSpecies){
         if (this.objSpecies[clave]["nivel"]== 0){
           if (this.objSpecies[clave][this.buscadorSpecies]["lits"].es == this.especie){ 
@@ -112,7 +147,7 @@ export class NuevoArbolComponent implements OnInit {
           }
         }
       }
-      this.newTree = {creator:  this.creador, lat: this.lat, long: this.long, image: this.base64, species: especie_select };
+      this.newTree = {creator:  this.creador, lat: this.lat, long: this.long, image: this.base64, species: especie_select, title: this.title, description: this.description, depicts: this.depicts};
 
     } else{
       if (this.especie != null){
@@ -128,7 +163,7 @@ export class NuevoArbolComponent implements OnInit {
         }
       } else if (this.imagen != null){
         si = true;
-        this.newTree = {creator:  this.creador, lat: this.lat, long: this.long, image: this.base64};
+        this.newTree = {creator:  this.creador, lat: this.lat, long: this.long, image: this.base64, title: this.title, description: this.description, depicts: this.depicts};
         
       }
     }
@@ -152,7 +187,8 @@ export class NuevoArbolComponent implements OnInit {
           this.mensajeError = "Parece que tenemos problemas con el servidor ";
         } else if (error.status == 413){
           this.mensajeError = "La imagen seleccionada ocupa demasiado espacio. Por favor, comprima el archivo antes de subirlo"
-
+        } else if (error.status == 404){
+          this.mensajeError = " Error 404. No se encuentra el árbol creado";
         }
         this.terminado2 = true;
       },
@@ -186,7 +222,7 @@ codeFile(event) {
     //console.log(this.base64);
     
     // Compruebo si la imagen ocupa menos de 10 Mb
-    if (this.base64.length > 9700000){
+    if (this.base64.length > 10000000){
       alert("La imagen seleccionada ocupa demasiado. Por favor, comprímala para que ocupe menos");
       this.base64 = null;
       this.imagen = null;

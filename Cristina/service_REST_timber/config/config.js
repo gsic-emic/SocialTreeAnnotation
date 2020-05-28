@@ -8,6 +8,6 @@ module.exports = {
     lenghtId: 5,
     timeClearCache_ms: 24*3600*1000,
     //directorySaveImages: '/home/ubuntu/nginx/html/data/images/',
-    directorySaveImages: '/Users/usuario/Desktop/Imagenes Timber',
+    directorySaveImages: '/Users/usuario/Desktop/Imagenes Timber/',
     uri_images: 'http://timber.gsic.uva.es/data/images/'
   }

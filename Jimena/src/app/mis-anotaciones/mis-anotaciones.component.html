@@ -17,7 +17,15 @@
         <i class="fas fa-exclamation-circle"></i>
           Ha habido un error al intentar cargar tus árboles. Por favor, inténtelo de nuevo más tarde
       </div>
-      <app-milista [trees]="trees"></app-milista>
+      <div class="d-flex justify-content-center flex-fill" *ngIf="!existen; else listar">
+        <div class="alert alert-primary text-center  ml-5 mr-5 mt-1"  style="max-width: 600px;" role="alert" >
+          ¡Aún no has creado ningún árbol!<br>
+          Ve a <a [routerLink]="['/nuevo_arbol']" class="text-decoration-none"><i class="fas fa-edit"></i> crear nuevo árbol</a>
+        </div>
+      </div>
+      <ng-template #listar>
+        <app-milista [trees]="trees"></app-milista>
+      </ng-template>
     </ng-template>
   </div>
   <ng-template #mostrarAnotaciones>
@@ -32,7 +40,15 @@
         <i class="fas fa-exclamation-circle"></i>
           Ha habido un error al intentar cargar tus anotaciones. Por favor, inténtelo de nuevo más tarde
       </div>
-      <app-milista-annot [annot]="annotations"></app-milista-annot>
+
+      <div class="d-flex justify-content-center flex-fill" *ngIf="!existen_anot; else listarAnot">
+        <div class="alert alert-primary text-center  ml-5 mr-5 mt-1"  style="max-width: 600px;" role="alert" >
+          ¡Aún no tienes ninguna anotación en tu lista!<br>
+        </div>
+      </div>
+      <ng-template #listarAnot>
+        <app-milista-annot [annot]="annotations"></app-milista-annot>
+      </ng-template>    
     </ng-template>
   </ng-template>
   

@@ -44,10 +44,38 @@
             <div class="d-flex justify-content-around flex-wrap">
                 <div class="card border-success m-3 flex-fill" style="max-width: 100rem;">
                     <div class="card-header"><i class="far fa-check-circle"></i> Más información</div>
+                    <div class="d-flex justify-content-around flex-wrap">
                         <div class="form-group p-3">
                             <label class="entrada" for="imagen"><i class="fas fa-camera"></i> Insertar imagen </label>
                             <input type="file" class="form-control" [(ngModel)]="imagen" name="imagen" (change)="selectFile($event)">
+                            <span class="badge badge-warning">La imagen no puede superar los 10 MB</span>
                         </div>
+                        <div class="form-group p-3">
+                            <div class="d-flex flex-column">
+                                <div class="form-inline">
+                                    <label class="entrada"> Título:  </label>
+                                    <input type="text" class="form-control m-1 ml-5" id="title" placeholder="título de la foto"  
+                                    [(ngModel)]="title" name="title">
+                                </div>
+                                <div class="form-inline">
+                                    <label class="entrada"> Descripción: </label>
+                                    <input type="text" class="form-control m-1 ml-1" id="description" placeholder="..."  
+                                        [(ngModel)]="description" name="description">
+                                </div>
+                                <div class="form-inline">
+                                    <label class="entrada"> Parte:   </label>
+                                    <select class="custom-select ml-5" id="inputGroupSelect01" [(ngModel)]="depicts" name="depicts" title="Seleccione una...">
+                                        <option  [value]="item" *ngFor="let item of PARTES" >{{item}}</option>
+                                    </select>
+                                </div> 
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                        
+                        
+                    
                 </div>
                 
                 <!--
