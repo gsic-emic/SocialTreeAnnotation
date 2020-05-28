@@ -63,12 +63,14 @@ api.delete(urls.tree, treeController.deleteTree);
 //Anotaciones
 api.get(urls.annotations, annotationController.getAnnotations);
 api.get(urls.annotation, annotationController.getAnnotation);
+api.post(urls.annotations, annotationController.createAnnotation);
 /* api.post(urls.annotations, annotationController.createAnnotation);
 api.put(urls.annotation, annotationController.updateAnnotation);
 api.delete(urls.annotation, annotationController.deleteAnnotation);
 */
+
 //Imágenes y partes
-api.post(urls.images, imageController.createImageAnnotation);
+//api.post(urls.images, imageController.createImage);
 /*
 api.get(urls.images, imageController.getImages);
 api.post(urls.images, imageController.createImage);*/

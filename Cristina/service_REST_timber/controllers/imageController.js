@@ -91,7 +91,7 @@ function encode_base64(filename) {
 }
 
 // Me  tiene que mandar Jimena en la petición el id del árbol, creator, image (que es la imagenen base64), type?
-function createImageAnnotation(req, res) {
+function createImage(req, res) {
 
   let bodyParameters = req.body;
   var idTree = bodyParameters.id.split("tree/")[1]; // No quiero la uri completa
@@ -145,23 +145,25 @@ function getExifData(image_path) {
       else
         //console.log(exifData)
         //Esto no rellenar coon 0s, dejar vacío.
-        exif_metadata.width = (exifData.exif.ExifImageWidth != undefined) ? exifData.exif.ExifImageWidth : 0;
-      exif_metadata.height = (exifData.exif.ExifImageHeight != undefined) ? exifData.exif.ExifImageHeight : 0;
-      exif_metadata.date = (exifData.exif.DateTimeOriginal != undefined) ? exifData.exif.DateTimeOriginal : 0;
-      var parseDate = exif_metadata.date.split(' ')[0].replace(":", "-");
-      var date = parseDate + "T" + exif_metadata.date.split(' ')[1] + "Z";
-      parseDate = new Date(parseISOString(date));
-      exif_metadata.date = parseDate.toISOString().slice(0, -1);
-      exif_metadata.latImg = 0;
-      exif_metadata.longImg = 0;
+        if (exifData.exif != undefined) {
+          exif_metadata.width = (exifData.exif.ExifImageWidth != undefined) ? exifData.exif.ExifImageWidth : 0;
+          exif_metadata.height = (exifData.exif.ExifImageHeight != undefined) ? exifData.exif.ExifImageHeight : 0;
+          exif_metadata.date = (exifData.exif.DateTimeOriginal != undefined) ? exifData.exif.DateTimeOriginal : 0;
+          var parseDate = exif_metadata.date.split(' ')[0].replace(":", "-");
+          var date = parseDate + "T" + exif_metadata.date.split(' ')[1] + "Z";
+          parseDate = new Date(parseISOString(date));
+          exif_metadata.date = parseDate.toISOString().slice(0, -1);
+          exif_metadata.latImg = 0;
+          exif_metadata.longImg = 0;
 
-      //Realmente en la ontología de exif hay metadatos de coordenadas gps como las que se recogen de la imagen. No hace falta convertirlas ni usar geo:lat y geo:long (sería mas correcto usar exif directamente ya que son metadatos estándar). De momento lo dejo implementado así, pero estaría bien modificarlo en el futuro.
-      if (Object.keys(exifData.gps).length > 0) {
-        var coordenadas = [];
-        coordenadas = helpers.getCoordinates(exifData.gps);
-        exif_metadata.latImg = coordenadas[0];
-        exif_metadata.longImg = coordenadas[1];
-      }
+          //Realmente en la ontología de exif hay metadatos de coordenadas gps como las que se recogen de la imagen. No hace falta convertirlas ni usar geo:lat y geo:long (sería mas correcto usar exif directamente ya que son metadatos estándar). De momento lo dejo implementado así, pero estaría bien modificarlo en el futuro.
+          if (Object.keys(exifData.gps).length > 0) {
+            var coordenadas = [];
+            coordenadas = helpers.getCoordinates(exifData.gps);
+            exif_metadata.latImg = coordenadas[0];
+            exif_metadata.longImg = coordenadas[1];
+          }
+        }
       resolve(exif_metadata);
 
 
@@ -191,7 +193,7 @@ function parseISOString(s) {
   return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
 }
 module.exports = {
-  createImageAnnotation,
+  createImage,
   uploadImage2SF,
   setDataImage,
   getImage
