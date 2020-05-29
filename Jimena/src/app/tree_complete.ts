@@ -8,4 +8,9 @@ export interface Tree_complete {
     title?: string; // titulo de la foto
     description?: string;
     depicts?: string;
+    width_img?: number;
+    height_img?: number;
+    date_img?: Date;
+    lat_img?: number;
+    long_img?: number;
 }
