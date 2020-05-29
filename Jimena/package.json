@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~9.0.0",
     "@angular/platform-browser-dynamic": "~9.0.0",
     "@angular/router": "~9.0.0",
+    "exif-js": "^2.3.0",
     "ipaddr.js": "^1.9.1",
     "leaflet": "^1.6.0",
     "leaflet.locatecontrol": "^0.70.0",
