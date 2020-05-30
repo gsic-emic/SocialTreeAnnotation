@@ -14,7 +14,7 @@ export class APIService {
                                       
 
   constructor( private http: HttpClient) { }
-  /*********************** RECUPERACIÓN DE DATOS DEL SERVIDOR *****************************+*/
+  /*********************** RECUPERACIÓN DE DATOS DEL SERVIDOR ******************************/
 
   /* GET all the trees storaged on the system */
   getTrees(url: string): Observable<string>{
@@ -64,6 +64,25 @@ export class APIService {
     let headers = new HttpHeaders().set('Content-Type','application/json');
     return this.http.post<string>(this.url_postTree, datos, {headers: headers}); //¿necesito cabeceras?
   }
+
+
+  /*********************** CONTROL DE ERRORES ********************************************/
+  public crearMensajeError(errorCode: number){
+    let mensajeError;
+
+    switch (errorCode){
+      case 0: return mensajeError = " Parece que tenemos problemas con el servidor ";
+
+      case 400: return mensajeError = " Error 400. Bad Request ";
+
+      case 404: return mensajeError = " Error 404. No se encuentra el árbol creado ";
+
+      case 413: return mensajeError = " La imagen seleccionada ocupa demasiado espacio. Por favor, comprima el archivo antes de subirlo "
+
+    }
+
+  }
+
 
 
 }
