@@ -90,6 +90,7 @@ export class NuevoArbolComponent implements OnInit {
     this.description = null;
     this.depicts = null;
     this.error2 = null;
+    this.imageSrc = null;
 
     this.volver();
     this.confirmacion = false;
