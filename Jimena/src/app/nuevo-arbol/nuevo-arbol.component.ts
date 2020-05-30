@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Tree_complete } from '../tree_complete';
+//------------------- SERVICIOS -----------------------------
 import { APIService} from '../api.service';
+import { UtilService } from '../services/util.service';
+import { SpeciesService } from '../services/species.service';
+import { ImagesService } from '../services/images.service';
+//-------------------------------------------------
 //import {EXIF as exifShim, EXIFStatic } from '../../../node_modules/exif-js/exif';
 
 //declare var EXIF : EXIFStatic;
@@ -15,8 +20,6 @@ export class NuevoArbolComponent implements OnInit {
   // ESPCIES **************************
   objSpecies: object[]=[]; // Objeto JSON que almacena todas las especies/familias/generos existentes
   ESPECIES: Array<string> = [];
-  buscadorSpecies: string = "http://crossforest.eu/ifn/ontology/vulgarName";
-  buscadorUri: string = "uri";
 
   // Variables para recoger los datos del cuestionario
   newTree: Tree_complete;
@@ -45,24 +48,29 @@ export class NuevoArbolComponent implements OnInit {
   description: string;
   PARTES: Array<string> = ["Parte del árbol", "Tronco", "Otra parte", "Hoja", "Vista general", "Fruto", "Flor", "Copa", "Rama"]
   depicts: string;
-  metadata: Array<any>;
-  date_img: string;
-  lat_img: number;
-  long_img: number;
-  width: number;
-  heigth: number;
+  //metadata: Array<any>;
+  //date_img: string;
+  //lat_img: number;
+  //long_img: number;
+  //width: number;
+  //heigth: number;
 
-  constructor(private api: APIService) { }
+  constructor(private api: APIService, public UtilService: UtilService, public SpeciesService: SpeciesService,
+    public ImagesService: ImagesService) { }
 
   ngOnInit(): void {
     this.getSpecies(); // cargo las especies disponibles para ponerlas en el formulario
+
   }
 
 
   // método que pasa a la página para confirmar la nueva anotación
   public onSubmit() { 
     this.submitted = true;
-    this.fecha = this.construirFecha();
+    this.fecha = this.UtilService.construirFecha(); 
+  }
+  public onSubmit2(){
+    this.confirmacion = true;
   }
 
   //acción que vuelve al formulario CON los datos que se han introducido
@@ -90,7 +98,7 @@ export class NuevoArbolComponent implements OnInit {
     this.api.getSpecies().subscribe(
       (data: any) =>{
         this.objSpecies = data.response;
-        this.cargarEspecies();
+        this.ESPECIES = this.SpeciesService.cargarEspecies(this.objSpecies); 
         //console.log(this.objSpecies);
       },
       (error) =>{
@@ -104,71 +112,59 @@ export class NuevoArbolComponent implements OnInit {
       }
       );
   }
-  cargarEspecies(){
-    var i=0;
-    for (let clave in this.objSpecies){     
-      if (this.objSpecies[clave]["nivel"]== 0){ // Las especies son de nivel 0
-        this.ESPECIES[i] = this.objSpecies[clave][this.buscadorSpecies]["lits"].es;
-        i++;
-      }
-    }
-  }
+
   
-  //contstruyo el arbol, lo convierto a JSON y hago un POST a la api
+  // Metodo que manda la informacion al servidor
   public createTree(){
+    this.createJsonTree(); // Creo el JSON con los datos necesarios
+    
+    // POST a la api
+    this.api.createTree(JSON.stringify(this.newTree)).subscribe(
+      (data) =>{
+        console.log(data);
+      },
+      (error) =>{
+        this.error2 = true;
+        console.error(error);
+        this.mensajeError = this.api.crearMensajeError(error.status);
+        this.terminado2 = true;
+      },
+      () =>{
+        this.terminado2 = true;
+      }
+      );
+
+    // Tras mandar los datos al servidor, limpio las variables del formulario por si se crea otro
+    this.lat = null;
+    this.long = null;
+    this.especie = null;
+    this.imagen = null;
+  }
+
+
+  createJsonTree(){
     let si = false;
     
     // creo el campo depics para no tener que repetir codigo en los if
     if (this.depicts != null){
       // Creo el campo de depics
-      switch (this.depicts){
-        case "Parte del árbol": this.depicts = "http://timber.gsic.uva.es/sta/ontology/TreePart";
-          break;
-        case "Tronco": this.depicts = "http://timber.gsic.uva.es/sta/ontology/Trunk";
-          break;
-        case "Otra parte": this.depicts = "http://timber.gsic.uva.es/sta/ontology/OtherPart";
-          break;
-        case "Hoja": this.depicts = "http://timber.gsic.uva.es/sta/ontology/Leaf";
-          break;
-        case "Vista general": this.depicts = "http://timber.gsic.uva.es/sta/ontology/GeneralView";
-          break;
-        case "Fruto": this.depicts = "http://timber.gsic.uva.es/sta/ontology/Fruit";
-          break;
-        case "Flor": this.depicts = "http://timber.gsic.uva.es/sta/ontology/Flower";
-          break;
-        case "Copa": this.depicts = "http://timber.gsic.uva.es/sta/ontology/Crown";
-          break;
-        case "Rama": this.depicts = "http://timber.gsic.uva.es/sta/ontology/Branch";
-          break;
-      }
+      this.depicts = this.ImagesService.createUriDepicts(this.depicts);
+      console.log(this.depicts);
     }
     // Compruebo si rellena todos los campos
     if (this.especie != null && this.imagen != null){
       let especie_select;
       si = true;
-      // Compruebo la especie seleccionada y busco su uri
-      for (let clave in this.objSpecies){
-        if (this.objSpecies[clave]["nivel"]== 0){
-          if (this.objSpecies[clave][this.buscadorSpecies]["lits"].es == this.especie){ 
-            especie_select = clave;
-            break;
-          }
-        }
-      }
+      especie_select = this.SpeciesService.buscarUri(this.objSpecies, this.especie);
       this.newTree = {creator:  this.creador, lat: this.lat, long: this.long, image: this.base64, species: especie_select, title: this.title, description: this.description, depicts: this.depicts};
 
     } else{
       if (this.especie != null){
+        let especie_select;
         si = true;
-        // Busco la uri de la especie seleccionada para mandarla al servidor
-        for (let clave in this.objSpecies){
-          if (this.objSpecies[clave]["nivel"]== 0){
-            if (this.objSpecies[clave][this.buscadorSpecies]["lits"].es == this.especie){ 
-              this.newTree = {creator:  this.creador, lat: this.lat, long: this.long, species: clave };
-              break;
-            }
-          }
-        }
+        especie_select = this.SpeciesService.buscarUri(this.objSpecies, this.especie);
+        this.newTree = {creator:  this.creador, lat: this.lat, long: this.long, species: especie_select };
+
       } else if (this.imagen != null){
         si = true;
         this.newTree = {creator:  this.creador, lat: this.lat, long: this.long, image: this.base64, title: this.title, description: this.description, depicts: this.depicts};
@@ -182,34 +178,8 @@ export class NuevoArbolComponent implements OnInit {
       this.newTree = {creator:  this.creador, lat: this.lat, long: this.long};
     }
     
-    console.log(JSON.stringify(this.newTree));
-    // POST a la api
-    this.api.createTree(JSON.stringify(this.newTree)).subscribe(
-      (data) =>{
-        console.log(data);
-      },
-      (error) =>{
-        this.error2 = true;
-        console.error(error);
-        if (error.status == 0){
-          this.mensajeError = "Parece que tenemos problemas con el servidor ";
-        } else if (error.status == 413){
-          this.mensajeError = "La imagen seleccionada ocupa demasiado espacio. Por favor, comprima el archivo antes de subirlo"
-        } else if (error.status == 404){
-          this.mensajeError = " Error 404. No se encuentra el árbol creado";
-        }
-        this.terminado2 = true;
-      },
-      () =>{
-        this.terminado2 = true;
-      }
-      );
+    //console.log(JSON.stringify(this.newTree));
 
-    // Tras mandar los datos al servidor, limpio las variables del formulario por si se crea otro
-    this.lat = null;
-    this.long = null;
-    this.especie = null;
-    this.imagen = null;
   }
 
   /******* Conversión de las imágenes a base64 para madar al servidor */
@@ -248,96 +218,6 @@ codeFile(event) {
       this.base64 = null;
       this.imagen = null;
     }
-
   }
-
-  /****************************** METADATOS *******************************/
-  /*
-  setDataImage(image_path){
-     // Consigo los metadatos de la imagen
-     return new Promise((resolve, reject) => {
-      //console.log(image_path)
-      this.getExifData(image_path).then((metadata) => {
-        //Aqui va en forma de promise o callbak 
-        resolve(metadata);
-        
-      })
-    });
-
-  }
-
-  // Cargo los metadatos de la imagen: extraído de https://github.com/exif-js/exif-js
-  getExifData(image) {
-    var exif_metadata = {};
-    var gps = {};
-
-    return new Promise((resolve, reject) => {
-
-      EXIF.getData(image, function(){
-        var allMetaData = EXIF.getAllTags(this);
-        
-        if (allMetaData != undefined) { // compruebo si hay metadatos
-          exif_metadata["DateTime"] = (allMetaData.DateTime != undefined) ? allMetaData.DateTime : 0;
-
-          exif_metadata["GPSLatitude"] = (allMetaData.GPSLatitude != undefined) ? allMetaData.GPSLatitude : null;
-          exif_metadata["GPSLatitudeRef"] = (allMetaData.GPSLatitudeRef != undefined) ? allMetaData.GPSLatitudeRef : null;
-          exif_metadata["GPSLongitude"] = (allMetaData.GPSLongitude != undefined) ? allMetaData.GPSLongitude : null;
-          exif_metadata["GPSLongitudeRef"] = (allMetaData.GPSLongitudeRef != undefined) ? allMetaData.GPSLongitudeRef : null;
-
-          //console.log(allMetaData);
-        }
-
-        resolve(exif_metadata);
-
-    });
-    
-    })
-}
-convertirMetadata(metadata){
-  if (metadata["DateTime"] != 0){
-    this.date_img = metadata.DateTime;
-    console.log(metadata);
-  }
-
-  if(metadata["GPSLatitude"] != 0 && metadata["GPSLatitudeRef"] != 0 && metadata["GPSLongitude"] != 0 && metadata["GPSLongitudeRef"] != 0 ){
-        var coordenadas = [];
-        var lat = [];
-
-     //console.log(metadata);
-
-        //coordenadas = this.getCoordinates(metadata["GPSLatitude"], metadata["GPSLatitudeRef"], metadata["GPSLongitude"], metadata["GPSLongitudeRef"]);
-        //this.lat_img = coordenadas[0];
-        //this.long_img = coordenadas[1];
-        console.log("Coordenadas: "+coordenadas[0]+" y "+ coordenadas[1]);
-  }
-}
-getCoordinates(lat, long, latRef, longRef) {
-  var coord = [];
-  coord[0] = this.ConvertDMSToDD(lat[0], lat[1], lat[2], latRef);
-  coord[1] = this.ConvertDMSToDD(long[0], long[1], long[2], longRef);
-  return coord;
-}
-
-ConvertDMSToDD(degrees, minutes, seconds, direction) {
-  var dd = degrees + minutes/60 + seconds/(60*60);
-
-  if (direction == "S" || direction == "W") {
-      dd = dd * -1;
-  } // Don't do anything for N or E
-  return dd;
-}*/
-
-
-  //-----------------------------------------------------
-  
-  public construirFecha(): string{
-    var f = new Date();
-    var fecha;
-    return fecha = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear();
-  }
-  public onSubmit2(){
-    this.confirmacion = true;
-  }
-
 
 }
