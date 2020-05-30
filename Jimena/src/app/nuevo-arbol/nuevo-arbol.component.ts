@@ -48,6 +48,8 @@ export class NuevoArbolComponent implements OnInit {
   description: string;
   PARTES: Array<string> = ["Parte del árbol", "Tronco", "Otra parte", "Hoja", "Vista general", "Fruto", "Flor", "Copa", "Rama"]
   depicts: string;
+  imageSrc: string; //Para la previsualizacion de la imagen al subirla
+  imageSrc_default: string = "./../assets/images/no-image.png";
   //metadata: Array<any>;
   //date_img: string;
   //lat_img: number;
@@ -184,15 +186,19 @@ export class NuevoArbolComponent implements OnInit {
 
   /******* Conversión de las imágenes a base64 para madar al servidor */
   selectFile(event){
-    var metadata = {};
     var files = event.target.files;
     var file = files[0];
 
     if (files && file) {
         var reader = new FileReader();
-        reader.onload =this.codeFile.bind(this);
+        reader.onload = this.codeFile.bind(this); // codificacion base64
         reader.readAsBinaryString(file);
 
+        var reader2 = new FileReader();
+        reader2.onload = (e: any) => {
+          this.imageSrc = e.target.result; // Previsualizacion de la imagen subida
+        };
+        reader2.readAsDataURL(event.target.files[0]);
        
       // Extraigo los metadatos de la imagen
       /*this.setDataImage(file).then((exifdata) => {
@@ -207,6 +213,7 @@ export class NuevoArbolComponent implements OnInit {
     }
   }
 
+
 codeFile(event) {
     var binaryString = event.target.result;
     this.base64= btoa(binaryString);
@@ -217,6 +224,7 @@ codeFile(event) {
       alert("La imagen seleccionada ocupa demasiado. Por favor, comprímala para que ocupe menos");
       this.base64 = null;
       this.imagen = null;
+      this.imageSrc = null;
     }
   }
 

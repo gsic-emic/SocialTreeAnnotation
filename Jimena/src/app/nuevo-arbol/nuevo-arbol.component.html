@@ -48,10 +48,9 @@
                         <div class="form-group p-3">
                             <label class="entrada" for="imagen"><i class="fas fa-camera"></i> Insertar imagen </label>
                             <input type="file" class="form-control" [(ngModel)]="imagen" name="imagen" (change)="selectFile($event)">
-                            <span class="badge badge-warning">La imagen no puede superar los 10 MB</span>
-                        </div>
-                        <div class="form-group p-3">
-                            <div class="d-flex flex-column">
+                            <span class="badge badge-warning">La imagen no puede superar los 10 MB</span> <br>
+
+                            <div class="d-flex flex-column align-items-center mt-3">
                                 <div class="form-inline">
                                     <label class="entrada"> Título:  </label>
                                     <input type="text" class="form-control m-1 ml-5" id="title" placeholder="título de la foto"  
@@ -64,18 +63,17 @@
                                 </div>
                                 <div class="form-inline">
                                     <label class="entrada"> Parte:   </label>
-                                    <select class="custom-select ml-5" id="inputGroupSelect01" [(ngModel)]="depicts" name="depicts" title="Seleccione una...">
-                                        <option  [value]="item" *ngFor="let item of PARTES" >{{item}}</option>
+                                    <select class="custom-select ml-5" id="inputGroupSelect01" [(ngModel)]="depicts" name="depicts" >
+                                        <option  [value]="item" *ngFor="let item of PARTES">{{item}}</option>
                                     </select>
                                 </div> 
                             </div>
                         </div>
+                        <div class="form-group p-3">
+                            <img class="image" [src]="imageSrc || imageSrc_default" alt="your image" />
+                        </div>
 
-                    </div>
-                    
-                        
-                        
-                    
+                    </div>                  
                 </div>
                 
                 <!--
@@ -113,14 +111,14 @@
 <!-- confirm-->
 <div class="recopilacion" [hidden]="!submitted">
     <div class="card border-primary mb-3" style="max-width: 70rem;">
-        <div class="card-header"><i class="fas fa-arrow-right"></i>Se va a crear la siguiente anotación en el sistema:</div>
+        <div class="card-header"><i class="fas fa-arrow-right"></i>Se va a crear el siguiente árbol en el sistema:</div>
         <div class="p-4">
             <p [hidden]="!especie"><i class="fab fa-pagelines"></i> Especie: {{especie}}</p>
             <p><i class="fas fa-map-marker-alt"></i> Latitud: {{lat}} </p>
             <p><i class="fas fa-map-marker-alt"></i> Longitud: {{long}}</p>
-            <p [hidden]="!imagen"><i class="fas fa-camera"></i> Imagen: {{imagen}} </p>
-            <p [hidden]="!hoja"><i class="fab fa-pagelines"></i> Tipo de hoja: {{hoja}}</p>
-            <p [hidden]="!fruto"><i class="fas fa-apple-alt"></i> Tipo de fruto: {{fruto}}</p>
+            <img class="image2" [src]="imageSrc" [hidden]="!imagen" alt="your image" />
+            <!--<p [hidden]="!hoja"><i class="fab fa-pagelines"></i> Tipo de hoja: {{hoja}}</p>
+            <p [hidden]="!fruto"><i class="fas fa-apple-alt"></i> Tipo de fruto: {{fruto}}</p>-->
             <br>
             <p><i class="fas fa-clock"></i> Fecha de creación: {{fecha}}</p>
         </div>
