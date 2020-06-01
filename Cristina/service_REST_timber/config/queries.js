@@ -257,7 +257,7 @@ queriesArray.push({
     'name': 'create_image',
     'query': 'INSERT DATA \n \
             { <{{{imageId}}}> a <'+onturis.image+ '> ; \n \
-            <'+onturis.prResource+ '><{{{image}}}> ; \n \
+            <'+onturis.prResource+ '> <{{{image}}}> ; \n \
                 dc:type <http://purl.org/dc/dcmitype/Image> ; \n \
                 {{{varTriplesImg}}} \n \
                 dc:created "{{date}}"^^xsd:date .\n \
@@ -281,6 +281,30 @@ queriesArray.push({
             }'
 });
 
+queriesArray.push({
+    'name': 'update_primary_annotation',
+    'query': 'DELETE { \n \
+        <{{{idTree}}}> <{{{hasPrimary}}}> ?o . \n \
+        ?o a <{{{typePrimary}}}> . \n \
+       } \n \
+       INSERT { \n \
+        <{{{idTree}}}> <{{{hasAnnot}}}> ?o . \n \
+        ?o a <{{{type}}}> . \n \
+       }\n \
+       WHERE  {\n \
+        <{{{idTree}}}> <{{{hasPrimary}}}> ?o . \n \
+       }'
+});
+/*
+queriesArray.push({
+    'name': 'get_primary_annotation',
+    'query': 'SELECT ?oldAnnot { \n \
+        WHERE { \n \
+        <{{{idTree}}}> <{{{hasPrimary}}}> ?oldAnnot . \n \
+        <{{{oldAnnot}}}> a <{{{typePrimary}}}> . \n \
+       }'
+});
+*/
 queriesArray.push({
     'name': 'test_delete',
     'query': 'DELETE { \n \

@@ -55,7 +55,6 @@ function putNewCreationInCache(id, type, object){
                             {
                                 //No está creado el array
                                 if(object[arg.uri][element.prop.value].value==element.value.value){
-                                    console.log("existe")
                                     existe = true;
                                 }
                                 if(!existe){
