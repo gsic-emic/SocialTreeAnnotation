@@ -1,4 +1,4 @@
-idTree="http://timber.gsic.uva.es/sta/data/tree/20200528-74c18"
+idTree="http://timber.gsic.uva.es/sta/data/tree/20200601-e9058"
 image="/home/ubuntu/SocialTreeAnnotation/Cristina/complementos/icons.png"
 creator="http://timber.gsic.uva.es/sta/data/user/12345"
 species="http://crossforest.eu/ifn/ontology/Species20"
@@ -19,11 +19,17 @@ description="Foto de test"
 
 ## Crear árbol completo
 
-(echo -n '{"creator": "'$creator'", "species":"'$species'", "lat": "'$lat'", "long":"'$long'", "depicts":"'$depicts'","title":"'$title'", "description":"'$description'", "image": "'; base64 "$image"; echo '"}')  | curl -H "Content-Type: application/json" -d @-  http://timber.gsic.uva.es/sta/data/tree/
+#(echo -n '{"creator": "'$creator'", "lat": "'$lat'", "long":"'$long'", "depicts":"'$depicts'","title":"'$title'", "description":"'$description'", "image": "'; base64 "$image"; echo '"}')  | curl -H "Content-Type: application/json" -d @-  http://timber.gsic.uva.es/sta/data/tree/
 
-## Crear antoación tipo imagen
+## Crear anotación tipo imagen
 
-image="/home/ubuntu/SocialTreeAnnotation/Cristina/complementos/forest.png"
-type="image"
-(echo -n '{"creator": "'$creator'", "id":"'$idTree'", "type":"'$type'", "image": "'; base64 "$image"; echo '"}')  | curl -H "Content-Type: application/json" -d @-  http://timber.gsic.uva.es/sta/data/annotation
+#image="/home/ubuntu/SocialTreeAnnotation/Cristina/complementos/forest.png"
+#type="image"
+#(echo -n '{"creator": "'$creator'", "id":"'$idTree'", "type":"'$type'", "image": "'; base64 "$image"; echo '"}')  | curl -v -H "Content-Type: application/json" -d @-  http://timber.gsic.uva.es/sta/data/annotation
+
+## Crear anotación tipo especie
+species="http://crossforest.eu/ifn/ontology/Species20"
+type="species"
+(echo -n '{"creator": "'$creator'", "id":"'$idTree'", "type":"'$type'", "species": "'$species'"}')  | curl -v -H "Content-Type: application/json" -d @-  http://timber.gsic.uva.es/sta/data/annotation
+
 echo -e "\n"

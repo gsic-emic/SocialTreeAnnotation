@@ -802,52 +802,80 @@ function getTree(req, res) {
         res.status(200).send({ response });
     }
     else {
+        //Para crear los campos lat long species como al listar árboles
+
+        /*var querys = [];
+        arg.propiri = onturis.geo_lat;
+        querys.push(queryInterface.getData("trees_prop_primaryAnnotation", arg, sparqlClient));
+        arg.propiri = onturis.geo_long;
+        querys.push(queryInterface.getData("trees_prop_primaryAnnotation", arg, sparqlClient));
+        arg.propiri = onturis.prHasTaxon;
+        querys.push(queryInterface.getData("trees_prop_primaryAnnotation", arg, sparqlClient));*/
+
+
         queryInterface.getData("details_allprop", arg, sparqlClient)
             .then((data) => {
                 if (data.results.bindings.length == 0) {
                     res.status(404).send({ response: "El árbol no existe" });
                 }
                 else {
-                    cache.trees[arg.uri] == undefined ? cache.trees[arg.uri] = {} : cache.trees[arg.uri];
-                    response[arg.uri] = cache.trees[arg.uri];
+                    //Para crear los campos lat long species como al listar árboles
+                    /*Promise.all(querys).then((data1) => {
+                        cache.trees[arg.uri] == undefined ? cache.trees[arg.uri] = {} : cache.trees[arg.uri];
+                        cache.trees[arg.uri].lat = data1[0][arg.uri][onturis.geo_lat][0].value;
+                        cache.trees[arg.uri].long = data1[1][arg.uri][onturis.geo_long][0].value;
+                        cache.trees[arg.uri].species = data1[2][arg.uri][onturis.prHasTaxon][0].value;*/
+                        
+                        cache.trees[arg.uri] == undefined ? cache.trees[arg.uri] = {} : cache.trees[arg.uri];
+                        response[arg.uri] = cache.trees[arg.uri];
 
-                    data.results.bindings.forEach(element => { 
-                        if (cache.trees[arg.uri][element.prop.value] != undefined) //para cachear un objeto que tiene una propiedad repetida- Por ejemplo un árbol con múltiples hasImgeAnnotation
-                        {
-                            exite = false;
-                            if(!Array.isArray(cache.trees[arg.uri][element.prop.value]))
+                        data.results.bindings.forEach(element => {
+                            if (cache.trees[arg.uri][element.prop.value] != undefined) //para cachear un objeto que tiene una propiedad repetida- Por ejemplo un árbol con múltiples hasImgeAnnotation
                             {
-                                //No está creado el array
-                                if(Object.is(cache.trees[arg.uri][element.prop.value],element.value)){
-                                    console.log("existe")
-                                    existe = true;
-                                }
-                                if(!existe){
-                                    cache.trees[arg.uri][element.prop.value] = [cache.trees[arg.uri][element.prop.value]];
-                                    cache.trees[arg.uri][element.prop.value].push(element.value);
-                                }      
-                            }
-                            else{
-                                // Si ya existe el elemento en el array no lo añado
-                                for (var i=0; i<cache.trees[arg.uri][element.prop.value].length;i++){
-                                    if(element.value.value == cache.trees[arg.uri][element.prop.value][i].value){
+                                exite = false;
+                                if (!Array.isArray(cache.trees[arg.uri][element.prop.value])) {
+                                    //No está creado el array
+                                    if (Object.is(cache.trees[arg.uri][element.prop.value], element.value)) {
+                                        //console.log("existe")
                                         existe = true;
                                     }
+                                    if (!existe) {
+                                        cache.trees[arg.uri][element.prop.value] = [cache.trees[arg.uri][element.prop.value]];
+                                        cache.trees[arg.uri][element.prop.value].push(element.value);
+                                    }
                                 }
-                                if(!existe)
-                                     cache.trees[arg.uri][element.prop.value].push(element.value);
+                                else {
+                                    // Si ya existe el elemento en el array no lo añado
+                                    for (var i = 0; i < cache.trees[arg.uri][element.prop.value].length; i++) {
+                                        if (element.value.value == cache.trees[arg.uri][element.prop.value][i].value) {
+                                            existe = true;
+                                        }
+                                    }
+                                    if (!existe)
+                                        cache.trees[arg.uri][element.prop.value].push(element.value);
+                                }
+                                response[arg.uri][element.prop.value] = cache.trees[arg.uri][element.prop.value];
                             }
-                            response[arg.uri][element.prop.value] = cache.trees[arg.uri][element.prop.value];
-                        }
-                        else{
-                            cache.trees[arg.uri][element.prop.value] = element.value;
-                            response[arg.uri][element.prop.value] = cache.trees[arg.uri][element.prop.value];
-                        }                
-                    });
-                    res.status(200).send({ response });
+                            else {
+                                cache.trees[arg.uri][element.prop.value] = element.value;
+                                response[arg.uri][element.prop.value] = cache.trees[arg.uri][element.prop.value];
+                            }
+                        });
+                        res.status(200).send({ response });
+
+                    /*})
+                        .catch((err) => {
+                            console.log("Error en conexión con endpoint");
+                            if (err.statusCode != null && err.statusCode != undefined) {
+                                res.status(err.statusCode).send({ message: err });
+                            }
+                            else {
+                                err = err.message;
+                                res.status(500).send(err);
+                            }
+                        });*/
                 }
-            })
-            .catch((err) => {
+            }).catch((err) => {
                 console.log("Error en conexión con endpoint");
                 if (err.statusCode != null && err.statusCode != undefined) {
                     res.status(err.statusCode).send({ message: err });
@@ -858,7 +886,9 @@ function getTree(req, res) {
                 }
             });
     }
+
 }
+
 
 
 function createTree(req, res) {
@@ -913,7 +943,7 @@ function createTree(req, res) {
                     arg.varTriplesImg += "dc:description \"" + bodyParameters.description + "\";";
                 }
                 if (bodyParameters.depicts != undefined) {
-                    arg.varTriplesImg += "foaf:depicts <" + bodyParameters.depicts + ">;";
+                    arg.varTriplesImg += "rdf:type <" + bodyParameters.depicts + ">;";
                 }
 
 
@@ -953,7 +983,7 @@ function createTree(req, res) {
                                 //Falta cachear imágenes
                                 //Cachéo la anotación recién creada
                                 cache.putNewCreationInCache(idImage.split('.')[0], onturis.image, cache.images).then((id) => {
-                                    console.log("Imagen " + id  + " cacheada");
+                                    console.log("Imagen " + id + " cacheada");
                                 }).catch((err) => {
                                     console.log("Error cacheando imagen");
                                     if (err.statusCode != null && err.statusCode != undefined) {
@@ -1168,43 +1198,100 @@ function createAnnotation(arg, idTree, type, querys, nameQuery) {
     return idAnnot;
 }
 
-function getTreeParts(req, res){
+function getTreeParts(req, res) {
     var nameQuery = "subclasses";
-    var arg ={};
-    var response = {} ;
-    arg.uri=onturis.treePart;
+    var arg = {};
+    var response = {};
+    arg.uri = onturis.treePartPhoto;
     queryInterface.getData(nameQuery, arg, sparqlClient).then((data) => {
-        if(data.results.bindings.length==0){
+        if (data.results.bindings.length == 0) {
             res.status(204);
         }
-        else{
-            data.results.bindings.forEach((element) =>{
-                if (response[element.sup.value] == undefined){
-                    response[element.sup.value] = {"subclasses": []};
+        else {
+            data.results.bindings.forEach((element) => {
+                if (response[element.sup.value] == undefined) {
+                    response[element.sup.value] = { "subclasses": [] };
                 }
                 response[element.sup.value].subclasses.push(element.sub.value);
             })
-            res.status(200).send({response})
+            res.status(200).send({ response })
         }
     })
-    .catch((err) => {
-        console.log("Error en conexión con endpoint");
-        if (err.statusCode != null && err.statusCode != undefined) {
-            res.status(err.statusCode).send({ message: err });
-        }
-        else {
-            err = err.message;
-            res.status(500).send(err);
-        }
-    });
+        .catch((err) => {
+            console.log("Error en conexión con endpoint");
+            if (err.statusCode != null && err.statusCode != undefined) {
+                res.status(err.statusCode).send({ message: err });
+            }
+            else {
+                err = err.message;
+                res.status(500).send(err);
+            }
+        });
 
 }
 
+function getTreeVirtuoso(id) {
+    sparqlClient.setDefaultGraph();
+    var arg = {};
+    arg.uri = id;
+    var response = {};
+    var existe = false;
+
+    return new Promise((resolve, reject) => {
+        queryInterface.getData("details_allprop", arg, sparqlClient)
+            .then((data) => {
+                if (data.results.bindings.length == 0) {
+                    resolve(null);
+                }
+                else {
+                    cache.trees[arg.uri] == undefined ? cache.trees[arg.uri] = {} : cache.trees[arg.uri];
+                    response[arg.uri] = cache.trees[arg.uri];
+
+                    data.results.bindings.forEach(element => {
+                        if (cache.trees[arg.uri][element.prop.value] != undefined) //para cachear un objeto que tiene una propiedad repetida- Por ejemplo un árbol con múltiples hasImgeAnnotation
+                        {
+                            exite = false;
+                            if (!Array.isArray(cache.trees[arg.uri][element.prop.value])) {
+                                //No está creado el array
+                                if (Object.is(cache.trees[arg.uri][element.prop.value], element.value)) {
+                                    //console.log("existe")
+                                    existe = true;
+                                }
+                                if (!existe) {
+                                    cache.trees[arg.uri][element.prop.value] = [cache.trees[arg.uri][element.prop.value]];
+                                    cache.trees[arg.uri][element.prop.value].push(element.value);
+                                }
+                            }
+                            else {
+                                // Si ya existe el elemento en el array no lo añado
+                                for (var i = 0; i < cache.trees[arg.uri][element.prop.value].length; i++) {
+                                    if (element.value.value == cache.trees[arg.uri][element.prop.value][i].value) {
+                                        existe = true;
+                                    }
+                                }
+                                if (!existe)
+                                    cache.trees[arg.uri][element.prop.value].push(element.value);
+                            }
+                        }
+                        else {
+                            cache.trees[arg.uri][element.prop.value] = element.value;
+                        }
+                    });
+                    resolve(cache.trees[arg.uri]);
+                }
+            })
+            .catch((err) => {
+                reject(err.statusCode);
+            });
+    });
+
+}
 module.exports = {
     getTrees,
     getTree,
     createTree,
     deleteTree,
     createAnnotation,
-    getTreeParts
+    getTreeParts,
+    getTreeVirtuoso
 }

@@ -3,7 +3,7 @@
 var onturis = {
 	//CLASES
     tree: 'http://timber.gsic.uva.es/sta/ontology/Tree',
-	treePart: 'http://timber.gsic.uva.es/sta/ontology/TreePart',
+	treePartPhoto: 'http://timber.gsic.uva.es/sta/ontology/TreePartPhoto',
 	leaf: 'http://timber.gsic.uva.es/sta/ontology/Leaf',
 	fruit: 'http://timber.gsic.uva.es/sta/ontology/Fruit',
 	trunk: 'http://timber.gsic.uva.es/sta/ontology/Trunk',

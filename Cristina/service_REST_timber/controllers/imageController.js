@@ -20,6 +20,7 @@ function getImage(req, res) {
 
   res.format({
     'application/json': function () {
+      //Devuelve info triplas
       if (cache.images[arg.uri] != undefined && cache.images[arg.uri][onturis.dc_created] != undefined) {
         response[arg.uri] = (response[arg.uri] == undefined) ? {} : response[arg.uri];
         response[arg.uri] = cache.images[arg.uri];
@@ -148,13 +149,16 @@ function createImage(req, res) {
   });
 }*/
 
-function setDataImage(idImage, arg) {
+function setDataImage(idImage) {
   return new Promise((resolve, reject) => {
     var image_path = dirname + idImage;
     //console.log(image_path)
     getExifData(image_path).then((exif) => {
       //Aqui va en forma de promise o callbak 
       resolve(exif);
+    })
+    .catch((err) =>{
+      reject(err);
     })
   });
 }
@@ -165,6 +169,7 @@ function getExifData(image_path) {
     new ExifImage({ image: image_path }, function (error, exifData) {
       if (error) {
         console.log('Error: ' + error.message);//Las imagenes solo pueden ser jpeg para recuperar sus exif data
+        //reject("Error en getExifData " + error.message)
       }
       else {
         //console.log(exifData)

@@ -162,9 +162,9 @@ function createAnnotation(req, res) {
         species: "species",
         image: "image"
     };
-    var querys = [];
-    var arg = {};
-    var nameQuery = "";
+
+    var validate = false;
+
 
     var url_Base_sta = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
     if (url_Base_sta.slice(-1) != "/")
@@ -174,13 +174,100 @@ function createAnnotation(req, res) {
 
     //console.log(bodyParameters);
 
-    // Comprobar que estos 3 campos están sino 400 Bad Request
-    if (idTree != undefined && type != undefined && creator != undefined) {
-        //Habría que comprobar que el árbol y el usuario existen y que el tipo es uno de los definidos (no lo compruebo, ya que habria que ver si está en la caché y sino en  el virtuoso. Líneas futuras)
-        //if (cache.trees[idTree] != undefined) {
-        //if (cache.users[creator] != undefined) {
-        //if (type == typeEnum.position || type == typeEnum.species || type == typeEnum.image) {
-        arg.creator = creator;
+
+    if (idTree == undefined) {
+        res.status(404).send({ "error": uri_tree + " no existe" });
+    }
+    else {
+        // Comprobar que estos 3 campos están sino 400 Bad Request
+        if (uri_tree != undefined && type != undefined && creator != undefined) {
+            //Habría que comprobar que el árbol y el usuario existen y que el tipo es uno de los definidos (no lo compruebo, ya que habria que ver si está en la caché y sino en  el virtuoso. Líneas futuras)
+
+            var promiseCheckData = new Promise((resolve, reject) => {
+                //Comprobar si el árbol está cacheado y sino consulto al virtuoso.
+                if (cache.trees[uri_tree] != undefined) {
+                    console.log("Árbol " + idTree + " cacheado");
+                    //Habría que comprobar que el usuario existe (ánalogo al árbol)
+                    console.log("Comprobar si el usuario existe");
+                    validate = true;
+                    resolve(validate);
+                }
+                else {
+                    treeController.getTreeVirtuoso(uri_tree).then((data) => {
+                        if (data == null) {
+                            err.statusMessage = "Error: no se puede crear la anotación. El árbol no existe"
+                            err.statusCode = 400;
+                            reject(err);
+                        }
+                        else {
+                            //Árbol existe
+                            console.log("El árbol existe");
+                            //Habría que comprobar que el usuario existe (ánalogo al árbol)
+                            console.log("Comprobar si el usuario existe");
+                            validate = true;
+                            resolve(validate);
+                        }
+                    }).catch((err) => {
+                        err.statusMessage += "Error: no se puede crear la anotación. El árbol no existe"
+                        reject(err);
+                    })
+                }
+            });
+
+            promiseCheckData.then((validate) => {
+                if (validate) {
+                    //Compruebo el tipo
+                    if (Object.values(typeEnum).includes(type)) {
+                        createAnn(bodyParameters, typeEnum, cache.trees[uri_tree]).then((response) => {
+                            res.status(response.statusCode).send(response.message);
+                        }).catch((err) => {
+                            //res.status(err.statusCode).send(err.statusMessage);
+                            res.status(500).send(err);
+                        });
+                    }
+                }
+            })
+                .catch((err) => {
+                    res.status(500).send(err);
+                })
+        }
+        /*/else
+            res.status(400).send({ "error": "La anotación de tipo " + type + " no existe" });
+    }
+    else
+        res.status(400).send({ "error": "El usuario " + creator + " no existe" });
+    }
+    else
+    res.status(400).send({ "error": "El árbol " + idTree + " no existe" });
+    }*/
+        else {
+            res.status(400).send({ "error": "Faltan campos obligatorios para crear la anotación" });
+        }
+    }
+
+}
+
+
+function createAnn(bodyParameters, typeEnum, tree) {
+    sparqlClient.setDefaultGraph(config.defaultGraph);
+
+    var response = {
+        statusCode: "",
+        message: ""
+    }
+    var querys = [];
+    var querysFirst = [];
+    var arg = {};
+    var nameQuery = "";
+    var idTree = bodyParameters.id.split("tree/")[1]; //me quedo el id solo
+    var type = bodyParameters.type;
+    var creator = bodyParameters.creator;
+    //if (cache.trees[idTree] != undefined) {
+    //if (cache.users[creator] != undefined) {
+    //if (type == typeEnum.position || type == typeEnum.species || type == typeEnum.image) {
+
+    arg.creator = creator;
+    return new Promise((resolve, reject) => {
         switch (type) {
             case typeEnum.position:
                 type = onturis.primaryPosition;
@@ -197,8 +284,76 @@ function createAnnotation(req, res) {
 
                 //Habría que recuperar la anotación primaria de especie de ese árbol y quitarle la clase primarySpecies
                 //Borrar la tripla del árbol hasPrimarySpecies anterior y crear la nueva
+
+                if (tree[onturis.prHasPrimarySpecies] != undefined || tree.species != undefined) {
+                    console.log("Tiene especie primaria");
+
+                    //Recuperar la anotación (oldSpecieAnn): tree hasPrimarySpecies oldSpecieAnn
+                    //Eliminar la tripla tree sta:hasPrimarySpecies oldSpecieAnn
+                    //Cambiar el tipo oldSpecieAnn a SpeciesAnnotation 
+                    //Crear nueva anotación de especie de tipo primario (newSpecieAnn)
+                    //Añadir tripla tree sta:hasPrimarySpecies newSpecieAnn
+                    //Modificar tree.species a newSpecie
+
+                    arg.idTree = bodyParameters.id;
+                    arg.hasPrimary = onturis.prHasPrimarySpecies;
+                    arg.hasAnnot = onturis.prHasSpeciesAnnotation;
+                    arg.type = onturis.speciesAnnotation;
+                    arg.typePrimary = onturis.primarySpecies;
+
+                    querysFirst.push(queryInterface.getData("update_primary_annotation", arg, sparqlClient));
+                    nameQuery = "create_annotation_species";
+
+                    //Actualizar caché
+                    tree.species = arg.species;
+                    delete tree[onturis.prHasPrimarySpecies]; //Borrar la antigua
+
+                    /*nameQuery = "create_annotation_species";
+                    var idAnnot = treeController.createAnnotation(arg, idTree, onturis.primarySpecies, querys, nameQuery);
+
+
+                    console.log("Anotación " + idAnnot);
+                    arg.annotation = onturis.data + "annotation/" + idAnnot;
+
+                    // Asociar anotación creada al árbol
+                    arg.id = idTree; //solo el id no a uri completa... (prefiero cambiar la query y madar la uri completa). Cambiar
+
+                    arg.hasAnnotation = onturis.prHasPrimarySpecies;
+
+                    querys.push(queryInterface.getData("add_annotation_tree", arg, sparqlClient));
+
+                    Promise.all(querys).then((data) => {
+                        console.log("Árbol actualizado: se han asociado las anotaciones");
+                        querys = [];
+                        response.statusCode = 201;
+                        response.message = "Anotación " + idAnnot + " creada correctamente.";
+
+                        resolve(response);
+                    })
+                        .catch((err) => {
+                            console.log("Error asociando anotación al árbol en virtuoso");
+                            err.statusCode = 500;
+                            reject(err);
+                        });
+
+                    //Posteriormente cachear todo.
+                    tree.species = arg.species;
+
+                })
+                    .catch((err) => {
+                        console.log("Error asociando anotación al árbol en virtuoso");
+                        err.statusCode = 500;
+                        reject(err);
+                    });*/
+                }
+                else {
+                    console.log("No tiene especie");
+                    nameQuery = "create_annotation_species";
+                }
+
                 break;
             case typeEnum.image:
+                console.log("Tipo imagen")
                 type = onturis.imageAnnotation;
                 var imageBlob = bodyParameters.image;
                 var idImage = imageController.uploadImage2SF(idTree, imageBlob);
@@ -212,7 +367,7 @@ function createAnnotation(req, res) {
                     arg.varTriplesImg += "dc:description \"" + bodyParameters.description + "\";";
                 }
                 if (bodyParameters.depicts != undefined) {
-                    arg.varTriplesImg += "foaf:depicts <" + bodyParameters.depicts + ">;";
+                    arg.varTriplesImg += "rdf:type <" + bodyParameters.depicts + ">;";
                 }
 
                 imageController.setDataImage(idImage, arg).then((exif) => {
@@ -247,113 +402,111 @@ function createAnnotation(req, res) {
                                     console.log("Imagen " + id + " cacheada");
                                 }).catch((err) => {
                                     console.log("Error cacheando imagen");
-                                    if (err.statusCode != null && err.statusCode != undefined) {
-                                        res.status(err.statusCode).send({ message: err });
-                                    }
-                                    else {
-                                        err = err.message;
-                                        res.status(500).send(err);
-                                    }
+                                    reject(err);
                                 });
                             }
                         }).catch((err) => {
                             console.log("Error creando imagen en virtuoso");
-                            if (err.statusCode != null && err.statusCode != undefined) {
-                                res.status(err.statusCode).send({ message: err });
-                            }
-                            else {
-                                err = err.message;
-                                res.status(500).send(err);
-                            }
+                            err.statusCode = 500;
+                            reject(err);
                         });
                 })
+                    .catch((err) => {
+                        console.log("Error leyendo exif imagen, no se puede continuar");
+                        err.statusCode = 400;
+                        err.statusMessage = "Error leyendo exif imagen";
+                        reject(err);
+                    });
+
                 nameQuery = "create_annotation_image";
 
                 break;
         }
-        idAnnot = treeController.createAnnotation(arg, idTree, type, querys, nameQuery);
 
-        // Asociar anotación creada al árbol
-        arg.annotation = onturis.data + "annotation/" + idAnnot;
-        arg.id = idTree; //solo el id no a uri completa... (prefiero cambiar la query y madar la uri completa). Cambiar
+        Promise.all(querysFirst).then((data) => {
+            idAnnot = treeController.createAnnotation(arg, idTree, type, querys, nameQuery);
 
-        if (idAnnot.split("-")[0] == "p") {
-            arg.hasAnnotation = onturis.prHasPrimaryPosition;
-        }
-        if (idAnnot.split("-")[0] == "s") {
-            arg.hasAnnotation = onturis.prHasPrimarySpecies;
-        }
-        else if (idAnnot.split("-")[0] == "i") {
-            arg.hasAnnotation = onturis.prHasImageAnnotation;
-        }
-        querys.push(queryInterface.getData("add_annotation_tree", arg, sparqlClient));
+            // Asociar anotación creada al árbol
+            arg.annotation = onturis.data + "annotation/" + idAnnot;
+            arg.id = idTree; //solo el id no a uri completa... (prefiero cambiar la query y madar la uri completa). Cambiar
+
+            if (idAnnot.split("-")[0] == "p") {
+                arg.hasAnnotation = onturis.prHasPrimaryPosition;
+            }
+            if (idAnnot.split("-")[0] == "s") {
+                arg.hasAnnotation = onturis.prHasPrimarySpecies;
+            }
+            else if (idAnnot.split("-")[0] == "i") {
+                arg.hasAnnotation = onturis.prHasImageAnnotation;
+            }
+            querys.push(queryInterface.getData("add_annotation_tree", arg, sparqlClient));
 
 
-        Promise.all(querys).then((data) => {
-            console.log("Árbol actualizado: se han asociado las anotaciones");
-            //console.log(data)
+            Promise.all(querys).then((data) => {
+                console.log("Árbol actualizado: se han asociado las anotaciones");
+                //console.log(data)
 
-            //Cachear anotaciones
-            //Cachéo la anotación recién creada
-            cache.putNewCreationInCache(idAnnot, onturis.annotation, cache.annotations).then((id) => {
-                console.log("Anotación " + id + " cacheada");
-            }).catch((err) => {
-                console.log("Error cacheando anotación");
-                if (err.statusCode != null && err.statusCode != undefined) {
-                    res.status(err.statusCode).send({ message: err });
-                }
-                else {
-                    err = err.message;
-                    res.status(500).send(err);
-                }
-            });
+                //Cachear anotaciones
+                //Cachéo la anotación recién creada
+                cache.putNewCreationInCache(idAnnot, onturis.annotation, cache.annotations).then((id) => {
+                    console.log("Anotación " + id + " cacheada");
+                }).catch((err) => {
+                    reject(err);
+                });
 
-            //Cachear árbol
-            // Cachear información del árbol
-            cache.putNewCreationInCache(idTree, onturis.tree, cache.trees).then((id) => {
-                console.log("Árbol " + id + " cacheado");
-            }).catch((err) => {
-                console.log("Error cacheando árbol");
-                if (err.statusCode != null && err.statusCode != undefined) {
-                    res.status(err.statusCode).send({ message: err });
-                }
-                else {
-                    err = err.message;
-                    res.status(500).send(err);
-                }
-            });
-            querys = [];
-            res.status(201).send({ "response": url_Base_sta + idAnnot });
+                //Cachear árbol
+                // Cachear información del árbol
+                cache.putNewCreationInCache(idTree, onturis.tree, cache.trees).then((id) => {
+                    console.log("Árbol " + id + " cacheado");
+                }).catch((err) => {
+                    console.log("Error cacheando árbol");
+                    reject(err);
+                });
+                querys = [];
+                response.statusCode = 201;
+                response.message = "Anotación " + idAnnot + " creada correctamente.";
+                resolve(response);
+            })
+                .catch((err) => {
+                    console.log("Error en conexión con endpoint");
+                    err.statusCode = 400;
+                    err.statusMessage += ": Error asociando anotaciones al árbol";
+                    reject(err);
+                });
         })
-            .catch((err) => {
-                console.log("Error en conexión con endpoint");
-                if (err.statusCode != null && err.statusCode != undefined) {
-                    res.status(err.statusCode).send({ message: err });
-                }
-                else {
-                    err = err.message;
-                    res.status(500).send(err);
-                }
-            });
-
-
-    }
-    /*/else
-        res.status(400).send({ "error": "La anotación de tipo " + type + " no existe" });
-}
-else
-    res.status(400).send({ "error": "El usuario " + creator + " no existe" });
-}
-else
-res.status(400).send({ "error": "El árbol " + idTree + " no existe" });
-}*/
-    else {
-        res.status(404).send({ "error": "Faltan campos obligatorios para crear la anotación" });
-    }
+    })
+        .catch((err) => {
+            err.statusCode = 400;
+            err.statusMessage += ": Error en querysFirst";
+            reject(err);
+        });
 
 
 }
 
+//Podría hacerse una función para validar que los datos son correctos antes de crear la anotación ya que ahora mismo se puede crear una anotación de un árbol que no existe.
+function validateData(params) {
+    var validate = false;
+
+    Object.keys(params).forEach((parametro) => {
+        switch (parametro) {
+            case "idTree":
+                //mirar cache y sino virtuoso si existe
+
+                break;
+            case "creator":
+                //mirar cache y sino virtuoso si existe
+
+                break;
+            case "type":
+                //mirar si es uno de los tipos 
+
+                break;
+        }
+    })
+
+    return validate;
+}
 
 module.exports = {
     getAnnotations,
