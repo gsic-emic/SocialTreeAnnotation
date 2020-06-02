@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {Tree} from '.././tree';
 import {APIService} from '../api.service';
+import { TreeService } from '../services/tree.service';
 
 
 declare let L;
@@ -23,7 +24,6 @@ export class MapaComponent implements OnInit {
    mymap;// mapa centrado en españa 
 
   // Variables para la comunicacion con la API ----------------------------------
-  buscadorSpecies: string = "http://crossforest.eu/ifn/ontology/vulgarName";
   objTrees: Tree[]; // Objeto JSON que almacena todos los árboles devueltos
   trees: Tree[]=[]; // Array con todos los árboles del sistema con formato adecuado para visualización
   error: boolean = false;
@@ -38,7 +38,7 @@ export class MapaComponent implements OnInit {
    lat1: number;
    long1: number;
 
-  constructor(private api: APIService) { }
+  constructor(private api: APIService, private TreeService: TreeService) { }
 
   ngOnInit(): void { /*se ejecuta en cuanto angular tenga listo el componente*/
 
@@ -59,16 +59,13 @@ export class MapaComponent implements OnInit {
     }).addTo(this.mymap);
 
     // Al iniciar la app, se carga el mapa donde está centrado
-      var bounds = this.mymap.getBounds(); // Obtengo las coordenadas area que abarca el mapa al cargarse
+      var bounds = this.mymap.getBounds(); // Obtengo las coordenadas del area que abarca el mapa al cargarse
       this.lat1 = bounds._northEast.lat;
       this.long1 = bounds._northEast.lng;
       this.lat0 = bounds._southWest.lat;
       this.long0 = bounds._southWest.lng;
       console.log(bounds);
     this.actualizarTrees(this.lat0, this.long0, this.lat1, this.long1);
-
-
-    
 
     // DETECCIÓN DE CAMBIOS EN EL MAPA
     // Evento que detecta cuando el mapa ha dejado de moverse      
@@ -82,13 +79,12 @@ export class MapaComponent implements OnInit {
       this.long0 = bounds._southWest.lng;
       this.trees = []; // Borro los datos de los árboles que tenia guardados
       this.actualizarTrees(this.lat0, this.long0, this.lat1, this.long1); // almaceno los nuevos
-      this.pintarArboles();
       console.log("Se ha movido el mapa");
      });
      
 
     // Añado los marcadores de los árboles registrados
-    this.pintarArboles();
+    //this.pintarArboles();
 
   }
 
@@ -104,7 +100,10 @@ export class MapaComponent implements OnInit {
           if (data != null){
             this.objTrees = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
             //console.log(data.response);
-            this.convertirDato();
+            console.log("cargando árboles...")
+            this. trees =  this.TreeService.crearTrees(this.objTrees, this.objSpecies);
+            console.log(this.trees);
+            //this.pintarArboles();
           }else{
             console.log("No hay árboles en la zona seleccionada");
             this.nohay = true;
@@ -119,29 +118,9 @@ export class MapaComponent implements OnInit {
         () =>{
           this.terminado = true;
           console.log("se han cargado todos los arboles");
+          this.pintarArboles();
         }
         );
-  }
-  // creo un objeto TypeScritp de tipo Tree[] con el objeto JSON devuelto para mostrarse en la pantalla adecuadamente
-  convertirDato(){
-    let i=0;
-    for (let clave in this.objTrees){
-      if (this.objTrees[clave].creator == "http://crossforest.eu/ifn/ontology/")
-        { 
-          this.objTrees[clave].creator = "IFN"
-        } 
-      // añado nombre vulgar a la especie
-      for (let clav in this.objSpecies){
-        if(this.objTrees[clave].species == this.objSpecies[clav]["uri"]){
-          this.objTrees[clave].species = this.objSpecies[clav][this.buscadorSpecies]["lits"].es;
-          break;
-        }
-      }
-      this.objTrees[clave].date = "1/1/2020";
-      this.trees[i] = { id: clave, lat: this.objTrees[clave].lat, long: this.objTrees[clave].long, species: this.objTrees[clave].species, creator:  this.objTrees[clave].creator, date: this.objTrees[clave].date};
-      i++;
-    }
-    this.pintarArboles();
   }
   //----------------------------------------------------------
   
@@ -201,9 +180,6 @@ export class MapaComponent implements OnInit {
         '</h5><h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> Creador: ' + this.trees[i].creator +
         '</h6><p class="card-text"><i class="far fa-clock"></i> '+this.trees[i].date+'</p><button type="button" (onclick)="verArbol('+ this.trees[i] + ')"; class="btn btn-primary ml-4">Ver más</button>');
    }
-  }
-  verArbol(tree: Tree){
-    console.log("Se ha pinchado un arbolito con id="+tree.id);
   }
  
  
