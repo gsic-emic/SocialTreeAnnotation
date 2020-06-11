@@ -5,8 +5,12 @@ const onturis = require('../config/onturis');
 const config = require('../config/config');
 const imageController = require('./imageController');
 const treeController = require('./treeController');
+const userController = require('./userController');
+const nameQueries = require('../config/queries').nameQueries;
+const errorCodes = require('../config/errorCodes');
+const errorHandler = require('../handlers/errorHandler');
 
-function getAnnotations(req, res) {
+async function getAnnotations(req, res) {
     var arg = {};
     let nextPage = undefined;
     var response = {};
@@ -33,7 +37,7 @@ function getAnnotations(req, res) {
         }
         else {
             fullUrl = req.protocol + '://' + req.hostname + req.originalUrl.split('&page')[0];
-            arg.uri_creator = (queryParameters.creator == "ifn") ? onturis.ifn_ontology : onturis.users + queryParameters.creator;
+            arg.uri_creator = (queryParameters.creator == "ifn") ? onturis.ifn_ontology : onturis.user + queryParameters.creator;
 
             queryInterface.getData("annotations_uris_creator", arg, sparqlClient)
                 .then((data) => {
@@ -91,7 +95,7 @@ function getAnnotations(req, res) {
         }
     }
 }
-function getAnnotation(req, res) {
+async function getAnnotation(req, res) {
     var arg = {};
     arg.uri = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
     var response = {};
@@ -150,101 +154,123 @@ function createAnnotation(req, res) {
      *   Optativos: title, description, depicts (bueno este último igual debería ser obligatorio...)
      */
 
-    sparqlClient.setDefaultGraph(config.defaultGraph);
 
-    var bodyParameters = req.body;
-    var idTree = bodyParameters.id.split("tree/")[1]; //me quedo el id solo
-    var uri_tree = bodyParameters.id;
-    var type = bodyParameters.type;
-    var creator = bodyParameters.creator;
-    var typeEnum = {
-        position: "position",
-        species: "species",
-        image: "image"
-    };
+    // Primero ver si es un usuario autenticado, sino no puede crear datos:
+    if (req.headers.authorization != undefined) {
+        // parse login and password from headers
+        const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
+        const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':');
 
-    var validate = false;
+        //console.log(login, password);
+        var bodyParameters = req.body;
+        var creator = bodyParameters.creator;
+
+        if (login == creator.split("user/")[1]) { //Daría problemas si  creator es undefined
+            //Comprobar que el login coindice con creator para modificaciones del usuario y el password con el hash almacenado en el fichero .passwd
+            userController.processLineByLine(login, password).then((userValidate) => {
+                if (userValidate) {
+                    //console.log("Usuario autenticado");
+                    sparqlClient.setDefaultGraph(config.defaultGraph);
+
+                    var idTree = bodyParameters.id.split("tree/")[1]; //me quedo el id solo
+                    var uri_tree = bodyParameters.id;
+                    var type = bodyParameters.type;
+                    var typeEnum = {
+                        position: "position",
+                        species: "species",
+                        image: "image"
+                    };
+
+                    var validate = false;
 
 
-    var url_Base_sta = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
-    if (url_Base_sta.slice(-1) != "/")
-        url_Base_sta += "/";
+                    var url_Base_sta = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
+                    if (url_Base_sta.slice(-1) != "/")
+                        url_Base_sta += "/";
 
-    var idAnnot = null;
+                    var idAnnot = null;
 
-    //console.log(bodyParameters);
+                    //console.log(bodyParameters);
 
 
-    if (idTree == undefined) {
-        res.status(404).send({ "error": uri_tree + " no existe" });
-    }
-    else {
-        // Comprobar que estos 3 campos están sino 400 Bad Request
-        if (uri_tree != undefined && type != undefined && creator != undefined) {
-            //Habría que comprobar que el árbol y el usuario existen y que el tipo es uno de los definidos (no lo compruebo, ya que habria que ver si está en la caché y sino en  el virtuoso. Líneas futuras)
+                    if (idTree == undefined) {
+                        res.status(404).send({ "error": uri_tree + " no existe" });
+                    }
+                    else {
+                        // Comprobar que estos 3 campos están sino 400 Bad Request
+                        if (uri_tree != undefined && type != undefined && creator != undefined) {
+                            //Habría que comprobar que el árbol y el usuario existen y que el tipo es uno de los definidos (no lo compruebo, ya que habria que ver si está en la caché y sino en  el virtuoso. Líneas futuras)
 
-            var promiseCheckData = new Promise((resolve, reject) => {
-                //Comprobar si el árbol está cacheado y sino consulto al virtuoso.
-                if (cache.trees[uri_tree] != undefined) {
-                    console.log("Árbol " + idTree + " cacheado");
-                    //Habría que comprobar que el usuario existe (ánalogo al árbol)
-                    console.log("Comprobar si el usuario existe");
-                    validate = true;
-                    resolve(validate);
-                }
-                else {
-                    treeController.getTreeVirtuoso(uri_tree).then((data) => {
-                        if (data == null) {
-                            err.statusMessage = "Error: no se puede crear la anotación. El árbol no existe"
-                            err.statusCode = 400;
-                            reject(err);
+                            var promiseCheckData = new Promise((resolve, reject) => {
+                                //Comprobar si el árbol está cacheado y sino consulto al virtuoso.
+                                if (cache.trees[uri_tree] != undefined) {
+                                    //console.log("Árbol " + idTree + " cacheado");
+                                    //Habría que comprobar que el usuario existe (ánalogo al árbol)
+                                    //console.log("Comprobar si el usuario existe");
+                                    validate = true;
+                                    resolve(validate);
+                                }
+                                else {
+                                    treeController.getTreeVirtuoso(uri_tree).then((data) => {
+                                        if (data == null) {
+                                            reject(errorCodes.treeNoExist);
+                                        }
+                                        else {
+                                            //Árbol existe
+                                            //console.log("El árbol existe");
+                                            //Habría que comprobar que el usuario existe (ánalogo al árbol)
+                                            //console.log("Comprobar si el usuario existe");
+                                            validate = true;
+                                            resolve(validate);
+                                        }
+                                    }).catch((err) => {
+                                        console.log(err)
+                                        reject(err);
+                                    })
+                                }
+                            });
+
+                            promiseCheckData.then((validate) => {
+                                if (validate) {
+                                    //Compruebo el tipo
+                                    if (Object.values(typeEnum).includes(type)) {
+                                        return createAnn(bodyParameters, typeEnum, cache.trees[uri_tree]);
+                                    }
+                                }
+                            })
+                            .then((response) => {
+                                res.status(response.statusCode).send(response.message);
+                            })
+                            .catch((err) => {
+                                errorHandler.sendError(res,err)
+                            })
                         }
+                        /*/else
+                            res.status(400).send({ "error": "La anotación de tipo " + type + " no existe" });
+                    }
+                    else
+                        res.status(400).send({ "error": "El usuario " + creator + " no existe" });
+                    }
+                    else
+                    res.status(400).send({ "error": "El árbol " + idTree + " no existe" });
+                    }*/
                         else {
-                            //Árbol existe
-                            console.log("El árbol existe");
-                            //Habría que comprobar que el usuario existe (ánalogo al árbol)
-                            console.log("Comprobar si el usuario existe");
-                            validate = true;
-                            resolve(validate);
+                            res.status(400).send({ "error": "Faltan campos obligatorios para crear la anotación" });
                         }
-                    }).catch((err) => {
-                        err.statusMessage += "Error: no se puede crear la anotación. El árbol no existe"
-                        reject(err);
-                    })
-                }
-            });
-
-            promiseCheckData.then((validate) => {
-                if (validate) {
-                    //Compruebo el tipo
-                    if (Object.values(typeEnum).includes(type)) {
-                        createAnn(bodyParameters, typeEnum, cache.trees[uri_tree]).then((response) => {
-                            res.status(response.statusCode).send(response.message);
-                        }).catch((err) => {
-                            //res.status(err.statusCode).send(err.statusMessage);
-                            res.status(500).send(err);
-                        });
                     }
                 }
-            })
-                .catch((err) => {
-                    res.status(500).send(err);
-                })
+                else {
+                    res.status(401).send('Unauthorized: Contraseña incorrecta')
+                }
+            });
         }
-        /*/else
-            res.status(400).send({ "error": "La anotación de tipo " + type + " no existe" });
-    }
-    else
-        res.status(400).send({ "error": "El usuario " + creator + " no existe" });
-    }
-    else
-    res.status(400).send({ "error": "El árbol " + idTree + " no existe" });
-    }*/
         else {
-            res.status(400).send({ "error": "Faltan campos obligatorios para crear la anotación" });
+            res.status(401).send('Unauthorized: El creador no coincide con la autenticación')
         }
     }
-
+    else {
+        res.status(401).send('Unauthorized')
+    }
 }
 
 
@@ -277,6 +303,19 @@ function createAnn(bodyParameters, typeEnum, tree) {
                 //Habría que recuperar la anotación primaria de posición de ese árbol y quitarle la clase primaryPosition
                 //Borrar la tripla del árbol hasPrimaryPosition anterior y crear la nueva
 
+                arg.idTree = bodyParameters.id;
+                arg.hasPrimary = onturis.prHasPrimaryPosition;
+                arg.hasAnnot = onturis.prHasPositionAnnotation;
+                arg.type = onturis.positionAnnotation;
+                arg.typePrimary = onturis.primaryPosition;
+
+                querysFirst.push(queryInterface.getData("update_primary_annotation", arg, sparqlClient));
+                nameQuery = nameQueries.createAnnotationPosition;
+                //Actualizar caché
+                tree.lat = arg.lat;
+                tree.long = arg.long;
+                delete tree[onturis.prHasPrimaryPosition]; //Borrar la antigua
+
                 break;
             case typeEnum.species:
                 type = onturis.primarySpecies;
@@ -286,7 +325,7 @@ function createAnn(bodyParameters, typeEnum, tree) {
                 //Borrar la tripla del árbol hasPrimarySpecies anterior y crear la nueva
 
                 if (tree[onturis.prHasPrimarySpecies] != undefined || tree.species != undefined) {
-                    console.log("Tiene especie primaria");
+                    //console.log("Tiene especie primaria");
 
                     //Recuperar la anotación (oldSpecieAnn): tree hasPrimarySpecies oldSpecieAnn
                     //Eliminar la tripla tree sta:hasPrimarySpecies oldSpecieAnn
@@ -302,7 +341,7 @@ function createAnn(bodyParameters, typeEnum, tree) {
                     arg.typePrimary = onturis.primarySpecies;
 
                     querysFirst.push(queryInterface.getData("update_primary_annotation", arg, sparqlClient));
-                    nameQuery = "create_annotation_species";
+                    nameQuery = nameQueries.createAnnotationSpecies;
 
                     //Actualizar caché
                     tree.species = arg.species;
@@ -347,13 +386,13 @@ function createAnn(bodyParameters, typeEnum, tree) {
                     });*/
                 }
                 else {
-                    console.log("No tiene especie");
-                    nameQuery = "create_annotation_species";
+                    //console.log("No tiene especie");
+                    nameQuery = nameQueries.createAnnotationSpecies;
                 }
 
                 break;
             case typeEnum.image:
-                console.log("Tipo imagen")
+                //console.log("Tipo imagen")
                 type = onturis.imageAnnotation;
                 var imageBlob = bodyParameters.image;
                 var idImage = imageController.uploadImage2SF(idTree, imageBlob);
@@ -397,9 +436,9 @@ function createAnn(bodyParameters, typeEnum, tree) {
                     queryInterface.getData("create_image", arg, sparqlClient)
                         .then((data) => {
                             if (data.results.bindings.length > 0) {
-                                console.log("Imagen creada correctamente en Virtuoso");
+                                //console.log("Imagen creada correctamente en Virtuoso");
                                 cache.putNewCreationInCache(idImage.split('.')[0], onturis.image, cache.images).then((id) => {
-                                    console.log("Imagen " + id + " cacheada");
+                                    //console.log("Imagen " + id + " cacheada");
                                 }).catch((err) => {
                                     console.log("Error cacheando imagen");
                                     reject(err);
@@ -443,13 +482,13 @@ function createAnn(bodyParameters, typeEnum, tree) {
 
 
             Promise.all(querys).then((data) => {
-                console.log("Árbol actualizado: se han asociado las anotaciones");
+                //console.log("Árbol actualizado: se han asociado las anotaciones");
                 //console.log(data)
 
                 //Cachear anotaciones
                 //Cachéo la anotación recién creada
                 cache.putNewCreationInCache(idAnnot, onturis.annotation, cache.annotations).then((id) => {
-                    console.log("Anotación " + id + " cacheada");
+                    //console.log("Anotación " + id + " cacheada");
                 }).catch((err) => {
                     reject(err);
                 });
@@ -457,7 +496,7 @@ function createAnn(bodyParameters, typeEnum, tree) {
                 //Cachear árbol
                 // Cachear información del árbol
                 cache.putNewCreationInCache(idTree, onturis.tree, cache.trees).then((id) => {
-                    console.log("Árbol " + id + " cacheado");
+                    //console.log("Árbol " + id + " cacheado");
                 }).catch((err) => {
                     console.log("Error cacheando árbol");
                     reject(err);

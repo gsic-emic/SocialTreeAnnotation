@@ -1,11 +1,12 @@
 const onturis = require('../config/onturis');
 const queryInterface = require('../helpers/queryInterface');
+const errorCodes = require('../config/errorCodes');
 
 var trees = {};
 var annotations = {};
 var images = {};
 var species = {};
-var users = { "http://timber.gsic.uva.es/sta/data/user/12345":{}};
+var users = {};
 
 function putNewCreationInCache(id, type, object){
     var arg = {};
@@ -24,6 +25,10 @@ function putNewCreationInCache(id, type, object){
         string_url="image";
         message="La imagen";
     }
+    else if (type == onturis.user){
+        string_url="user";
+        message="El usuario";
+    }
 
     arg.uri = onturis.data + string_url + "/"+ id;
 
@@ -32,7 +37,7 @@ function putNewCreationInCache(id, type, object){
         .then((data) => {
             if (data.results.bindings.length == 0) {
                 //res.status(404).send({ response: message + "no existe" });
-                reject(arg.uri);
+                reject(errorCodes.notFound);
             }
             else {
                 object[arg.uri] == undefined ? object[arg.uri] = {} : object[arg.uri];

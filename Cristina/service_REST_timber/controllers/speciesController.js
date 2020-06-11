@@ -4,7 +4,7 @@ const _ = require('underscore');
 const config = require('../config/onturis');
 var especies = require('../models/cache').species;
 
-function getSpecies(req, res) {
+async function getSpecies(req, res) {
     var arg = {};
     let nextPage = undefined;
     var response = {};
