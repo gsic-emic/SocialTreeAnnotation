@@ -1,13 +1,13 @@
-//'use strict'
-
 const express = require('express');
 const queryInterface = require('../helpers/queryInterface');
 const userController = require('../controllers/userController');
 const treeController = require('../controllers/treeController');
+const treePartController = require('../controllers/treePartController');
 const annotationController = require('../controllers/annotationController');
 const imageController = require('../controllers/imageController');
 const speciesController = require('../controllers/speciesController');
-
+const errorHandler = require('../handlers/errorHandler');
+const errorCodes = require('./errorCodes');
 
 const api = express.Router();
 
@@ -30,37 +30,37 @@ api.get(urls.root, (req, res) => {
     /*imageController.getExifData("//home/ubuntu/SocialTreeAnnotation/Cristina/complementos/forest.png")
     imageController.getExifData("/home/ubuntu/SocialTreeAnnotation/Cristina/complementos/20200527_134437.jpg")
     */
-
     queryInterface.getData("test", {}, sparqlClient)
         .then(() => {
             res.status(200).send(urls);
         })
         .catch((err) => {
-            console.log("Error en conexión con endpoint");
             console.log(err.statusCode)
             if (err.statusCode != null && err.statusCode != undefined) {
-                res.status(err.statusCode).send({ message: err });
+                errorHandler.sendError(res, errorCode.queryVirtuoso);
             }
             else {
-                res.status(500).send({ message: err });
+                errorHandler.sendError(res, errorCode.conexionVirtuoso);
             }
         });
 });
 
 //Usuarios
-/*api.get('/users', auth, userController.getUsers)
-api.get('/users/:userId', userController.getUser)
-api.put('/users/:userId', auth, userController.createUpdateUser) //Si existe se actualiza
-api.delete('/users/:userId', auth, userController.deleteUser)*/
+api.put(urls.user, userController.createUpdateUser) //Si existe se actualizaría. De momento solo creación
+api.get(urls.user, userController.getUser)
+api.get(urls.users, userController.getUsers)
+
+
+/*api.delete('/users/:userId', auth, userController.deleteUser)*/
 
 //Árboles
 api.get(urls.trees, treeController.getTrees);
 api.post(urls.trees, treeController.createTree);
 api.get(urls.tree, treeController.getTree);
-api.delete(urls.tree, treeController.deleteTree); 
+//api.delete(urls.tree, treeController.deleteTree);
 
 // Partes de árbol para identificar en la imagen
-api.get(urls.treePart, treeController.getTreeParts);
+api.get(urls.treePart, treePartController.getTreeParts);
 
 
 //Anotaciones
@@ -90,5 +90,17 @@ api.delete('/images/:imagesId/parts/:partId', imageController.deleteImagePart);
 //Especies
 api.get(urls.species, speciesController.getSpecies);
 
+//El resto de métodos no están permitidos:
+api.all(urls.root, (req, res) => errorHandler.methodNotAllow(res));
+api.all(urls.users, (req, res) => errorHandler.methodNotAllow(res));
+api.all(urls.user, (req, res) => errorHandler.methodNotAllow(res));
+api.all(urls.trees, (req, res) => errorHandler.methodNotAllow(res));
+api.all(urls.tree, (req, res) => errorHandler.methodNotAllow(res));
+api.all(urls.treePart, (req, res) => errorHandler.methodNotAllow(res));
+api.all(urls.annotations, (req, res) => errorHandler.methodNotAllow(res));
+api.all(urls.annotation, (req, res) => errorHandler.methodNotAllow(res));
+api.all(urls.images, (req, res) => errorHandler.methodNotAllow(res));
+api.all(urls.image, (req, res) => errorHandler.methodNotAllow(res));
+api.all(urls.species, (req, res) => errorHandler.methodNotAllow(res));
 
 module.exports = api

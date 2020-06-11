@@ -23,6 +23,8 @@ var onturis = {
 	primarySpecies: 'http://timber.gsic.uva.es/sta/ontology/PrimarySpecies',
 	assertedPosition: 'http://timber.gsic.uva.es/sta/ontology/AssertedPosition',
 	assertedSpecies: 'http://timber.gsic.uva.es/sta/ontology/AssertedSpecies',
+	user: "http://timber.gsic.uva.es/sta/data/user/",
+
 
 
 	//PROPIEDADES
@@ -58,9 +60,9 @@ var onturis = {
 	prifnVulgarName: 'http://crossforest.eu/ifn/ontology/vulgarName',
 	prifnWikipediaPage: 'http://crossforest.eu/ifn/ontology/hasWikipediaPage',
 	prifnSameAs: 'http://schema.org/sameAs',
+	foafPerson: 'http://xmlns.com/foaf/0.1/Person',
 
 
-	users: "http://timber.gsic.uva.es/sta/data/user/",
 	data: "http://timber.gsic.uva.es/sta/data/"
 
 

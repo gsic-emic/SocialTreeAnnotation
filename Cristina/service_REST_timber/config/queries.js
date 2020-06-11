@@ -22,6 +22,13 @@ var queryPrefixes = {
     'annotation': 'http://timber.gsic.uva.es/sta/data/annotation/'
 };
 
+//Incluir aquí los nombres de las consultas para usarlos por el resto de la aplicación
+var nameQueries = {
+    'createAnnotationPosition': 'create_annotation_position',
+    'createAnnotationSpecies': 'create_annotation_species',
+    'createUser': 'create_user'
+};
+
 // query array with all the queries
 var queriesArray = [];
 
@@ -39,7 +46,7 @@ queriesArray.push({
 //Árboles en un área dada por 4 puntos
 queriesArray.push({
     'name': 'treesinArea_pos',
-    'query':    'CONSTRUCT { \n \
+    'query': 'CONSTRUCT { \n \
                     ?tree geo:lat ?lat ; \n \
                           geo:long ?long ; \n \
                           dc:creator ?creator . \n \
@@ -56,11 +63,11 @@ queriesArray.push({
             } \n \
             ORDER BY (?tree) \n \
             LIMIT {{limit}} \n \
-            OFFSET {{offset}}' 
+            OFFSET {{offset}}'
 });
 queriesArray.push({
     'name': 'treesinArea_species',
-    'query':    'CONSTRUCT { \n \
+    'query': 'CONSTRUCT { \n \
                     ?tree <' + onturis.prHasTaxon + '> ?taxon . \n \
                 }  \n \
                 WHERE {  \n \
@@ -69,7 +76,7 @@ queriesArray.push({
                     ?annotation <' + onturis.prHasTaxon + '> ?taxon . \n \
                     FILTER(?tree IN ( {{{treesArea}}} )) \n \
             } \n \
-            ORDER BY (?tree)' 
+            ORDER BY (?tree)'
 });
 
 //Recuperar todos los árboles y sus anotaciones
@@ -82,8 +89,9 @@ queriesArray.push({
             }'
 });
 
-queriesArray.push({'name': 'allTrees_pos',
-	'query': 'CONSTRUCT { \n \
+queriesArray.push({
+    'name': 'allTrees_pos',
+    'query': 'CONSTRUCT { \n \
                 ?tree geo:lat ?lat ; \n \
                 geo:long ?long ; \n \
                 dc:creator ?creator . \n \
@@ -97,11 +105,12 @@ queriesArray.push({'name': 'allTrees_pos',
                              geo:long ?long . \n \
               } \n \
               LIMIT {{limit}} \n \
-              OFFSET {{offset}}'      
+              OFFSET {{offset}}'
 });
 
-queriesArray.push({'name': 'allTrees_species',
-	'query': 'CONSTRUCT { \n \
+queriesArray.push({
+    'name': 'allTrees_species',
+    'query': 'CONSTRUCT { \n \
                 ?tree <' + onturis.prHasTaxon + '> ?taxon . \n \
               }  \n \
               WHERE {  \n \
@@ -109,7 +118,7 @@ queriesArray.push({'name': 'allTrees_species',
                     ?has rdfs:subPropertyOf* <' + onturis.prHasPrimaryAnnotation + '> .  \n \
                     ?annotation <' + onturis.prHasTaxon + '> ?taxon . \n \
                  VALUES ?tree { {{{treesArea}}} } \n \
-              }'      
+              }'
 });
 /*?has ?annotation . \n \
                 ?has rdfs:subPropertyOf* <' + onturis.prHasPrimaryAnnotation + '> .  \n \
@@ -256,8 +265,8 @@ queriesArray.push({
 queriesArray.push({
     'name': 'create_image',
     'query': 'INSERT DATA \n \
-            { <{{{imageId}}}> a <'+onturis.image+ '> ; \n \
-            <'+onturis.prResource+ '> <{{{image}}}> ; \n \
+            { <{{{imageId}}}> a <'+ onturis.image + '> ; \n \
+            <'+ onturis.prResource + '> <{{{image}}}> ; \n \
                 dc:type <http://purl.org/dc/dcmitype/Image> ; \n \
                 {{{varTriplesImg}}} \n \
                 dc:created "{{date}}"^^xsd:date .\n \
@@ -305,6 +314,28 @@ queriesArray.push({
        }'
 });
 */
+
+/**
+ * INSERT DATA
+{ <http://timber.gsic.uva.es/sta/data/user/12345> a foaf:Person ;
+ foaf:firstName "Demo" ;
+ foaf:lastName "García" ;
+ foaf:nick "12345" ;
+ foaf:mbox "user12345@gmail.com"
+}
+ */
+
+queriesArray.push({
+    'name': 'create_user',
+    'query': 'INSERT DATA \n \
+            { <{{{uri}}}> a foaf:Person ;\n \
+            foaf:name "{{name}}" ; \n \
+            foaf:nick "{{id}}"^^rdf:langString ; \n \
+            foaf:mbox "{{email}}"^^rdf:langString ; \n \
+            dc:created "{{date}}"^^xsd:date .\n \
+            }'
+});
+
 queriesArray.push({
     'name': 'test_delete',
     'query': 'DELETE { \n \
@@ -330,15 +361,17 @@ queriesArray.push({
  */
 
 // Individuos de una clase => utilizo construct en vez de select para poder devolver los datos en json-ld (como la dbpedia)
-queriesArray.push({'name': 'indivs',
-	'query': 'CONSTRUCT \n \
+queriesArray.push({
+    'name': 'indivs',
+    'query': 'CONSTRUCT \n \
             WHERE { \n \
                 ?uri a <{{{cluri}}}> . \n \
             }'
 });
 
-queriesArray.push({'name': 'details',
-	'query': 'CONSTRUCT { \n \
+queriesArray.push({
+    'name': 'details',
+    'query': 'CONSTRUCT { \n \
                 ?iri <{{{propiri}}}> ?value . \n \
             }  \n \
             WHERE { \n \
@@ -348,8 +381,9 @@ queriesArray.push({'name': 'details',
 });
 
 
-queriesArray.push({'name': 'details_allprop',
-	'query': 'SELECT * \n \
+queriesArray.push({
+    'name': 'details_allprop',
+    'query': 'SELECT * \n \
             WHERE { \n \
                 ?iri ?prop ?value . \n \
                 FILTER (  ?iri IN ( <{{{uri}}}> )). \n \
@@ -357,9 +391,10 @@ queriesArray.push({'name': 'details_allprop',
 });
 
 // get subclass relations from a base class
-queriesArray.push({'name': 'subclasses',
-//	'prefixes': ['rdfs', 'ifn', 'mfe', 'epsg', 'patch', 'poly', 'plot', 'tree', 'is'],
-	'query': 'SELECT DISTINCT ?sup ?sub \n \
+queriesArray.push({
+    'name': 'subclasses',
+    //	'prefixes': ['rdfs', 'ifn', 'mfe', 'epsg', 'patch', 'poly', 'plot', 'tree', 'is'],
+    'query': 'SELECT DISTINCT ?sup ?sub \n \
 WHERE { \n \
   ?sup rdfs:subClassOf* <{{{uri}}}> . \n \
   ?sub rdfs:subClassOf ?sup . \n \
@@ -368,14 +403,16 @@ WHERE { \n \
 
 
 // get values for properties
-queriesArray.push({'name': 'propvalues',
-//	'prefixes': ['ifn', 'mfe', 'epsg', 'patch', 'poly', 'plot', 'tree', 'is'],
-	'query': 'SELECT DISTINCT ?uri ?value \n \
-WHERE { \n \
-?uri <{{{propuri}}}> ?value . \n \
-FILTER (?uri IN ( {{{furis}}} )) }'
+queriesArray.push({
+    'name': 'propvalues',
+    //	'prefixes': ['ifn', 'mfe', 'epsg', 'patch', 'poly', 'plot', 'tree', 'is'],
+    'query': 'SELECT DISTINCT ?uri ?value \n \
+            WHERE { \n \
+            ?uri <{{{propuri}}}> ?value . \n \
+            FILTER (?uri IN ( {{{furis}}} )) }'
 });
 module.exports = {
     queriesArray,
+    nameQueries,
     queryPrefixes
 };
