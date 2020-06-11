@@ -29,55 +29,55 @@ sta:Tree a owl:Class , rdfs:Class ;
   rdfs:comment "Woody perennial plant with an elongated stem supporting branches"@en , "Planta vivaz (que vive más de dos años, de tallo leñoso, que se ramifica a cierta altura del suelo"@es ; 
   rdfs:isDefinedBy sta: . 
 
-sta:TreePart a owl:Class , rdfs:Class ;
-  rdfs:label "Tree part"@en , "Parte del árbol"@es ;
+sta:TreePartPhoto a owl:Class , rdfs:Class ;
+  rdfs:label "Tree part photo"@en , "Parte del árbol de la foto"@es ;
   rdfs:comment "Part of a tree that it is shown in the image"@en , "Parte del árbol que se muestra en la imagen"@es ;
   rdfs:isDefinedBy sta: . 
 
 sta:Leaf a owl:Class , rdfs:Class ;
-  rdfs:subClassOf sta:TreePart ;
+  rdfs:subClassOf sta:TreePartPhoto ;
   rdfs:label "Leaf"@en , "Hoja"@es ;
   rdfs:comment "Leaf"@en , "Hoja de árbol"@es ;
   rdfs:isDefinedBy sta: .
 
 sta:Fruit a owl:Class , rdfs:Class ;
-  rdfs:subClassOf sta:TreePart ;
+  rdfs:subClassOf sta:TreePartPhoto ;
   rdfs:label "Fruit"@en , "Fruto"@es ;
   rdfs:comment "Fruit which grows on a tree"@en , "Fruto que crece en un árbol"@es ;
   rdfs:isDefinedBy sta: .
 
 sta:Trunk a owl:Class , rdfs:Class ;
-  rdfs:subClassOf sta:TreePart ;
+  rdfs:subClassOf sta:TreePartPhoto ;
   rdfs:label "Trunk"@en , "Tronco"@es ;
   rdfs:comment ""@en , ""@es ;
   rdfs:isDefinedBy sta: .
 
 sta:Branch a owl:Class , rdfs:Class ;
-  rdfs:subClassOf sta:TreePart ;
+  rdfs:subClassOf sta:TreePartPhoto ;
   rdfs:label "Branch"@en , "Rama"@es ;
   rdfs:comment ""@en , ""@es ;
   rdfs:isDefinedBy sta: .
 
 sta:Crown a owl:Class , rdfs:Class ;
-  rdfs:subClassOf sta:TreePart ;
+  rdfs:subClassOf sta:TreePartPhoto ;
   rdfs:label "Crown"@en , "Copa"@es ;
   rdfs:comment ""@en , ""@es ;
   rdfs:isDefinedBy sta: .
 
 sta:GeneralView a owl:Class , rdfs:Class ;
-  rdfs:subClassOf sta:TreePart ;
+  rdfs:subClassOf sta:TreePartPhoto ;
   rdfs:label "General"@en , "General"@es ;
   rdfs:comment "General view"@en , "Vista general"@es ;
   rdfs:isDefinedBy sta: .
 
 sta:Flower a owl:Class , rdfs:Class ;
-  rdfs:subClassOf sta:TreePart ;
+  rdfs:subClassOf sta:TreePartPhoto ;
   rdfs:label "Flower"@en , "Flor"@es ;
   rdfs:comment ""@en , ""@es ;
   rdfs:isDefinedBy sta: . 
 
 sta:OtherPart a owl:Class , rdfs:Class ;
-  rdfs:subClassOf sta:TreePart ;
+  rdfs:subClassOf sta:TreePartPhoto ;
   rdfs:label "Other plart"@en , "Otra parte"@es ;
   rdfs:comment ""@en , ""@es ;
   rdfs:isDefinedBy sta: . 
@@ -159,12 +159,15 @@ sta:AssertedSpecies a owl:Class, rdfs:Class ;
 #################################################################
 #    Object Properties
 #################################################################
-sta:hasPart a owl:ObjectProperty , rdf:Property ;
-  rdfs:label "has part"@en , "tiene parte"@es ;
-  rdfs:comment "part of a tree"@en , "parte de un árbol"@es ;
-  rdfs:domain sta:Tree ;
-  rdfs:range sta:TreePart ;
-  rdfs:isDefinedBy sta: .
+
+# No se está usando. ¿Tiene sentido tenerla?
+
+#sta:hasPart a owl:ObjectProperty , rdf:Property ;
+#  rdfs:label "has part"@en , "tiene parte"@es ;
+#  rdfs:comment "part of a tree"@en , "parte de un árbol"@es ;
+#  rdfs:domain sta:Tree ;
+#  rdfs:range sta:TreePartPhoto ;
+#  rdfs:isDefinedBy sta: .
 
 sta:hasAnnotation a owl:ObjectProperty , rdf:Property ;
   rdfs:label "has annotation"@en , "tiene anotación"@es ;
@@ -259,4 +262,12 @@ sta:hasAssertedSpecies a owl:ObjectProperty , rdf:Property ;
   rdfs:comment "annotation asserted by experts of a tree species"@en , "anotación afirmada por expertos de una especie de un árbol"@es ;
   rdfs:domain sta:Tree ;
   rdfs:range sta:AssertedSpecies ;
+  rdfs:isDefinedBy sta: .
+
+# Para linkar el jpg con la imagen
+sta:resource a owl:ObjectProperty , rdf:Property ;
+  rdfs:subPropertyOf foaf:depiction ;
+  rdfs:label "resource"@en , "recurso"@es ;
+  rdfs:comment ""@en , ""@es ;
+  rdfs:domain sta:Image ;
   rdfs:isDefinedBy sta: .
