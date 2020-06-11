@@ -25,6 +25,14 @@ export class InicioComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSpecies(); // nada más cargarse que recoja las especies
+    this.api.prueba().subscribe(
+      (data: any) =>{
+        console.log(data);
+      },
+      (error) =>{
+        console.error(error); // si se ha producido algún error
+      }
+    );
  }
 
   //-----------------------------

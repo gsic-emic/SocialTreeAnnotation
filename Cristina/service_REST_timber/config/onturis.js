@@ -3,7 +3,7 @@
 var onturis = {
 	//CLASES
     tree: 'http://timber.gsic.uva.es/sta/ontology/Tree',
-	treePart: 'http://timber.gsic.uva.es/sta/ontology/TreePart',
+	treePartPhoto: 'http://timber.gsic.uva.es/sta/ontology/TreePartPhoto',
 	leaf: 'http://timber.gsic.uva.es/sta/ontology/Leaf',
 	fruit: 'http://timber.gsic.uva.es/sta/ontology/Fruit',
 	trunk: 'http://timber.gsic.uva.es/sta/ontology/Trunk',
@@ -23,6 +23,8 @@ var onturis = {
 	primarySpecies: 'http://timber.gsic.uva.es/sta/ontology/PrimarySpecies',
 	assertedPosition: 'http://timber.gsic.uva.es/sta/ontology/AssertedPosition',
 	assertedSpecies: 'http://timber.gsic.uva.es/sta/ontology/AssertedSpecies',
+	user: "http://timber.gsic.uva.es/sta/data/user/",
+
 
 
 	//PROPIEDADES
@@ -31,6 +33,8 @@ var onturis = {
 
 	//Imagen
 	prHasPart: 'http://timber.gsic.uva.es/sta/ontology/hasPart',
+	prResource: 'http://timber.gsic.uva.es/sta/ontology/resource',
+
 	//Árbol
 	prHasAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasAnnotation',
 	prHasSpeciesAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasSpeciesAnnotation',
@@ -56,9 +60,9 @@ var onturis = {
 	prifnVulgarName: 'http://crossforest.eu/ifn/ontology/vulgarName',
 	prifnWikipediaPage: 'http://crossforest.eu/ifn/ontology/hasWikipediaPage',
 	prifnSameAs: 'http://schema.org/sameAs',
+	foafPerson: 'http://xmlns.com/foaf/0.1/Person',
 
 
-	users: "http://timber.gsic.uva.es/sta/data/user/",
 	data: "http://timber.gsic.uva.es/sta/data/"
 
 

@@ -9,12 +9,17 @@ import { Tree } from './tree';
 })
 export class APIService {
 
-  apiUrl = 'http://localhost:8888/sta/';  // URL to web api 
-  url_postTree = 'http://localhost:8888/sta/data/tree';
+  apiUrl = 'http://timber.gsic.uva.es/sta/';  // URL to web api
+  //apiUrl = 'http://localhost:8888/sta/';  // URL to web api 
+  //url_postTree = 'http://localhost:8888/sta/data/tree';
+  url_postTree = 'http://timber.gsic.uva.es/sta/data/tree';
                                       
 
   constructor( private http: HttpClient) { }
   /*********************** RECUPERACIÓN DE DATOS DEL SERVIDOR ******************************/
+  prueba(): Observable<string>{
+    return this.http.get<string>(this.apiUrl); 
+  }
 
   /* GET all the trees storaged on the system */
   getTrees(url: string): Observable<string>{

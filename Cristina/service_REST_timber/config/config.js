@@ -10,4 +10,6 @@ module.exports = {
     //directorySaveImages: '/home/ubuntu/nginx/html/data/images/',
     directorySaveImages: '/Users/usuario/Desktop/Imagenes Timber/',
     uri_images: 'http://timber.gsic.uva.es/data/images/'
+    filenamePasswd: './models/.passwd',
+    saltRounds: 10
   }

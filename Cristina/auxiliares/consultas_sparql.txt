@@ -116,3 +116,18 @@ Digest username="demo", realm="SPARQL Endpoint", nonce="eba22571690f085ae5c49f99
 
 
 http://vos.openlinksw.com/owiki/wiki/VOS/VirtTipsAndTricksDigestAuthAJAX
+
+
+###########################################################################################################
+Crear usuario:
+
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+prefix sta: <http://timber.gsic.uva.es/sta/ontology/> 
+
+INSERT DATA
+{ <http://timber.gsic.uva.es/sta/data/user/12345> a foaf:Person ;
+ foaf:firstName "Demo" ;
+ foaf:lastName "García" ;
+ foaf:nick "12345" ;
+ foaf:mbox "user12345@gmail.com"
+}
