@@ -9,10 +9,10 @@ import { Tree } from './tree';
 })
 export class APIService {
 
-  apiUrl = 'http://timber.gsic.uva.es/sta/';  // URL to web api
-  //apiUrl = 'http://localhost:8888/sta/';  // URL to web api 
-  //url_postTree = 'http://localhost:8888/sta/data/tree';
-  url_postTree = 'http://timber.gsic.uva.es/sta/data/tree';
+ //apiUrl = 'http://timber.gsic.uva.es/sta/';  // URL to web api
+apiUrl = 'http://localhost:8888/sta/';  // URL to web api 
+url_postTree = 'http://localhost:8888/sta/data/tree';
+  //url_postTree = 'http://timber.gsic.uva.es/sta/data/tree';
                                       
 
   constructor( private http: HttpClient) { }
