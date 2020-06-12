@@ -57,8 +57,7 @@ export class ListaComponent implements OnInit {
   obtenerIdSelecionado(tree: Tree){
     this.tree_selected = tree;  // obtengo el arbol que se ha elegido para ver
     // Recupero toda la info que hay de ese arbol en el servidor
-    //this.getInfoTree(this.tree_selected.id);
-    this.getInfoTree("http://localhost:8888/sta/data/tree/47-0036-A-1-1"); // esta es provisional ya que estoy en local
+    this.getInfoTree(this.tree_selected.id);
   }
 
   // Método que oculta la vista de todos los árboles
@@ -104,47 +103,44 @@ export class ListaComponent implements OnInit {
       /********* POSITION *************/
       //si hay posicion validada, recupero los datos de la misma
       if(this.objInfoTree[clave][this.AssertedPossition]){ 
-        //this.getInfoAnnot(this.objInfoTree[clave][this.AssertedPossition].value, true);
-        this.getInfoAnnot("http://localhost:8888/sta/data/annotation/p47-0036-A-1-1", true, false); //PROVISIONAL
+        this.getInfoAnnot(this.objInfoTree[clave][this.AssertedPossition].value, true, false);
+        //this.getInfoAnnot("http://localhost:8888/sta/data/annotation/p47-0036-A-1-1", true, false); //PROVISIONAL
         this.IsPossitionAsserted = true;
         // Si existe anotación Asserted, entonces la primaria coindice, por lo que solo compruebo la primaria
         // si no hay anotacion Asserted
       } else{
         if(this.objInfoTree[clave][this.PrimaryPossition]){ //aqui se mete solo si no hay anotacion Asserted
-          //this.getInfoAnnot(this.objInfoTree[clave][this.PrimaryPossition].value, false);
-          this.getInfoAnnot("http://localhost:8888/sta/data/annotation/p47-0036-A-1-1", false, true); //PROVISIONAL
+          this.getInfoAnnot(this.objInfoTree[clave][this.PrimaryPossition].value, false, true);
+          //this.getInfoAnnot("http://localhost:8888/sta/data/annotation/p47-0036-A-1-1", false, true); //PROVISIONAL
         }
       }
 
       // Compruebo si hay otras anotaciones de posicion
       if(this.objInfoTree[clave][this.Possition]){
-        //this.getInfoAnnot(this.objInfoTree[clave][this.Possition].value, false);
-        this.getInfoAnnot("http://localhost:8888/sta/data/annotation/004", false, false); //PROVISIONAL
+        this.getInfoAnnot(this.objInfoTree[clave][this.Possition].value, false, false);
+        //this.getInfoAnnot("http://localhost:8888/sta/data/annotation/004", false, false); //PROVISIONAL
       }
 
       /********* SPECIES *************/
       //si hay especie validada, recupero los datos de la misma
       if(this.objInfoTree[clave][this.AssertedSpecies]){ 
-        //this.getInfoAnnot(this.objInfoTree[clave][this.AssertedSpecies].value, true);
-        this.getInfoAnnot("http://localhost:8888/sta/data/annotation/s47-0036-A-1-1", true, false); //PROVISIONAL
+        this.getInfoAnnot(this.objInfoTree[clave][this.AssertedSpecies].value, true, false);
         // Si existe anotación Asserted, entonces la primaria coindice
         this.IsSpeciesAsserted = true;
       } else{
         if(this.objInfoTree[clave][this.PrimarySpecies]){ //aqui se mete solo si no hay anotacion Asserted
-          //this.getInfoAnnot(this.objInfoTree[clave][this.AssertedSpecies].value, false);
-          this.getInfoAnnot("http://localhost:8888/sta/data/annotation/s47-0036-A-1-1", false, true); //PROVISIONAL
+          this.getInfoAnnot(this.objInfoTree[clave][this.AssertedSpecies].value, false, true);
         }
       }
 
       // Compruebo si hay otras anotaciones de posicion
       if(this.objInfoTree[clave][this.Species]){
-        //this.getInfoAnnot(this.objInfoTree[clave][this.Species].value, false, false);
+        this.getInfoAnnot(this.objInfoTree[clave][this.Species].value, false, false);
       }
 
       /********* IMAGEN *************/
       if(this.objInfoTree[clave][this.Image]){
-        //this.getInfoAnnot(this.objInfoTree[clave][this.Image].value, flase);
-        this.getInfoAnnot("http://localhost:8888/sta/data/annotation/003", false, false); //PROVISIONAL
+        this.getInfoAnnot(this.objInfoTree[clave][this.Image].value, false, false);
       } 
     }
 
