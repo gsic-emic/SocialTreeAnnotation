@@ -120,6 +120,7 @@ export class NuevoArbolComponent implements OnInit {
   // Metodo que manda la informacion al servidor
   public createTree(){
     this.createJsonTree(); // Creo el JSON con los datos necesarios
+    console.log("Se va a crear el árbol...");
     
     // POST a la api
     this.api.createTree(JSON.stringify(this.newTree)).subscribe(
@@ -129,7 +130,7 @@ export class NuevoArbolComponent implements OnInit {
       (error) =>{
         this.error2 = true;
         console.error(error);
-        this.mensajeError = this.api.crearMensajeError(error.status);
+        this.mensajeError = this.UtilService.crearMensajeError(error.status);
         this.terminado2 = true;
       },
       () =>{
