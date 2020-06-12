@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { Tree } from './tree';
+import { Observable} from 'rxjs';
 
 
 @Injectable({
@@ -9,10 +8,10 @@ import { Tree } from './tree';
 })
 export class APIService {
 
- //apiUrl = 'http://timber.gsic.uva.es/sta/';  // URL to web api
-apiUrl = 'http://localhost:8888/sta/';  // URL to web api 
-url_postTree = 'http://localhost:8888/sta/data/tree';
-  //url_postTree = 'http://timber.gsic.uva.es/sta/data/tree';
+ apiUrl = 'http://timber.gsic.uva.es/sta/';  // URL to web api
+  //apiUrl = 'http://localhost:8888/sta/';  // URL to web api 
+  //url_postTree = 'http://localhost:8888/sta/data/tree';
+  url_postTree = 'http://timber.gsic.uva.es/sta/data/tree';
                                       
 
   constructor( private http: HttpClient) { }
@@ -69,25 +68,6 @@ url_postTree = 'http://localhost:8888/sta/data/tree';
     let headers = new HttpHeaders().set('Content-Type','application/json');
     return this.http.post<string>(this.url_postTree, datos, {headers: headers}); //¿necesito cabeceras?
   }
-
-
-  /*********************** CONTROL DE ERRORES ********************************************/
-  public crearMensajeError(errorCode: number){
-    let mensajeError;
-
-    switch (errorCode){
-      case 0: return mensajeError = " Parece que tenemos problemas con el servidor ";
-
-      case 400: return mensajeError = " Error 400. Bad Request ";
-
-      case 404: return mensajeError = " Error 404. No se encuentra el árbol creado ";
-
-      case 413: return mensajeError = " La imagen seleccionada ocupa demasiado espacio. Por favor, comprima el archivo antes de subirlo "
-
-    }
-
-  }
-
 
 
 }
