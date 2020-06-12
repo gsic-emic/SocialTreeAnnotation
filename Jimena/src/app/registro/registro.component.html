@@ -16,7 +16,8 @@
         <div class="form-group">
         <br><h5>Nombre de Usuario</h5>
           <input type="text" class="form-control" id="formGroupExampleInput" placeholder="username" 
-          [(ngModel)]="username" name="username" required>
+          [(ngModel)]="username" name="username" required> 
+          <span class="badge badge-warning" *ngIf="repetido" >Escoja uno nuevo</span>
         </div>
 
         <br><h5>TU CUENTA</h5>
@@ -27,9 +28,10 @@
         <div class="form-group">
             <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="Crear contraseña"
             [(ngModel)]="password" name="password" pattern="(^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$)" required>
-            <small id="emailHelp" class="form-text text-muted">La contraseña debe tener mínimo 8 caracteres, incluyendo una mayúscula y 2 números</small>
+            <small id="emailHelp" class="form-text text-muted">La contraseña debe tener mínimo 8 caracteres, incluyendo una mayúscula y 1 número</small>
         </div>
 
+        <button type="button" class="btn btn-outline-danger mr-2" (click)="borrarDatos()"><i class="far fa-times-circle"></i> Borrar todo </button>
         <button type="submit" class="btn btn-primary btn-success" [disabled]="!regForm.form.valid">Enviar <i class="fas fa-long-arrow-alt-right"></i></button>
       </form>
     </div>

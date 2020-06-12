@@ -2,8 +2,8 @@
 export interface User {
     nombre: string;
     apellidos:string;
-    username: string;
+    username?: string;
     email: string;
-    password?: string; // cómo se guarda esto?????
+    password?: string; 
 }
 
