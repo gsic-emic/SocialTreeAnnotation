@@ -164,108 +164,112 @@ function createAnnotation(req, res) {
         //console.log(login, password);
         var bodyParameters = req.body;
         var creator = bodyParameters.creator;
-
-        if (login == creator.split("user/")[1]) { //Daría problemas si  creator es undefined
-            //Comprobar que el login coindice con creator para modificaciones del usuario y el password con el hash almacenado en el fichero .passwd
-            userController.processLineByLine(login, password).then((userValidate) => {
-                if (userValidate) {
-                    //console.log("Usuario autenticado");
-                    sparqlClient.setDefaultGraph(config.defaultGraph);
-
-                    var idTree = bodyParameters.id.split("tree/")[1]; //me quedo el id solo
-                    var uri_tree = bodyParameters.id;
-                    var type = bodyParameters.type;
-                    var typeEnum = {
-                        position: "position",
-                        species: "species",
-                        image: "image"
-                    };
-
-                    var validate = false;
-
-
-                    var url_Base_sta = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
-                    if (url_Base_sta.slice(-1) != "/")
-                        url_Base_sta += "/";
-
-                    var idAnnot = null;
-
-                    //console.log(bodyParameters);
-
-
-                    if (idTree == undefined) {
-                        res.status(404).send({ "error": uri_tree + " no existe" });
-                    }
-                    else {
-                        // Comprobar que estos 3 campos están sino 400 Bad Request
-                        if (uri_tree != undefined && type != undefined && creator != undefined) {
-                            //Habría que comprobar que el árbol y el usuario existen y que el tipo es uno de los definidos (no lo compruebo, ya que habria que ver si está en la caché y sino en  el virtuoso. Líneas futuras)
-
-                            var promiseCheckData = new Promise((resolve, reject) => {
-                                //Comprobar si el árbol está cacheado y sino consulto al virtuoso.
-                                if (cache.trees[uri_tree] != undefined) {
-                                    //console.log("Árbol " + idTree + " cacheado");
-                                    //Habría que comprobar que el usuario existe (ánalogo al árbol)
-                                    //console.log("Comprobar si el usuario existe");
-                                    validate = true;
-                                    resolve(validate);
-                                }
-                                else {
-                                    treeController.getTreeVirtuoso(uri_tree).then((data) => {
-                                        if (data == null) {
-                                            reject(errorCodes.treeNoExist);
-                                        }
-                                        else {
-                                            //Árbol existe
-                                            //console.log("El árbol existe");
-                                            //Habría que comprobar que el usuario existe (ánalogo al árbol)
-                                            //console.log("Comprobar si el usuario existe");
-                                            validate = true;
-                                            resolve(validate);
-                                        }
-                                    }).catch((err) => {
-                                        console.log(err)
-                                        reject(err);
-                                    })
-                                }
-                            });
-
-                            promiseCheckData.then((validate) => {
-                                if (validate) {
-                                    //Compruebo el tipo
-                                    if (Object.values(typeEnum).includes(type)) {
-                                        return createAnn(bodyParameters, typeEnum, cache.trees[uri_tree]);
-                                    }
-                                }
-                            })
-                            .then((response) => {
-                                res.status(response.statusCode).send(response.message);
-                            })
-                            .catch((err) => {
-                                errorHandler.sendError(res,err)
-                            })
-                        }
-                        /*/else
-                            res.status(400).send({ "error": "La anotación de tipo " + type + " no existe" });
-                    }
-                    else
-                        res.status(400).send({ "error": "El usuario " + creator + " no existe" });
-                    }
-                    else
-                    res.status(400).send({ "error": "El árbol " + idTree + " no existe" });
-                    }*/
-                        else {
-                            res.status(400).send({ "error": "Faltan campos obligatorios para crear la anotación" });
-                        }
-                    }
-                }
-                else {
-                    res.status(401).send('Unauthorized: Contraseña incorrecta')
-                }
-            });
+        if (creator == undefined) {
+            res.status(400).send({ error: "Faltan campos obligatorios para la creación de la anotación: creador" });
         }
         else {
-            res.status(401).send('Unauthorized: El creador no coincide con la autenticación')
+            if (login == creator.split("user/")[1]) { //Daría problemas si  creator es undefined
+                //Comprobar que el login coindice con creator para modificaciones del usuario y el password con el hash almacenado en el fichero .passwd
+                userController.processLineByLine(login, password).then((userValidate) => {
+                    if (userValidate) {
+                        //console.log("Usuario autenticado");
+                        sparqlClient.setDefaultGraph(config.defaultGraph);
+
+                        var idTree = bodyParameters.id.split("tree/")[1]; //me quedo el id solo
+                        var uri_tree = bodyParameters.id;
+                        var type = bodyParameters.type;
+                        var typeEnum = {
+                            position: "position",
+                            species: "species",
+                            image: "image"
+                        };
+
+                        var validate = false;
+
+
+                        var url_Base_sta = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
+                        if (url_Base_sta.slice(-1) != "/")
+                            url_Base_sta += "/";
+
+                        var idAnnot = null;
+
+                        //console.log(bodyParameters);
+
+
+                        if (idTree == undefined) {
+                            res.status(404).send({ "error": uri_tree + " no existe" });
+                        }
+                        else {
+                            // Comprobar que estos 3 campos están sino 400 Bad Request
+                            if (uri_tree != undefined && type != undefined && creator != undefined) {
+                                //Habría que comprobar que el árbol y el usuario existen y que el tipo es uno de los definidos (no lo compruebo, ya que habria que ver si está en la caché y sino en  el virtuoso. Líneas futuras)
+
+                                var promiseCheckData = new Promise((resolve, reject) => {
+                                    //Comprobar si el árbol está cacheado y sino consulto al virtuoso.
+                                    if (cache.trees[uri_tree] != undefined) {
+                                        //console.log("Árbol " + idTree + " cacheado");
+                                        //Habría que comprobar que el usuario existe (ánalogo al árbol)
+                                        //console.log("Comprobar si el usuario existe");
+                                        validate = true;
+                                        resolve(validate);
+                                    }
+                                    else {
+                                        treeController.getTreeVirtuoso(uri_tree).then((data) => {
+                                            if (data == null) {
+                                                reject(errorCodes.treeNoExist);
+                                            }
+                                            else {
+                                                //Árbol existe
+                                                //console.log("El árbol existe");
+                                                //Habría que comprobar que el usuario existe (ánalogo al árbol)
+                                                //console.log("Comprobar si el usuario existe");
+                                                validate = true;
+                                                resolve(validate);
+                                            }
+                                        }).catch((err) => {
+                                            console.log(err)
+                                            reject(err);
+                                        })
+                                    }
+                                });
+
+                                promiseCheckData.then((validate) => {
+                                    if (validate) {
+                                        //Compruebo el tipo
+                                        if (Object.values(typeEnum).includes(type)) {
+                                            return createAnn(bodyParameters, typeEnum, cache.trees[uri_tree]);
+                                        }
+                                    }
+                                })
+                                    .then((response) => {
+                                        res.status(response.statusCode).send(response.message);
+                                    })
+                                    .catch((err) => {
+                                        errorHandler.sendError(res, err)
+                                    })
+                            }
+                            /*/else
+                                res.status(400).send({ "error": "La anotación de tipo " + type + " no existe" });
+                        }
+                        else
+                            res.status(400).send({ "error": "El usuario " + creator + " no existe" });
+                        }
+                        else
+                        res.status(400).send({ "error": "El árbol " + idTree + " no existe" });
+                        }*/
+                            else {
+                                res.status(400).send({ "error": "Faltan campos obligatorios para crear la anotación" });
+                            }
+                        }
+                    }
+                    else {
+                        res.status(401).send('Unauthorized: Contraseña incorrecta')
+                    }
+                });
+            }
+            else {
+                res.status(401).send('Unauthorized: El creador no coincide con la autenticación')
+            }
         }
     }
     else {
