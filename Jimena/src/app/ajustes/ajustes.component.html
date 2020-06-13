@@ -6,7 +6,7 @@
   <div class="d-flex flex-column align-items-center mb-50">
     <div class="card border-primary m-2 flex-fill" style="max-width: 400px;">
       <div class="card-header"> <i class="fas fa-user"></i>  Cuenta</div>
-      <div class="card-body text-primary">
+      <div class="card-body text-primary" *ngIf="!error; else mostrarError">
         <h5 class="card-title text-center">Modifica tus datos</h5>
         <h5>SOBRE TI</h5>
         <form (ngSubmit)="onSubmit()" #regForm="ngForm">
@@ -39,6 +39,14 @@
           </div>
         </form>
       </div>
+      <ng-template #mostrarError>
+        <div class="card-body text-primary">
+          <div class="alert alert-danger" role="alert">
+            <i class="far fa-frown"></i> No se pueden cargar tus datos en estos momentos <i class="far fa-frown"></i>
+            <br><br>Inténtelo de nuevo más tarde
+        </div>
+        </div>
+      </ng-template>
     </div>    
       <div class="card border-success m-2 flex-fill" style="max-width: 400px;">
           <div class="card-header"> <i class="fas fa-lock"></i>  Privacidad</div>
