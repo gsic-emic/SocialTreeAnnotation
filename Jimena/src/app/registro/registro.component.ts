@@ -53,7 +53,9 @@ export class RegistroComponent implements OnInit {
     this.UserService.createUser(datosUsuario, username).subscribe(
       (data) =>{
         console.log(data);
-        
+        // Guardo los datos de inicio en la sesión
+        sessionStorage.setItem('username', this.username);
+        sessionStorage.setItem('password', this.password);
         this.router.navigate(['/principal']);
       },
       (error) =>{

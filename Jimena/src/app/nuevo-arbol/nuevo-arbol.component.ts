@@ -5,6 +5,7 @@ import { APIService} from '../api.service';
 import { UtilService } from '../services/util.service';
 import { SpeciesService } from '../services/species.service';
 import { ImagesService } from '../services/images.service';
+import { UsersService } from './../services/users.service';
 //-------------------------------------------------
 //import {EXIF as exifShim, EXIFStatic } from '../../../node_modules/exif-js/exif';
 
@@ -31,6 +32,9 @@ export class NuevoArbolComponent implements OnInit {
   imagen: string;
   creador:string = "demo";
   fecha: string;
+
+  // DATOS DE LA SESIÓN
+  basicAuth: string;
   
 
   //variables de control
@@ -50,18 +54,13 @@ export class NuevoArbolComponent implements OnInit {
   depicts: string;
   imageSrc: string; //Para la previsualizacion de la imagen al subirla
   imageSrc_default: string = "./../assets/images/no-image.png";
-  //metadata: Array<any>;
-  //date_img: string;
-  //lat_img: number;
-  //long_img: number;
-  //width: number;
-  //heigth: number;
 
   constructor(private api: APIService, public UtilService: UtilService, public SpeciesService: SpeciesService,
-    public ImagesService: ImagesService) { }
+    public ImagesService: ImagesService, public UsersService: UsersService) { }
 
   ngOnInit(): void {
     this.getSpecies(); // cargo las especies disponibles para ponerlas en el formulario
+    this.basicAuth = this.UsersService.getUserAutentication();
 
   }
 
@@ -123,7 +122,7 @@ export class NuevoArbolComponent implements OnInit {
     console.log("Se va a crear el árbol...");
     
     // POST a la api
-    this.api.createTree(JSON.stringify(this.newTree)).subscribe(
+    this.api.createTree(JSON.stringify(this.newTree), this.basicAuth).subscribe(
       (data) =>{
         console.log(data);
       },
