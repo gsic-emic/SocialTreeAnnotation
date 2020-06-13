@@ -22,7 +22,7 @@ export class UtilService {
       case 0: return mensajeError = " Parece que tenemos problemas con el servidor ";
       case 400: return mensajeError = " Error 400. Bad Request ";
       case 401: return mensajeError = " Error 401. No autorizado ";
-      case 404: return mensajeError = " Error 404. No se encuentra el árbol creado ";
+      case 404: return mensajeError = " Error 404. Not found ";
       case 413: return mensajeError = " La imagen seleccionada ocupa demasiado espacio. Por favor, comprima el archivo antes de subirlo "
 
     }
