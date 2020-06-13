@@ -31,6 +31,13 @@ export class RegistroComponent implements OnInit {
 
 
   ngOnInit(): void {
+    // Se comprueba si el navegador es compatible con el login
+    if (typeof(Storage) !== 'undefined') {
+      // Código cuando Storage es compatible
+    } else {
+     // Código cuando Storage NO es compatible
+     alert("El navegador utilizado no es compatible con el inicio de sesión. Por favor, pruebe con uno más moderno");
+    }
   }
   
   public onSubmit() {
@@ -46,6 +53,7 @@ export class RegistroComponent implements OnInit {
     this.UserService.createUser(datosUsuario, username).subscribe(
       (data) =>{
         console.log(data);
+        
         this.router.navigate(['/principal']);
       },
       (error) =>{

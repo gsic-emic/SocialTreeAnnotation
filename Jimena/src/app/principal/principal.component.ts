@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { UsersService } from './../services/users.service';
 
 
 
@@ -9,11 +10,17 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class PrincipalComponent implements OnInit {
 
+  public username: string;
 
-  constructor() { }
+
+  constructor(private UsersService: UsersService) { }
 
   ngOnInit(): void {
-   
+    this.username = this.UsersService.getSessionName();
+  }
+
+  public borrarDatosSession(){
+    this.UsersService.clearSession();
   }
 
 }
