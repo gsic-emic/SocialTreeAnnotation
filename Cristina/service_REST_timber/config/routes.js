@@ -45,6 +45,26 @@ api.get(urls.root, (req, res) => {
         });
 });
 
+// Para el login:
+api.post(urls.root, (req, res) => {
+    var login = req.body.idUser;
+    var password = req.body.password;
+
+    if(login != undefined && password != undefined){
+        userController.processLineByLine(login, password).then((userValidate) => {
+            if (userValidate) {
+                res.status(200).send('Authorized')
+            }
+            else {
+                res.status(401).send('Unauthorized: Contraseña incorrecta')
+            }
+        });
+    }
+    else {
+        res.status(401).send('Unauthorized')
+    }
+});
+
 //Usuarios
 api.put(urls.user, userController.createUpdateUser) //Si existe se actualizaría. De momento solo creación
 api.get(urls.user, userController.getUser)
