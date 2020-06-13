@@ -1,6 +1,6 @@
 <app-menu-usuarios></app-menu-usuarios>
 <div class="contenedor">
-  <div class="cerrar"><a [routerLink]="['/']">Cerrar Sesión <i class="fas fa-sign-out-alt"></i></a></div>
+  <div class="cerrar"><a [routerLink]="['/']" (click)="borrarDatosSession()" >Cerrar Sesión <i class="fas fa-sign-out-alt"></i></a></div>
   <div class="titulo">AJUSTES</div>
 
   <div class="d-flex flex-column align-items-center mb-50">

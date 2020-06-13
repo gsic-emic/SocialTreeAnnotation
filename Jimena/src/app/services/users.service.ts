@@ -12,7 +12,7 @@ export class UsersService {
   constructor(private http: HttpClient) { }
 
     /*********************** CREACION DE USUARIOS ******************************/
-    public createUser(datos: string, username: string): Observable<string> {
+    public createUser(datos: string, username: string,): Observable<string> {
       // Cabecera necesaria
       let urlComplete = this.userUrl+username;
       console.log("La url creada es: "+urlComplete);

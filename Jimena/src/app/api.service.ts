@@ -9,9 +9,7 @@ import { Observable} from 'rxjs';
 export class APIService {
 
  apiUrl = 'http://timber.gsic.uva.es/sta/';  // URL to web api
-  //apiUrl = 'http://localhost:8888/sta/';  // URL to web api 
-  //url_postTree = 'http://localhost:8888/sta/data/tree';
-  url_postTree = 'http://timber.gsic.uva.es/sta/data/tree';
+//apiUrl = 'http://localhost:8888/sta/';  // URL to web api 
                                       
 
   constructor( private http: HttpClient) { }
@@ -63,10 +61,15 @@ export class APIService {
   }
 
   /*********************** CREACIÓN DE DATOS EN EL SERVIDOR ******************************/
-  createTree(datos: string): Observable<string> {
+  createTree(datos: string, basicAuth: string): Observable<string> {
     // Cabecera necesaria
-    let headers = new HttpHeaders().set('Content-Type','application/json');
-    return this.http.post<string>(this.url_postTree, datos, {headers: headers}); //¿necesito cabeceras?
+    //let headers = new HttpHeaders().set('Content-Type','application/json');
+    let headers = new HttpHeaders({
+      'Content-Type':  'application/json',
+      'Authorization': 'Basic '+basicAuth
+    });
+    let url_postTree = this.apiUrl+'data/tree/';
+    return this.http.post<string>(url_postTree, datos, {headers: headers}); //¿necesito cabeceras?
   }
 
 

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../user';
-import { from } from 'rxjs';
-
+import { UsersService } from './../services/users.service';
 @Component({
   selector: 'app-ajustes',
   templateUrl: './ajustes.component.html',
@@ -9,7 +8,7 @@ import { from } from 'rxjs';
 })
 export class AjustesComponent implements OnInit {
 
-  constructor() { }
+  constructor(private UsersService: UsersService) { }
 
   public user: User; // De momento la creo a mano, en su momento esta variable será la que esté en todo el sistema
                       // con los datos del usuario actual
@@ -26,7 +25,10 @@ export class AjustesComponent implements OnInit {
   }
 
   public onSubmit() {
-    
+
+  }
+  public borrarDatosSession(){
+    this.UsersService.clearSession();
   }
 
 }
