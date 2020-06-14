@@ -27,7 +27,6 @@ export class AjustesComponent implements OnInit {
     let username = this.UsersService.getSessionName();
     //Obtengo los datos del usuario actual
     this.obtenerDatosUsuario(username);
-    //this.user = {nombre: "Jimena", apellidos: "Andrade", username: "jandrade", email: "jimena@hotmail.com"};
   }
 
   //------------ Recuperación de los datos del usuario actual -------------------//
