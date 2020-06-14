@@ -39,10 +39,10 @@ export class IniciarSesionComponent implements OnInit {
 
     this.UsersService.login(json).subscribe(
       (data) =>{
-        console.log(data);
+        console.log("Los datos de acceso son correctos");
         // Los datos de acceso son correctos
-      sessionStorage.setItem('username', this.username);  // Guardo los datos de inicio en la sesión
-      sessionStorage.setItem('password', this.password);
+        sessionStorage.setItem('username', this.username);  // Guardo los datos de inicio en la sesión
+        sessionStorage.setItem('password', this.password);
 
         // LLevo al usuario a la página principal
         this.router.navigate(['/principal']);
@@ -50,7 +50,16 @@ export class IniciarSesionComponent implements OnInit {
       (error) =>{
         console.error(error);
         //this.mensajeError = this.UtilService.crearMensajeError(error.status);
-        alert("Tu nombre de usuario o contraseña son incorrectos. Por favor, inténtelo de nuevo");
+        if (error.status == 401){
+          alert("Tu nombre de usuario o contraseña son incorrectos. Por favor, inténtelo de nuevo");
+        }else if(error.status == 200){
+          // Los datos de acceso son correctos
+        sessionStorage.setItem('username', this.username);  // Guardo los datos de inicio en la sesión
+        sessionStorage.setItem('password', this.password);
+
+        // LLevo al usuario a la página principal
+        this.router.navigate(['/principal']);
+        }
         this.username = null; // borro los campos del cuestionario
         this.password = null;
       },
