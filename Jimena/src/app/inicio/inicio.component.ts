@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
 //--------------------------
 import {APIService} from '../api.service';
-import {Tree} from '.././tree';
-import { Specie } from '../species';
 //-----------------------------
 
 @Component({
@@ -16,11 +13,11 @@ export class InicioComponent implements OnInit {
   constructor(private api: APIService) { }
 
   //-----------------------------
-  mapa: boolean = true;
+  public mapa: boolean = true;
 
-  error: boolean = false;
-  terminado_species: boolean = false;
-  objSpecies: object=[];
+  public error: boolean = false;
+  public terminado_species: boolean = false;
+  public objSpecies: object=[];
   
 
   ngOnInit(): void {
