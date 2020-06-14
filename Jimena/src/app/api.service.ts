@@ -13,6 +13,7 @@ export class APIService {
                                       
 
   constructor( private http: HttpClient) { }
+  
   /*********************** RECUPERACIÓN DE DATOS DEL SERVIDOR ******************************/
   testConexion(): Observable<string>{
     return this.http.get<string>(this.apiUrl); 
