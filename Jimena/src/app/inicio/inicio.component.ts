@@ -24,7 +24,22 @@ export class InicioComponent implements OnInit {
   
 
   ngOnInit(): void {
-    this.getSpecies(); // nada más cargarse que recoja las especies
+    // Antes de cargar nada, compruebo si hay conexión con el servidor
+    this.comprobarConexion();
+ }
+
+ //-----------------------------
+ public comprobarConexion(){
+   this.api.testConexion().subscribe(
+    (data: any) =>{
+      console.log('Hay conexión con el servidor');
+      // Hay conexión, cargo las especies
+      this.getSpecies();
+    },
+    (error) =>{
+      console.error(error); // si se ha producido algún error
+      alert("No se puede conectar con el servidor. Por favor, inténtelo de nuevo más tarde");
+    });
  }
 
   //-----------------------------
@@ -32,13 +47,11 @@ export class InicioComponent implements OnInit {
     this.api.getSpecies().subscribe(
       (data: any) =>{
         this.objSpecies = data.response;
-        //console.log(this.objSpecies);
       },
       (error) =>{
         console.error(error); // si se ha producido algún error
         this.error = true;
         alert("Ha habido un error al intentar cargar las especies del sistema.");
-        //this.terminado_species = true;
       },
       () =>{
         this.terminado_species = true;

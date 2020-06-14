@@ -14,7 +14,7 @@ export class APIService {
 
   constructor( private http: HttpClient) { }
   /*********************** RECUPERACIÓN DE DATOS DEL SERVIDOR ******************************/
-  prueba(): Observable<string>{
+  testConexion(): Observable<string>{
     return this.http.get<string>(this.apiUrl); 
   }
 
