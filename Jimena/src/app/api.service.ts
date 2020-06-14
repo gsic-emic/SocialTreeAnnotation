@@ -63,13 +63,14 @@ export class APIService {
   /*********************** CREACIÓN DE DATOS EN EL SERVIDOR ******************************/
   createTree(datos: string, basicAuth: string): Observable<string> {
     // Cabecera necesaria
-    //let headers = new HttpHeaders().set('Content-Type','application/json');
+    // Codifico en base64 la autenticacion del usuario
+    let auth = btoa('Basic '+basicAuth); //?????????????no se si el basic va ahí o no y si hay que codificarlo
     let headers = new HttpHeaders({
       'Content-Type':  'application/json',
-      'Authorization': 'Basic '+basicAuth
+      'Authorization': auth
     });
     let url_postTree = this.apiUrl+'data/tree/';
-    return this.http.post<string>(url_postTree, datos, {headers: headers}); //¿necesito cabeceras?
+    return this.http.post<string>(url_postTree, datos, {headers: headers}); 
   }
 
 

@@ -30,7 +30,7 @@ export class NuevoArbolComponent implements OnInit {
   hoja: string;
   fruto: string;
   imagen: string;
-  creador:string = "demo";
+  creador:string = 'http://timber.gsic.uva.es/sta/data/user/';
   fecha: string;
 
   // DATOS DE LA SESIÓN
@@ -60,7 +60,14 @@ export class NuevoArbolComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSpecies(); // cargo las especies disponibles para ponerlas en el formulario
+
+    // Recojo el username para crear la url del usuario
+    let username = this.UsersService.getSessionName();
+    this.creador = this.creador+username; // url completa: http://timber.gsic.uva.es/sta/data/user/username
+
+    // Guardo la autenticación del usuario
     this.basicAuth = this.UsersService.getUserAutentication();
+
 
   }
 
