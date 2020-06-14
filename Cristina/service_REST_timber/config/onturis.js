@@ -25,8 +25,6 @@ var onturis = {
 	assertedSpecies: 'http://timber.gsic.uva.es/sta/ontology/AssertedSpecies',
 	user: "http://timber.gsic.uva.es/sta/data/user/",
 
-
-
 	//PROPIEDADES
 	prHasImage: 'http://timber.gsic.uva.es/sta/ontology/hasImage',
 	prHasTaxon: 'http://timber.gsic.uva.es/sta/ontology/hasTaxon',
@@ -47,7 +45,6 @@ var onturis = {
 	prHasAssertedSpecies: 'http://timber.gsic.uva.es/sta/ontology/hasAssertedSpecies',
 	prHasAssertedPosition: 'http://timber.gsic.uva.es/sta/ontology/hasAssertedPosition',
 
-
 	geo_lat: "http://www.w3.org/2003/01/geo/wgs84_pos#lat",
 	geo_long: "http://www.w3.org/2003/01/geo/wgs84_pos#long",
 	dc_creator: "http://purl.org/dc/elements/1.1/creator",
@@ -55,6 +52,7 @@ var onturis = {
 	ifn_ontology: "http://crossforest.eu/ifn/ontology/",
 	ifn_species: "http://crossforest.eu/ifn/ontology/Species",
 	ifn_especiesTop: ['http://crossforest.eu/ifn/ontology/Class2', 'http://crossforest.eu/ifn/ontology/Class1'],
+	
 	// especies
 	prifnScientificName: 'http://crossforest.eu/ifn/ontology/hasAcceptedName>/<http://crossforest.eu/ifn/ontology/name',
 	prifnVulgarName: 'http://crossforest.eu/ifn/ontology/vulgarName',
@@ -62,10 +60,7 @@ var onturis = {
 	prifnSameAs: 'http://schema.org/sameAs',
 	foafPerson: 'http://xmlns.com/foaf/0.1/Person',
 
-
 	data: "http://timber.gsic.uva.es/sta/data/"
-
-
 };
 
 module.exports = onturis;
