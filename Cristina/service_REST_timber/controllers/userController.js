@@ -148,7 +148,6 @@ function createUpdateUser(req, res) {
     var password = req.body.password;
     var bodyParameters = req.body;
 
-
     //Comprobar si la petición lleva la Caberecera de autenticación básica de http
     if (req.headers.authorization != undefined) {
         // parse login and password from headers
@@ -230,7 +229,7 @@ function createUpdateUser(req, res) {
                         })
                         .catch((err) => {
                             if(err.code == errorCodes.badRequest.code)
-                                errorHandler.sendError(res, errorCodes.badRequest, "Error creando usuario en Virtuoso"); 
+                                errorHandler.sendError(res, errorCodes.badRequest, "Error creando usuario en Virtuoso");
                             else
                                 errorHandler.sendError(res, errorCodes.internalError, "Error cacheando usuario");// Al frontend le da igual este error realmente. Es interno
                         });
@@ -243,7 +242,6 @@ function createUpdateUser(req, res) {
         }
     }
 }
-
 
 function getUserVirtuoso(id) {
     sparqlClient.setDefaultGraph();
