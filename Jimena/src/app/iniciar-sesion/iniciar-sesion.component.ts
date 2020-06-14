@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UsersService } from './../services/users.service';
 
 
 @Component({
@@ -9,10 +10,12 @@ import { Router } from '@angular/router';
 })
 export class IniciarSesionComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  //public mensajeError: string;
+
+  constructor(private router: Router, private UsersService: UsersService) { }
 
   ngOnInit(): void {
-    // Se comprueba si el navegador es compatible con el login
+    // Se comprueba si el navegador es compatible con las sesiones
     if (typeof(Storage) !== 'undefined') {
       // Código cuando Storage es compatible
     } else {
@@ -24,12 +27,36 @@ export class IniciarSesionComponent implements OnInit {
   public password: string;
 
   public onSubmit(){
-    // Guardo los datos de inicio en la sesión
-    sessionStorage.setItem('username', this.username);
-    sessionStorage.setItem('password', this.password);
+    // Creo el JSON con los datos del usuario
+    let user = {idUser: this.username, password: this.password};
 
-    this.router.navigate(['/principal']);
+    // Consulto con el servicio si los datos de acceso son correctos
+    this.comprobarLogIn(JSON.stringify(user));
+  }
 
+  public comprobarLogIn(json: string){
+    let error = false;
+
+    this.UsersService.login(json).subscribe(
+      (data) =>{
+        console.log(data);
+        // Los datos de acceso son correctos
+      sessionStorage.setItem('username', this.username);  // Guardo los datos de inicio en la sesión
+      sessionStorage.setItem('password', this.password);
+
+        // LLevo al usuario a la página principal
+        this.router.navigate(['/principal']);
+      },
+      (error) =>{
+        console.error(error);
+        //this.mensajeError = this.UtilService.crearMensajeError(error.status);
+        alert("Tu nombre de usuario o contraseña son incorrectos. Por favor, inténtelo de nuevo");
+        this.username = null; // borro los campos del cuestionario
+        this.password = null;
+      },
+      () =>{
+      }
+      );
   }
 
 }

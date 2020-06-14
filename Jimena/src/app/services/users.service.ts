@@ -23,6 +23,14 @@ export class UsersService {
     return this.http.get<any[]>(urlComplete);
   }
 
+  /*********************** INICIO DE SESION ******************************/
+  login(datos: string): Observable<string> {
+    let headers = new HttpHeaders().set('Content-Type','application/json'); // Cabecera necesaria
+    let url = 'http://timber.gsic.uva.es/sta/';
+    return this.http.post<string>(url, datos, {headers: headers});
+  }
+
+
 
     /*********************** CREACION DE USUARIOS ******************************/
     public createUser(datos: string, username: string,): Observable<string> {
@@ -33,7 +41,7 @@ export class UsersService {
       return this.http.put<string>(urlComplete, datos, {headers: headers});
     }
 
-    /****** Datos de la sesion *******/
+    /********************** CONTROL DE LA SESIÓN SEL USUARIO ACTUAL *******************/
     public getSessionName(): string{
       let username = sessionStorage.getItem('username');
       return username;
