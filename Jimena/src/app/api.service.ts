@@ -57,19 +57,21 @@ export class APIService {
   }
 
   getUserAnnotatios (userId): Observable<any[]> {
-    var urlComplete = "data/annotation?creator="+userId;
-    return this.http.get<any[]>(this.apiUrl+urlComplete);
+    var urlComplete = this.apiUrl+"data/annotation?creator="+userId;
+    return this.http.get<any[]>(urlComplete);
   }
 
   /*********************** CREACIÓN DE DATOS EN EL SERVIDOR ******************************/
   createTree(datos: string, basicAuth: string): Observable<string> {
     // Cabecera necesaria
     // Codifico en base64 la autenticacion del usuario
-    let auth = btoa('Basic '+basicAuth); //?????????????no se si el basic va ahí o no y si hay que codificarlo
+    let auth = btoa(basicAuth); 
     let headers = new HttpHeaders({
       'Content-Type':  'application/json',
-      'Authorization': auth
+      'Authorization': 'Basic '+auth, // Especifico que es autenticación básica y codifico en base64 user:pwd
+      'Access-Control-Allow-Origin': 'POST'
     });
+    //let headers = new HttpHeaders().set('Content-Type','application/json');
     let url_postTree = this.apiUrl+'data/tree/';
     return this.http.post<string>(url_postTree, datos, {headers: headers}); 
   }

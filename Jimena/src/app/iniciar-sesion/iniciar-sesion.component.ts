@@ -64,6 +64,7 @@ export class IniciarSesionComponent implements OnInit {
         this.password = null;
       },
       () =>{
+        console.log("Los datos de acceso son correctos");
       }
       );
   }

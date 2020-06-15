@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {APIService} from '../api.service';
-import {Tree} from '.././tree';
+import { APIService} from '../api.service';
+import { Tree} from '.././tree';
 import { Annotation } from '../Annotation';
+import { AnnotationService } from './../services/annotation.service';
+import { UtilService } from './../services/util.service';
+import { TreeService } from './../services/tree.service';
+import { UsersService } from './../services/users.service';
+
 
 @Component({
   selector: 'app-mis-anotaciones',
@@ -19,7 +24,7 @@ export class MisAnotacionesComponent implements OnInit {
   terminado: boolean = false;
   terminado_species: boolean = false;
   terminado_anot: boolean = false;
-  user: string = "Jimena";
+  user: string;
 
   // Variables de almacenamiento de los daros recuperados------------------------
   objSpecies: object[]=[];
@@ -27,21 +32,17 @@ export class MisAnotacionesComponent implements OnInit {
   trees: Tree[]=[]; // Array con todos los árboles del sistema con formato adecuado para visualización
   objAnnotations: Annotation[] = []; // Objeto JSON que almacena todas las anotaciones del usuario
   annotations: Annotation[] = []; // datos de las anotaciones modelados
-  buscadorSpecies: string = "http://crossforest.eu/ifn/ontology/vulgarName";
-  tipoAnnot: string = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-  buscadorFecha: string = "http://purl.org/dc/elements/1.1/created";
-  buscadorLong: string = "http://www.w3.org/2003/01/geo/wgs84_pos#long";
-  buscadorLat: string = "http://www.w3.org/2003/01/geo/wgs84_pos#lat";
-  buscador_taxon: string = "http://timber.gsic.uva.es/sta/ontology/hasTaxon";
-  buscador_image: string = "http://timber.gsic.uva.es/sta/ontology/hasImage";
 
-
-
-  constructor(private api: APIService) { }
+  constructor(private api: APIService, private annot: AnnotationService, private util: UtilService,
+    private tree: TreeService, private userService: UsersService) { }
 
   ngOnInit(): void {
     this.getSpecies();
+    // Recojo el username 
+    this.user = this.userService.getSessionName();
+
     this.getMyAnnotatios(this.user);
+
   }
    
   /****************************** SPECIES **************************/
@@ -55,6 +56,7 @@ export class MisAnotacionesComponent implements OnInit {
       (error) =>{
         console.error(error); // si se ha producido algún error
         this.error = true;
+        this.terminado = true;
         alert("Ha habido un error al intentar cargar las especies del sistema.");
       },
       () =>{  // una vez que tengo las especies, pedo llamar a la funcion que obtiene los árboles
@@ -72,8 +74,9 @@ export class MisAnotacionesComponent implements OnInit {
           this.existen = false; // no tiene arboles
         } else{
           this.objTrees = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
+          // Convierto los datos devueltos en objetos tipo Tree
+        this.trees = this.tree.crearTrees(this.objTrees, this.objSpecies);
         }
-        this.convertirDato();
       },
       (error) =>{
         console.error(error); // si se ha producido algún error
@@ -86,31 +89,7 @@ export class MisAnotacionesComponent implements OnInit {
       }
       );
   }
-  // método que  crea un objeto de tipo Tree
-  createTree(id: string, latitud: number, longitud: number, specie: string, creator: string, date: string){
-    let tree = { id: id, lat: latitud, long: longitud, species: specie, creator:  creator, date: date};
-    //console.log("Se ha creado el siguiente árbol: "+ tree.id +":"+tree.lat, tree.long);
-    return tree;
-  }
-  // creo un objeto TypeScritp de tipo Tree[] con el objeto JSON devuelto para mostrarse en la pantalla adecuadamente
-  convertirDato(){
-    let i=0;
-    for (let clave in this.objTrees){
-      if (this.objTrees[clave].creator == "http://crossforest.eu/ifn/ontology/")
-        { 
-          this.objTrees[clave].creator = "IFN"
-        } 
-      for (let clav in this.objSpecies){
-        if(this.objTrees[clave].species == this.objSpecies[clav]["uri"]){
-          this.objTrees[clave].species = this.objSpecies[clav][this.buscadorSpecies]["lits"].es;
-          break;
-        }
-      }
-      this.objTrees[clave].date = "1/1/2020";
-      this.trees[i] = this.createTree(clave, this.objTrees[clave].lat, this.objTrees[clave].long, this.objTrees[clave].species, this.objTrees[clave].creator, this.objTrees[clave].date);
-      i++;
-    }
-  }
+
     /****************************** ANNOTATIONS **************************/
   getMyAnnotatios(user: string){
     this.api.getUserAnnotatios(user).subscribe(
@@ -120,7 +99,6 @@ export class MisAnotacionesComponent implements OnInit {
         } else {
           this.objAnnotations = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
         }
-        //console.log(data);
         this.convertirAnnot();
       },
       (error) =>{
@@ -135,12 +113,6 @@ export class MisAnotacionesComponent implements OnInit {
       );
     }
 
-    // método que  crea un objeto de tipo Tree
-  /*createAnno(id: string, latitud: number, longitud: number, specie: string, creator: string, date: string){
-    let annot = { id: id, creator:  creator, date: date, type: type: {specie: "Pino"}};
-    //console.log("Se ha creado el siguiente árbol: "+ tree.id +":"+tree.lat, tree.long);
-    return annot;
-  }*/
   // creo un objeto TypeScritp de tipo Annotation[] con el objeto JSON devuelto para mostrarse en la pantalla adecuadamente
   convertirAnnot(){
     let i=0;
@@ -154,37 +126,37 @@ export class MisAnotacionesComponent implements OnInit {
       primary = false;
       asserted = false;
       // Primero compruebo el tipo de anotacion que es
-      switch (this.objAnnotations[clave][this.tipoAnnot].value){
+      switch (this.objAnnotations[clave][this.annot.tipoAnnot].value){
         case "http://timber.gsic.uva.es/sta/ontology/PrimaryPosition":
           primary = true; //es una anotacion de tipo localización y ademas es una anotacion primaria
           tipo = "location";
-          lat = Number(this.objAnnotations[clave][this.buscadorLat].value);
-          long = Number(this.objAnnotations[clave][this.buscadorLong].value);
+          lat = Number(this.objAnnotations[clave][this.annot.buscadorLat].value);
+          long = Number(this.objAnnotations[clave][this.annot.buscadorLong].value);
           break;
         case "http://timber.gsic.uva.es/sta/ontology/AssertedSpecies":
           asserted = true;
           tipo = "specie";
-          especie = this.objAnnotations[clave][this.buscador_taxon].value;
+          especie = this.objAnnotations[clave][this.annot.buscador_taxon].value;
           break;
         case "http://timber.gsic.uva.es/sta/ontology/ImageAnnotation":
             tipo = "image";
-            image = this.objAnnotations[clave][this.buscador_image].value;
+            image = this.objAnnotations[clave][this.annot.buscador_image].value;
             break;
         case "http://timber.gsic.uva.es/sta/ontology/PositionAnnotation":
             tipo = "location";
-            lat = Number(this.objAnnotations[clave][this.buscadorLat].value);
-            long = Number(this.objAnnotations[clave][this.buscadorLong].value);
+            lat = Number(this.objAnnotations[clave][this.annot.buscadorLat].value);
+            long = Number(this.objAnnotations[clave][this.annot.buscadorLong].value);
             break;
         case "http://timber.gsic.uva.es/sta/ontology/SpeciesAnnotation":
             tipo = "specie";
-            especie = this.objAnnotations[clave][this.buscador_taxon].value;
+            especie = this.objAnnotations[clave][this.annot.buscador_taxon].value;
             break;
       }
       // Recupero la fecha (si no tiene me la invento: las del ifn)
-      if(!this.objAnnotations[clave][this.buscadorFecha]){
+      if(!this.objAnnotations[clave][this.annot.buscadorFecha]){
         date = "01/01/2020";
       } else{
-        date = this.formatearFecha(this.objAnnotations[clave][this.buscadorFecha].value);
+        date = this.util.formatearFecha(this.objAnnotations[clave][this.annot.buscadorFecha].value);
       }
       //creo la anotacion en funcion del tipo
       switch (tipo){
@@ -201,13 +173,6 @@ export class MisAnotacionesComponent implements OnInit {
       i++;
     }
   }
-  formatearFecha(date: string): string{
-    let nueva_fecha = date.split("T", 2); // Me quedo con el AAAA/MM/DD
-    let Arrayfecha = nueva_fecha[0].split("-"); // Genera un array con el dia, mes y año por separado
-    let fecha = Arrayfecha[2]+"/"+Arrayfecha[1]+"/"+Arrayfecha[0]; //reordeno para tener DD/MM/AAAA
-    return fecha;
-  }
-
   
   
 
