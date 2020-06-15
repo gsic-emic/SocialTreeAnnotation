@@ -76,4 +76,13 @@ export class UsersService {
       }
     }
 
+    // Conversión de la url completa de un usuario a su username
+      // http://timber.gsic.uva.es/sta/data/user/jimena22 -----> jimena22
+    public adaptarUsername(userUrl: string): string{
+      let array = userUrl.split('/');
+      let username = array[6];
+      return username;
+
+    }
+
 }

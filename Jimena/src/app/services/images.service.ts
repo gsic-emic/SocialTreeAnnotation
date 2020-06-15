@@ -1,13 +1,25 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImagesService {
 
-  constructor() { }
+  public apiUrl = 'http://timber.gsic.uva.es/sta/';  // URL to web api
+  //public buscadorPartes = 'http://timber.gsic.uva.es/sta/ontology/TreePartPhoto';
 
-  /** Subir imágenes **/ 
+  constructor(private http: HttpClient) { }
+
+  /************** PARTES DE UN ARBOL ************************/ 
+
+// Obtención de las partes de un árbol para el campo DEPICTS
+public getTreeParts(): Observable<any[]> {
+  var urlComplete = this.apiUrl+"data/treePart";
+  return this.http.get<any[]>(urlComplete);
+}
+
 // Creación de la uri del campo depicts
 public createUriDepicts(depicts: string){
   switch (depicts){
