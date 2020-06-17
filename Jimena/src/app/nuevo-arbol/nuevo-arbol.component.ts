@@ -158,7 +158,7 @@ export class NuevoArbolComponent implements OnInit {
     if (this.depicts != null){
       // Creo el campo de depics
       this.depicts = this.ImagesService.createUriDepicts(this.depicts);
-      console.log(this.depicts);
+      //console.log(this.depicts);
     }
     // Compruebo si rellena todos los campos
     if (this.especie != null && this.imagen != null){
@@ -187,7 +187,7 @@ export class NuevoArbolComponent implements OnInit {
       this.newTree = {creator:  this.creador, lat: this.lat, long: this.long};
     }
     
-    console.log(JSON.stringify(this.newTree));
+    //console.log(JSON.stringify(this.newTree));
 
   }
 

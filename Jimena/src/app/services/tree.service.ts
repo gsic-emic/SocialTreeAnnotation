@@ -41,7 +41,7 @@ export class TreeService {
 
       // Busco la fecha de creación en la url completa
       let fecha = this.buscarFechaTree(clave); //---------NO ME FUNCIONA!!!!!
-      console.log(fecha);
+      //console.log(fecha);
       
       trees[i] = { id: clave, lat: objTrees[clave].lat, long: objTrees[clave].long, species: objTrees[clave].species, creator:  username, date: fecha};
       i++;
