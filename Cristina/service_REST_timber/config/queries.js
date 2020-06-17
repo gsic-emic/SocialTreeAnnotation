@@ -1,4 +1,5 @@
 var onturis = require('./onturis');
+const { name } = require('mustache');
 
 // query prefixes
 var queryPrefixes = {
@@ -26,7 +27,9 @@ var queryPrefixes = {
 var nameQueries = {
     'createAnnotationPosition': 'create_annotation_position',
     'createAnnotationSpecies': 'create_annotation_species',
-    'createUser': 'create_user'
+    'createUser': 'create_user',
+    'detailsAll':'details_allprop',
+    'individuals': 'indivs',
 };
 
 // query array with all the queries
@@ -362,11 +365,13 @@ queriesArray.push({
 
 // Individuos de una clase => utilizo construct en vez de select para poder devolver los datos en json-ld (como la dbpedia)
 queriesArray.push({
-    'name': 'indivs',
+    'name': nameQueries.individuals,
     'query': 'CONSTRUCT \n \
             WHERE { \n \
                 ?uri a <{{{cluri}}}> . \n \
-            }'
+            }\n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}'
 });
 
 queriesArray.push({
@@ -382,7 +387,7 @@ queriesArray.push({
 
 
 queriesArray.push({
-    'name': 'details_allprop',
+    'name': nameQueries.detailsAll,
     'query': 'SELECT * \n \
             WHERE { \n \
                 ?iri ?prop ?value . \n \
