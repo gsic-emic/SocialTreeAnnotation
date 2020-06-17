@@ -1,6 +1,6 @@
 # Variables
 idTree="http://timber.gsic.uva.es/sta/data/tree/20200601-e9058"
-image="/home/ubuntu/SocialTreeAnnotation/Cristina/complementos/icons.png"
+image="/home/ubuntu/SocialTreeAnnotation/Cristina/complementos/20200527_134437.jpg"
 creator="http://timber.gsic.uva.es/sta/data/user/cmayo"
 species="http://crossforest.eu/ifn/ontology/Species20"
 lat="41.34"

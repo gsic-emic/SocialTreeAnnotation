@@ -8,6 +8,8 @@ const imageController = require('../controllers/imageController');
 const speciesController = require('../controllers/speciesController');
 const errorHandler = require('../handlers/errorHandler');
 const errorCodes = require('./errorCodes');
+const cacheMiddleware = require('../models/cache').cacheMiddleware;
+const timeClearCache_ms = 30 * 1000;
 
 const api = express.Router();
 
@@ -25,67 +27,60 @@ var urls = {
     species: '/data/species'
 };
 
-//Root
-api.get(urls.root, (req, res) => {
-    /*imageController.getExifData("//home/ubuntu/SocialTreeAnnotation/Cristina/complementos/forest.png")
-    imageController.getExifData("/home/ubuntu/SocialTreeAnnotation/Cristina/complementos/20200527_134437.jpg")
-    */
+/**
+ *  Recurso Root
+ */
+api.get(urls.root, async (req, res) => {
     queryInterface.getData("test", {}, sparqlClient)
         .then(() => {
             res.status(200).send(urls);
         })
         .catch((err) => {
-            console.log(err.statusCode)
-            if (err.statusCode != null && err.statusCode != undefined) {
-                errorHandler.sendError(res, errorCode.queryVirtuoso);
-            }
-            else {
-                errorHandler.sendError(res, errorCode.conexionVirtuoso);
-            }
+            //Develvo siempre un error 500 de conexión con el virtuoso ya que al frontend le da igual el motivo y escribo en los logs el error original.
+            console.log("Error de conexión inicial con el virtuoso: ", err);
+            res.status(errorCodes.conexionVirtuoso.code).send({ "response": errorCodes.conexionVirtuoso.msg });
         });
 });
 
 // Para el login:
-api.post(urls.root, (req, res) => {
-    var login = req.body.idUser;
-    var password = req.body.password;
-
-    if(login != undefined && password != undefined){
-        userController.processLineByLine(login, password).then((userValidate) => {
-            if (userValidate) {
-                res.status(200).send('Authorized')
-            }
-            else {
-                res.status(401).send('Unauthorized: Contraseña incorrecta')
-            }
-        });
-    }
-    else {
-        res.status(401).send('Unauthorized')
-    }
+api.post(urls.root, async (req, res) => {
+   const response = await userController.loginUser(req.body.idUser, req.body.password)
+    return res.status(response.code).send({"response": response.msg});
 });
 
 //Usuarios
-api.put(urls.user, userController.createUpdateUser) //Si existe se actualizaría. De momento solo creación
-api.get(urls.user, userController.getUser)
-api.get(urls.users, userController.getUsers)
+api.put(urls.user, async (req, res) => {
+    let uri_user = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
+    const response = await userController.createUpdateUser(req.params.userId,uri_user, req.body, req.headers.authorization);
+    return res.status(response.code).send({"response": response.msg});
+});
+api.get(urls.user, cacheMiddleware(timeClearCache_ms), async(req, res) =>{
+    let uri_user = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
+    const response = await userController.getUser(uri_user);
+    return res.status(response.code).send({"response": response.msg});
+});
+api.get(urls.users, cacheMiddleware(timeClearCache_ms), async(req, res) =>{
+    let fullUrl = req.protocol + '://' + req.hostname + req.originalUrl.split('?page')[0];
+    const response = await userController.getUsers(req.query,fullUrl);
+    return res.status(response.code).send(response.msg);
+});
 
 
 /*api.delete('/users/:userId', auth, userController.deleteUser)*/
 
 //Árboles
-api.get(urls.trees, treeController.getTrees);
+api.get(urls.trees, cacheMiddleware(timeClearCache_ms), treeController.getTrees);
 api.post(urls.trees, treeController.createTree);
-api.get(urls.tree, treeController.getTree);
+api.get(urls.tree, cacheMiddleware(timeClearCache_ms), treeController.getTree);
 //api.delete(urls.tree, treeController.deleteTree);
 
 // Partes de árbol para identificar en la imagen
-api.get(urls.treePart, treePartController.getTreeParts);
+api.get(urls.treePart, cacheMiddleware(timeClearCache_ms * 1000), treePartController.getTreeParts);
 
 
 //Anotaciones
-api.get(urls.annotations, annotationController.getAnnotations);
-api.get(urls.annotation, annotationController.getAnnotation);
+api.get(urls.annotations, cacheMiddleware(timeClearCache_ms), annotationController.getAnnotations);
+api.get(urls.annotation, cacheMiddleware(timeClearCache_ms), annotationController.getAnnotation);
 api.post(urls.annotations, annotationController.createAnnotation);
 /* api.post(urls.annotations, annotationController.createAnnotation);
 api.put(urls.annotation, annotationController.updateAnnotation);
@@ -97,7 +92,7 @@ api.delete(urls.annotation, annotationController.deleteAnnotation);
 /*
 api.get(urls.images, imageController.getImages);
 api.post(urls.images, imageController.createImage);*/
-api.get(urls.image, imageController.getImage);
+api.get(urls.image, cacheMiddleware(timeClearCache_ms * 1000), imageController.getImage);
 /*api.put(urls.image, imageController.updateImage);
 api.delete(urls.image, imageController.deleteImage);
 api.get('/images/:imagesId/parts', imageController.getImageParts);
@@ -108,7 +103,7 @@ api.delete('/images/:imagesId/parts/:partId', imageController.deleteImagePart);
  */
 
 //Especies
-api.get(urls.species, speciesController.getSpecies);
+api.get(urls.species, cacheMiddleware(timeClearCache_ms * 1000), speciesController.getSpecies);
 
 //El resto de métodos no están permitidos:
 api.all(urls.root, (req, res) => errorHandler.methodNotAllow(res));

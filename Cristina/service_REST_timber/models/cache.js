@@ -1,12 +1,36 @@
 const onturis = require('../config/onturis');
 const queryInterface = require('../helpers/queryInterface');
 const errorCodes = require('../config/errorCodes');
+var cacheTEST = require('memory-cache');
 
 var trees = {};
 var annotations = {};
 var images = {};
 var species = {};
 var users = {};
+
+// configure cache middleware. Solo para los GET. Ahora sí se crea un árbol o anotación tarda 30 segundos en actualizar pero el servicio funciona mucho más fluído. Se puede configurar a 5 segundos o un valor razonable para evitar hacer tantas request. Comentar en la reunión. Las especies o las partes del árbol que no van a cambiar se pueden dejar cacheadas 30 minutos por ejemplo ya que es "estático" (a menos por el momento).
+let memCache = new cacheTEST.Cache();
+
+var cacheMiddleware = (duration) => {
+    return (req, res, next) => {
+        let key =  req.originalUrl || req.url
+        let cacheContent = memCache.get(key);
+        //console.log(key,"\n",cacheContent,"\n",memCache)
+        res.setHeader('Content-Type', 'application/json');
+        if(cacheContent){
+            res.send( cacheContent );
+            return
+        }else{
+            res.sendResponse = res.send
+            res.send = (body) => {
+                memCache.put(key,body,duration);
+                res.sendResponse(body)
+            }
+            next()
+        }
+    }
+}
 
 function putNewCreationInCache(id, type, object){
     var arg = {};
@@ -106,5 +130,6 @@ module.exports = {
     species,
     users,
     putNewCreationInCache,
-    clearCache
+    clearCache,
+    cacheMiddleware
 }

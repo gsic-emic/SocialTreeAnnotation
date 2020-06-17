@@ -31,6 +31,41 @@ module.exports = {
         "code": 400,
         "msg":"El árbol no existe"
     },
-
+    "badPassword":{
+        "code": 401,
+        "msg":"Contraseña incorrecta"
+    },
+    "emptyUserPass":{
+        "code": 401,
+        "msg":"Falta usuario y/o contraseña"
+    },
+    "badLoginPassword":{
+        "code": 401,
+        "msg":"Login y/o contraseña incorrectos"
+    },
+    "badLogin":{
+        "code": 401,
+        "msg":"Login incorrecto"
+    },
+    "notAuthorized":{
+        "code": 401,
+        "msg":"Falta cabecera de autenticación"
+    },
+    "notAllowedUpdate":{
+        "code": 405,
+        "msg":"No se permite actualizar información de usuario"
+    },
+    "emptyRequiredFields":{
+        "code": 400,
+        "msg":"Faltan campos obligatorios"
+    },
+    "usedLogin":{
+        "code": 400,
+        "msg":"Login ya usado"
+    },
+    "userNotFound":{
+        "code": 400,
+        "msg":"El usuario no existe"
+    }
 
 }

@@ -154,7 +154,7 @@ async function getTrees(req, res) {
                                 res.status(200).send({ response, nextPage });
                             })
                                 .catch((err) => {
-                                    console.log("Error" + err.message);
+                                    console.log("Error: ", err);
                                     if (err.statusCode != null && err.statusCode != undefined) {
                                         res.status(err.statusCode).send({ message: err });
                                     }
@@ -171,7 +171,7 @@ async function getTrees(req, res) {
                     }
                 })
                 .catch((err) => {
-                    console.log("Error en conexión con endpoint");
+                    console.log("Error en conexión con endpoint", err);
                     if (err.statusCode != null && err.statusCode != undefined) {
                         res.status(err.statusCode).send({ message: err });
                     }
@@ -381,7 +381,7 @@ async function getTrees(req, res) {
                                     res.status(200).send({ response, nextPage });
                                 })
                                     .catch((err) => {
-                                        console.log("Error" + err.message);
+                                        console.log("Error: ", err);
                                         if (err.statusCode != null && err.statusCode != undefined) {
                                             res.status(err.statusCode).send({ message: err });
                                         }
@@ -692,7 +692,7 @@ async function getTrees(req, res) {
                                 res.status(200).send({ response, nextPage });
                             })
                                 .catch((err) => {
-                                    console.log("Error" + err.message);
+                                    console.log("Error: " ,err);
                                     if (err.statusCode != null && err.statusCode != undefined) {
                                         res.status(err.statusCode).send({ message: err });
                                     }

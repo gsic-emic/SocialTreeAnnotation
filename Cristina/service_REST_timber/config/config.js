@@ -10,6 +10,6 @@ module.exports = {
     timeClearCache_ms: 24*3600*1000,
     directorySaveImages: '/home/ubuntu/nginx/html/data/images/',
     uri_images: 'http://timber.gsic.uva.es/data/images/',
-    filenamePasswd: './models/.passwd',
+    filenamePasswd: '/home/ubuntu/SocialTreeAnnotation/Cristina/service_REST_timber/models/.passwd',
     saltRounds: 10
   }

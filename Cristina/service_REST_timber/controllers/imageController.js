@@ -178,10 +178,17 @@ function getExifData(image_path) {
           exif_metadata.width = (exifData.exif.ExifImageWidth != undefined) ? exifData.exif.ExifImageWidth : 0;
           exif_metadata.height = (exifData.exif.ExifImageHeight != undefined) ? exifData.exif.ExifImageHeight : 0;
           exif_metadata.date = (exifData.exif.DateTimeOriginal != undefined) ? exifData.exif.DateTimeOriginal : 0;
-          var parseDate = exif_metadata.date.split(' ')[0].replace(":", "-");
-          var date = parseDate + "T" + exif_metadata.date.split(' ')[1] + "Z";
-          parseDate = new Date(parseISOString(date));
-          exif_metadata.date = parseDate.toISOString().slice(0, -1);
+
+          if(exif_metadata.date == 0 ){
+            exif_metadata=helpers.getDateCreated();
+          }
+          else{
+            var parseDate = exif_metadata.date.split(' ')[0].replace(":", "-");
+            var date = parseDate + "T" + exif_metadata.date.split(' ')[1] + "Z";
+            parseDate = new Date(parseISOString(date));
+            exif_metadata.date = parseDate.toISOString().slice(0, -1);
+          }
+          
           exif_metadata.latImg = 0;
           exif_metadata.longImg = 0;
 
