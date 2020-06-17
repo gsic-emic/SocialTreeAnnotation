@@ -124,7 +124,7 @@ async function getUser(uri) {
             resolve(finalResp);
         }
         else {
-            queryInterface.getData(nameQueries.details, arg, sparqlClient)
+            queryInterface.getData(nameQueries.detailsAll, arg, sparqlClient)
                 .then((data) => {
                     if (data.results.bindings.length == 0)
                         resolve(errorCodes.userNotFound)
