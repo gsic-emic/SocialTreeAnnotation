@@ -64,7 +64,7 @@ export class MapaComponent implements OnInit {
       this.long1 = bounds._northEast.lng;
       this.lat0 = bounds._southWest.lat;
       this.long0 = bounds._southWest.lng;
-      console.log(bounds);
+      //console.log(bounds);
     this.actualizarTrees(this.lat0, this.long0, this.lat1, this.long1);
 
     // DETECCIÓN DE CAMBIOS EN EL MAPA
@@ -95,15 +95,15 @@ export class MapaComponent implements OnInit {
 //---------------- Funciones relacionadas con la obtencion de los arboles -------------------------------
   // Consulta a la api para que me devuelva el JSON con todos los árboles en la zona que muestra el mapa
   actualizarTrees(lat0: number, long0: number, lat1: number, long1: number){
+    let trees;
     this.api.getTreesZone(lat0, long0, lat1, long1).subscribe(
         (data: any) =>{
           if (data != null){
             this.objTrees = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
             //console.log(data.response);
             console.log("cargando árboles...")
-            this. trees =  this.TreeService.crearTrees(this.objTrees, this.objSpecies);
-            console.log(this.trees);
-            //this.pintarArboles();
+            trees = this.TreeService.crearTrees(this.objTrees, this.objSpecies);
+            //console.log(trees);
           }else{
             console.log("No hay árboles en la zona seleccionada");
             this.nohay = true;
@@ -118,7 +118,7 @@ export class MapaComponent implements OnInit {
         () =>{
           this.terminado = true;
           console.log("se han cargado todos los arboles");
-          this.pintarArboles();
+          this.pintarArboles(trees);
         }
         );
   }
@@ -170,15 +170,18 @@ export class MapaComponent implements OnInit {
     var marker = L.marker([latitud, longitud]);
     return marker;
   }
+
   // Función que crea un icono para cada arbol cargado en el mapa
-  pintarArboles(){
+  pintarArboles(trees: Tree[]){
     var treeIcon = this.crearIcono();
-    for (var i = 0; i <= this.trees.length; i++) {
-      L.marker([this.trees[i].lat, this.trees[i].long], {icon: treeIcon}).
-      addTo(this.mymap).bindPopup(
-        '<h5 class="card-title"><i class="fab fa-pagelines"></i> '+this.trees[i].species + 
-        '</h5><h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> Creador: ' + this.trees[i].creator +
-        '</h6><p class="card-text"><i class="far fa-clock"></i> '+this.trees[i].date+'</p><button type="button" (onclick)="verArbol('+ this.trees[i] + ')"; class="btn btn-primary ml-4">Ver más</button>');
+    
+   for (let clave in trees){
+    L.marker([trees[clave].lat, trees[clave].long], {icon: treeIcon}).
+    addTo(this.mymap).bindPopup(
+      '<h5 class="card-title"><i class="fab fa-pagelines"></i> '+trees[clave].species + 
+      '</h5><h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> Creador: ' + trees[clave].creator +
+      /*'</h6><p class="card-text"><i class="far fa-clock"></i> '+trees[clave].date+*/'</p><button type="button" (onclick)="verArbol('+ trees[clave] + ')"; class="btn btn-primary ml-4">Ver más</button>');
+
    }
   }
  
