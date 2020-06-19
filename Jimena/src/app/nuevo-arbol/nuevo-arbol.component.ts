@@ -50,16 +50,17 @@ export class NuevoArbolComponent implements OnInit {
   base64: string; // guarda la codificacion de la imagen
   title: string;
   description: string;
-  PARTES: Array<string> = ["Parte del árbol", "Tronco", "Otra parte", "Hoja", "Vista general", "Fruto", "Flor", "Copa", "Rama"]
   depicts: string;
   imageSrc: string; //Para la previsualizacion de la imagen al subirla
   imageSrc_default: string = "./../assets/images/no-image.png";
+  PARTES: Array<string> = [];
 
-  constructor(private api: APIService, public UtilService: UtilService, public SpeciesService: SpeciesService,
-    public ImagesService: ImagesService, public UsersService: UsersService) { }
+  constructor(private api: APIService, private UtilService: UtilService, private SpeciesService: SpeciesService,
+    private ImagesService: ImagesService, private UsersService: UsersService) { }
 
   ngOnInit(): void {
     this.getSpecies(); // cargo las especies disponibles para ponerlas en el formulario
+    this.PARTES = this.ImagesService.PARTES;
     
     // Recojo el username para crear la url del usuario
     let username = this.UsersService.getSessionName();
@@ -206,17 +207,6 @@ export class NuevoArbolComponent implements OnInit {
           this.imageSrc = e.target.result; // Previsualizacion de la imagen subida
         };
         reader2.readAsDataURL(event.target.files[0]);
-       
-      // Extraigo los metadatos de la imagen
-      /*this.setDataImage(file).then((exifdata) => {
-        Object.keys(exifdata).forEach((prop) => {
-          if(prop != undefined){
-              metadata[prop] = exifdata[prop];
-          }
-        });
-      });
-      console.log(metadata);
-      this.convertirMetadata(metadata);*/
     }
   }
 

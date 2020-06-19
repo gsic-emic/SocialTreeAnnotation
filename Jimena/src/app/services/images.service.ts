@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable} from 'rxjs';
+import { Observable } from 'rxjs';
+import { AnnotationService } from '../services/annotation.service';
+import { APIService } from '../api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,11 +10,65 @@ import { Observable} from 'rxjs';
 export class ImagesService {
 
   public apiUrl = 'http://timber.gsic.uva.es/sta/';  // URL to web api
-  //public buscadorPartes = 'http://timber.gsic.uva.es/sta/ontology/TreePartPhoto';
+  public imageInfo: Observable<object>;
+  public arrayInfo: object = [];
 
-  constructor(private http: HttpClient) { }
+  public buscadorDescript = 'http://purl.org/dc/elements/1.1/description';
+  public buscadorTitulo = 'http://purl.org/dc/elements/1.1/title';
+  public buscadorImagen = 'http://timber.gsic.uva.es/sta/ontology/resource';
 
-  /************** PARTES DE UN ARBOL ************************/ 
+  // Array con las diferentes partes de la imagen
+  public PARTES: Array<string> = ["Parte del árbol", "Tronco", "Otra parte", "Hoja", "Vista general", "Fruto", "Flor", "Copa", "Rama"];
+
+
+  constructor(private http: HttpClient, private annotService: AnnotationService, private api: APIService) { }
+
+/************** RECUPERAR DATOS DE UNA IMAGEN ************************/ 
+/**
+ * getImageInfo
+imageURL */
+public getImageInfo(imageURL) {
+let urlJPG;
+  this.api.getImageInfo(imageURL).subscribe(
+    (data: any) =>{
+      this.imageInfo = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
+    },
+    (error) =>{
+      console.error(error); // si se ha producido algún error
+      alert("Ha habido un error al intentar cargar las imágenes de la anotación");
+    },
+    () =>{
+      urlJPG = this.sacarDatosImagen(imageURL, this.imageInfo);
+      return this.imageInfo;
+    }
+  );
+}
+
+
+
+/**
+ * sacarDatosImagen
+imageInfo: Object */
+public sacarDatosImagen(id: string, imageInfo: Object){
+  let parte, descript, titulo; //Esta información es opcional
+
+  let urlJPG = imageInfo[id][this.buscadorImagen].value;
+
+  if(imageInfo[id][this.annotService.tipoAnnot]["0"]){
+    parte = imageInfo[id][this.annotService.tipoAnnot]["0"].value;
+  }
+  if (imageInfo[id][this.buscadorDescript]){
+    descript = imageInfo[id][this.buscadorDescript].value;
+  }
+  if(imageInfo[id][this.buscadorTitulo]){
+    titulo = imageInfo[id][this.buscadorTitulo].value;
+  }
+
+  this.arrayInfo = {id: id, urlJPG: urlJPG, description: descript, title: titulo, depicts: parte};
+  console.log(this.arrayInfo);  
+}
+
+/************** PARTES DE UN ARBOL ************************/ 
 
 // Obtención de las partes de un árbol para el campo DEPICTS
 public getTreeParts(): Observable<any[]> {

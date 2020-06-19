@@ -1,3 +1,5 @@
+<app-menu-usuarios></app-menu-usuarios>
+
 <div class="container" [hidden]="submitted">
     <div class="titulo"> Añadir nueva anotación </div>
     <form class="formulario" (ngSubmit)="onSubmit()" #tipoForm="ngForm">
@@ -20,19 +22,53 @@
                 <div class="card-header"><i class="fas fa-plus-circle"></i> Nueva Anotación de tipo {{type}}</div>
                 <div class="nueva">
                     <!-- Diferencio el tipo de anotación que se va a crear-->
+
+                    <!-- ANOTACIÓN DE IMAGEN -->
                     <div class="form-group p-1" *ngIf="type == 'Imagen'">
-                        <label class="entrada" for="imagen"><i class="fas fa-camera"></i> Insertar imagen </label>
-                        <input type="file" class="form-control" [(ngModel)]="imagen" name="imagen" required>
+                        <div class="d-flex justify-content-around flex-wrap">
+                            <div class="form-group p-3">
+                                <label class="entrada" for="imagen"><i class="fas fa-camera"></i> Insertar imagen </label>
+                                <input type="file" class="form-control" [(ngModel)]="imagen" name="imagen" (change)="selectFile($event)">
+                                <span class="badge badge-warning">La imagen no puede superar los 10 MB</span> <br>
+    
+                                <div class="d-flex flex-column align-items-center mt-3">
+                                    <div class="form-inline">
+                                        <label class="entrada"> Título:  </label>
+                                        <input type="text" class="form-control m-1 ml-5" id="title" placeholder="título de la foto"  
+                                        [(ngModel)]="title" name="title">
+                                    </div>
+                                    <div class="form-inline">
+                                        <label class="entrada"> Descripción: </label>
+                                        <input type="text" class="form-control m-1 ml-1" id="description" placeholder="..."  
+                                            [(ngModel)]="description" name="description">
+                                    </div>
+                                    <div class="form-inline">
+                                        <label class="entrada"> Parte:   </label>
+                                        <select class="custom-select ml-5" id="inputGroupSelect01" [(ngModel)]="depicts" name="depicts" >
+                                            <option  [value]="item" *ngFor="let item of PARTES">{{item}}</option>
+                                        </select>
+                                    </div> 
+                                </div>
+                            </div>
+                            <div class="form-group p-3">
+                                <img class="image" [src]="imageSrc || imageSrc_default" alt="your image" />
+                            </div>
+    
+                        </div>
                     </div>
+
+                    <!-- ANOTACIÓN DE POSICIÓN -->
                     <div class="form-group" *ngIf="type == 'Ubicación'">
                         <label class="entrada" for="ubicacion"><i class="fas fa-map-marker-alt"></i> Ubicación </label>
                         <input type="number" class="form-control" id="lat" placeholder="Latitud" [(ngModel)]="lat" name="lat" required> 
                         <input type="number" class="form-control" id="long" placeholder="Longitud" [(ngModel)]="long" name="long" required>
                     </div>
+                    <!-- ANOTACIÓN DE ESPECIE -->
                     <div class="form-group" *ngIf="type == 'Especie'">
                         <label class="entrada" for="especie"><i class="fab fa-pagelines"></i> Especie:</label>
-                        <input type="text" class="form-control" id="especie" placeholder="Especie"
-                            [(ngModel)]="especie" name="especie" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)" required>
+                        <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="especie" name="especie">
+                            <option  [value]="item" *ngFor="let item of ESPECIES">{{item}}</option>
+                        </select>
                     </div>
                 </div>
           </div>
@@ -42,8 +78,37 @@
     </div>
 </div>
 <div class="container" [hidden]="!submitted2">
-    <div class="alert alert-warning" role="alert">
-        La anotación se ha añadido correctamente
+    <div class="d-flex justify-content-center mt-10" *ngIf="!terminado; else result">
+        <div class="spinner-grow text-success" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
     </div>
+
+    <ng-template #result>
+        <div class="aviso" *ngIf="errorCreacion; else mostrarConfirm">
+            <div class="alert alert-danger" role="alert">
+                <i class="far fa-frown"></i> {{mensajeError}} <i class="far fa-frown"></i>
+                <br> Inténtelo de nuevo más tarde
+            </div>
+        </div>
+    
+        <ng-template #mostrarConfirm>
+            <div class="aviso">
+                <div class="alert alert-warning" role="alert">
+                    ¡La anotación se ha añadido correctamente!
+                </div>
+                <!-- AQUÍ ESTARÍA BIEN MOSTRAR LA ANOTACIÓN CREADA CON EL ÁRBOL EN CUESTIÓN-->
+            </div>
+        </ng-template>
+
+           
+        <div class="d-flex flex-nowrap justify-content-center ">
+            <div class="mt-15 ml-15">
+                <button type="button" class="btn btn-primary text-center mr-3"> <a [routerLink]="['/mis_anot']"> Ver mis anotaciones </a></button>
+                <button type="submit" class="btn btn-success text-center " ><a [routerLink]="['/busqueda']"><i class="fas fa-search"></i> Volver al mapa</a></button>
+            </div>
+        </div>
+    </ng-template>
+
 </div>
 

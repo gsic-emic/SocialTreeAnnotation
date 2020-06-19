@@ -15,6 +15,7 @@ export class MapaComponent implements OnInit {
 
   @Input() objSpecies; // Las especies se cargan en el componente padre
   @Input() mapa;
+  //@Input() filtroEspecie; // Si estamos en el buscador, filtra los árboles por dicha especie
   //-----------------------------
   
    muestra_info: boolean = false;
@@ -43,7 +44,7 @@ export class MapaComponent implements OnInit {
   ngOnInit(): void { /*se ejecuta en cuanto angular tenga listo el componente*/
 
     /* Creación del objeto mapa y su capa de diseño */
-    this.mymap = this.crearMapa(41.763, -5.1093, 13); // mapa centrado en españa 
+    this.mymap = this.crearMapa(41.75, -5.01093, 13); // mapa centrado en españa 
     var layer = this.crearLayer_gray();
     layer.addTo(this.mymap);
 
@@ -79,12 +80,13 @@ export class MapaComponent implements OnInit {
       this.long0 = bounds._southWest.lng;
       this.trees = []; // Borro los datos de los árboles que tenia guardados
       this.actualizarTrees(this.lat0, this.long0, this.lat1, this.long1); // almaceno los nuevos
-      console.log("Se ha movido el mapa");
+      //console.log("Se ha movido el mapa");
      });
-     
 
-    // Añado los marcadores de los árboles registrados
-    //this.pintarArboles();
+      /* // Listener para el botón de cada árbol
+       var arbolClick = document.getElementById("treeButton"); 
+       arbolClick.addEventListener("click", function(){console.log("Pinchado")}, false);*/
+    
 
   }
 
@@ -95,14 +97,13 @@ export class MapaComponent implements OnInit {
 //---------------- Funciones relacionadas con la obtencion de los arboles -------------------------------
   // Consulta a la api para que me devuelva el JSON con todos los árboles en la zona que muestra el mapa
   actualizarTrees(lat0: number, long0: number, lat1: number, long1: number){
-    let trees;
     this.api.getTreesZone(lat0, long0, lat1, long1).subscribe(
         (data: any) =>{
           if (data != null){
             this.objTrees = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
             //console.log(data.response);
             console.log("cargando árboles...")
-            trees = this.TreeService.crearTrees(this.objTrees, this.objSpecies);
+            this.trees = this.TreeService.crearTrees(this.objTrees, this.objSpecies);
             //console.log(trees);
           }else{
             console.log("No hay árboles en la zona seleccionada");
@@ -118,7 +119,7 @@ export class MapaComponent implements OnInit {
         () =>{
           this.terminado = true;
           console.log("se han cargado todos los arboles");
-          this.pintarArboles(trees);
+          this.pintarArboles(this.trees);
         }
         );
   }
@@ -180,8 +181,7 @@ export class MapaComponent implements OnInit {
     addTo(this.mymap).bindPopup(
       '<h5 class="card-title"><i class="fab fa-pagelines"></i> '+trees[clave].species + 
       '</h5><h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> Creador: ' + trees[clave].creator +
-      /*'</h6><p class="card-text"><i class="far fa-clock"></i> '+trees[clave].date+*/'</p><button type="button" (onclick)="verArbol('+ trees[clave] + ')"; class="btn btn-primary ml-4">Ver más</button>');
-
+      /*'</h6><p class="card-text"><i class="far fa-clock"></i> '+trees[clave].date+*/'</p><button type="button" id="treeButton" (onclick)="verArbol('+ trees[clave] + ')"; class="btn btn-primary ml-4">Ver más</button>');
    }
   }
  

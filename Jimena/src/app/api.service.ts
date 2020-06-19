@@ -61,6 +61,11 @@ export class APIService {
     return this.http.get<any[]>(urlComplete);
   }
 
+  /************** RECUPERAR DATOS DE UNA IMAGEN ************************/ 
+  public getImageInfo(url): Observable<any[]> {
+    return this.http.get<any[]>(url);
+  }
+
   /*********************** CREACIÓN DE DATOS EN EL SERVIDOR ******************************/
   createTree(datos: string, basicAuth: string): Observable<string> {
     // Cabecera necesaria
