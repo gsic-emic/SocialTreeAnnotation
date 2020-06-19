@@ -48,6 +48,7 @@
           </div>
           <div class="tipo_anot" *ngIf="anot.type.image">
             <p class="card-text"><small class="text-muted">{{anot.creator}} añadió una anotación de tipo imagen: </small></p>
+            
             <img src="{{anot.type.image}}" class="d-block w-100 h-50" alt="imagen no disponible">
           </div>
           <div class="tipo_anot" *ngIf="anot.type.specie">
@@ -73,7 +74,7 @@
     <div class="card text-white bg-success flex-fill m-3" style="max-width: 18rem;">
       <div class="card-header">Añade una nueva anotación</div>
       <div class="card-body">
-        <h5 class="card-title text-center"><a [routerLink]="['/nuevaAnot']" class="alert-link" title="Crear nueva anotación"><i class="fas fa-plus"></i></a></h5>
+        <h5 class="card-title text-center"><a id="mas" class="alert-link" title="Crear nueva anotación"><i class="fas fa-plus"></i></a></h5>
         <p class="card-text"><a [routerLink]="['/inicio_sesion']" class="alert-link">Regístrate</a> para poder añadir una nueva anotación</p>
       </div>
     </div>

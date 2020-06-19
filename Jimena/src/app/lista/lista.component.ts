@@ -1,9 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {Tree} from '.././tree';
+import { Tree} from '.././tree';
 import { Annotation } from '.././Annotation';
-import {APIService} from '../api.service';
+import { APIService } from '../api.service';
 import { UtilService } from './../services/util.service';
 import { AnnotationService } from './../services/annotation.service';
+import { UsersService } from '../services/users.service';
+import { ImagesService } from '../services/images.service';
+
 
 
 
@@ -20,9 +23,12 @@ export class ListaComponent implements OnInit {
   tree_selected: Tree;
   objInfoTree: object = [];
   objAnnot: object = [];
+  public imageInfo: object = [];
+  public imageURL: string;
   annotations: Annotation[]=[];
   IsPossitionAsserted: boolean = false; // Estas dos variables controlan si los datos son oficiales
   IsSpeciesAsserted: boolean = false;   // para que se muestre una indicación en la interfaz
+
 
   //Variables de control -------------------------
   submitted = false;
@@ -32,7 +38,8 @@ export class ListaComponent implements OnInit {
   terminado_anot: boolean = false;
   i: number = 0; //controla el numero de anotaciones que tiene el árbol
 
-  constructor(private api: APIService, private util: UtilService, private annot: AnnotationService) { }
+  constructor(private api: APIService, private util: UtilService, private annot: AnnotationService,
+    private user: UsersService, private imageService: ImagesService) { }
 
   ngOnInit(): void {
      
@@ -53,9 +60,7 @@ export class ListaComponent implements OnInit {
   volver(){
     let j=0;
     this.submitted = false;
-    for(j=0;j<this.annotations.length;j++){
-      this.annotations[j] = null;
-    }
+    this.annotations.splice(0,this.annotations.length); // borro las anotaciones
     this.i = 0;
   }
 
@@ -114,7 +119,7 @@ export class ListaComponent implements OnInit {
         this.IsSpeciesAsserted = true;
       } else{
         if(this.objInfoTree[clave][this.annot.PrimarySpecies]){ //aqui se mete solo si no hay anotacion Asserted
-          this.getInfoAnnot(this.objInfoTree[clave][this.annot.AssertedSpecies].value, false, true);
+          this.getInfoAnnot(this.objInfoTree[clave][this.annot.PrimarySpecies].value, false, true);
         }
       }
 
@@ -153,8 +158,9 @@ export class ListaComponent implements OnInit {
     convertirAnnot(isAsserted: boolean, isPrimary: boolean){
       let tipo: string;
       let date: string;
-      let lat, long, especie, image;
+      let lat, long, especie;
       let creador;
+      let imageURL;
   
       for (let clave in this.objAnnot){
         // Primero compruebo el tipo de anotacion que es
@@ -168,10 +174,13 @@ export class ListaComponent implements OnInit {
             tipo = "specie";
             especie = this.objAnnot[clave][this.annot.buscador_taxon].value;
             break;
-
+          case "http://timber.gsic.uva.es/sta/ontology/PrimarySpecies":
+            tipo = "specie";
+            especie = this.objAnnot[clave][this.annot.buscador_taxon].value;
+            break;
           case "http://timber.gsic.uva.es/sta/ontology/ImageAnnotation":
               tipo = "image";
-              image = this.objAnnot[clave][this.annot.buscador_image].value;
+              imageURL = this.objAnnot[clave][this.annot.buscador_image].value;
               break;
           case "http://timber.gsic.uva.es/sta/ontology/PositionAnnotation":
               tipo = "location";
@@ -181,6 +190,7 @@ export class ListaComponent implements OnInit {
           case "http://timber.gsic.uva.es/sta/ontology/SpeciesAnnotation":
               tipo = "specie";
               especie = this.objAnnot[clave][this.annot.buscador_taxon].value;
+              console.log(especie);
               break;
         }
         
@@ -195,7 +205,7 @@ export class ListaComponent implements OnInit {
         { 
           creador = "IFN"
         } else{
-          creador = this.objAnnot[clave][this.annot.buscador_creador].value;
+          creador = this.user.adaptarUsername(this.objAnnot[clave][this.annot.buscador_creador].value);
         }
         //creo la anotacion en funcion del tipo
         switch (tipo){
@@ -213,12 +223,17 @@ export class ListaComponent implements OnInit {
             this.annotations[this.i] = {id: clave, creator: creador, date: date, primary: isPrimary, asserted: isAsserted, type: {specie: especie}};
             break;
           case "image":
-            this.annotations[this.i] = {id: clave, creator: creador, date: date, primary: isPrimary, asserted: isAsserted, type: {image: image}};
+            this.annotations[this.i] = {id: clave, creator: creador, date: date, primary: isPrimary, asserted: isAsserted, type: {image: imageURL}};
             break;
         }
         this.i++;
       }
+
     }
+
+
+
+
 
   
 

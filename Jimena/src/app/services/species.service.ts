@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { APIService } from '../api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -6,9 +7,21 @@ import { Injectable } from '@angular/core';
 export class SpeciesService {
 
   private buscador_vulgarName: string = "http://crossforest.eu/ifn/ontology/vulgarName";
+  public objSpecies: object=[];
 
 
-  constructor() { }
+  constructor(private api: APIService) { }
+
+  getSpecies(){
+    this.api.getSpecies().subscribe(
+      (data: any) =>{
+        this.objSpecies = data.response;
+      },
+      (error) =>{
+        console.error(error); // si se ha producido algún error
+        alert("Ha habido un error al intentar cargar las especies del sistema.");
+      });
+  }
   
 
   public cargarEspecies(objSpecies: object[]){
