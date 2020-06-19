@@ -1,7 +1,6 @@
 var onturis = require('./onturis');
-const { name } = require('mustache');
 
-// query prefixes
+// Prefijos
 var queryPrefixes = {
     'owl': 'http://www.w3.org/2002/07/owl#',
     'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
@@ -18,34 +17,290 @@ var queryPrefixes = {
     //'epsg': 'http://epsg.w3id.org/ontology/',
     'exif': 'http://www.w3.org/2003/12/exif/ns#',
     'sta': 'http://timber.gsic.uva.es/sta/ontology/',
-    //'example': 'http://crossforest.eu/sta/data/example/'
     'tree': 'http://timber.gsic.uva.es/sta/data/tree/',
     'annotation': 'http://timber.gsic.uva.es/sta/data/annotation/'
 };
 
-//Incluir aquí los nombres de las consultas para usarlos por el resto de la aplicación
+// Nombres de las consultas
 var nameQueries = {
+    'addAnnotationTree':'add_annotation_tree',
+    'annotationsUrisCreator':'annotations_uris_creator',
+    'createAnnotationImage': 'create_annotation_image',
     'createAnnotationPosition': 'create_annotation_position',
     'createAnnotationSpecies': 'create_annotation_species',
+    'createImage': 'create_image',
+    'createTree':'create_tree',
     'createUser': 'create_user',
-    'detailsAll':'details_allprop',
+    'details': 'details',
+    'detailsAll': 'details_allprop',
     'individuals': 'indivs',
+    'propvalues':'propvalues',
+    'subclasses':'subclasses',
+    'test': 'test',
+    'treesPropAnnotation': 'trees_prop_annotation',
+    'treesUris': 'trees_uris',
+    'treesUrisCreator':'trees_uris_creator',
+    'treesUrisSpecies': 'trees_uris_specie',
+    'treesUrisZone': 'trees_uris_zone',
+    'updatePrimaryAnnotation':'update_primary_annotation'
 };
 
-// query array with all the queries
+// Array con todas las consultas definidas
 var queriesArray = [];
 
 // test endpoint
 queriesArray.push({
-    'name': 'test',
+    'name': nameQueries.test,
     'query': 'SELECT * \n \
               WHERE { \n \
                    ?s ?p ?o .\n \
               } LIMIT 1'
 });
 
-// Pensar si puedo hacer querys genéricas para no tener que ir construyendo una a una...
+/**
+ * Árboles y anotaciones
+ */
+// Recuperar las iris de los árboles
+queriesArray.push({
+    'name': nameQueries.treesUris,
+    'query': 'CONSTRUCT \n \
+            WHERE { \n \
+                ?tree a <' + onturis.tree + '> . \n \
+            } \n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}'
+});
+// Recuperar la propiedad concreta de un tipo de anotación concreto de un árbol
+queriesArray.push({
+    'name': nameQueries.treesPropAnnotation,
+    'query': 'CONSTRUCT { \n \
+                ?iri <{{{propiri}}}> ?value . \n \
+            } \n \
+            WHERE { \n \
+                ?iri <{{{propiritype}}}>/<{{{propiri}}}> ?value . \n \
+                FILTER ( ?iri IN ( <{{{uri}}}> )). \n \
+            }'
+});
+// Recupera iris de los árboles de una zona
+queriesArray.push({
+    'name': nameQueries.treesUrisZone,
+    'query': 'CONSTRUCT { \n \
+                ?tree geo:lat ?lat ;  \n \
+                      geo:long ?long .  \n \
+                }  \n \
+            WHERE { \n \
+                ?tree a <' + onturis.tree + '> . \n \
+                ?tree <' + onturis.prHasPrimaryPosition + '> ?ann. \n \
+                ?ann geo:lat ?lat ; \n \
+                     geo:long ?long . \n \
+                     FILTER (?lat > {{latsouth}}) . \n \
+                     FILTER (?lat < {{latnorth}}) . \n \
+                     FILTER (?long > {{longwest}}) . \n \
+                     FILTER (?long < {{longeast}}) . \n \
+            } \n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}'
+});
+// Recupera iris de los árboles de una especie
+queriesArray.push({
+    'name': nameQueries.treesUrisSpecies,
+    'query': 'CONSTRUCT { \n \
+                ?tree <' + onturis.prHasTaxon + '>   ?species_iris .  \n \
+                }  \n \
+            WHERE { \n \
+                ?tree a <' + onturis.tree + '> . \n \
+                ?tree <' + onturis.prHasPrimarySpecies + '> ?ann. \n \
+                ?ann  <' + onturis.prHasTaxon + '>  ?species_iris . \n \
+                FILTER ( ?species_iris IN ( <{{{uri_specie}}}> )). \n \
+            } \n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}'
+});
+// Recupera iris de los árboles creados por usuario
+queriesArray.push({
+    'name': nameQueries.treesUrisCreator,
+    'query': 'CONSTRUCT { \n \
+                ?tree dc:creator ?creator .  \n \
+                }  \n \
+            WHERE { \n \
+                ?tree a <' + onturis.tree + '> . \n \
+                ?tree dc:creator ?creator. \n \
+                FILTER ( ?creator IN ( <{{{uri_creator}}}> )). \n \
+            } \n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}'
+});
+// Crear árbol
+queriesArray.push({
+    'name': 'create_tree',
+    'query': 'INSERT DATA \n \
+            { <'+ queryPrefixes.tree + '{{id}}> a <' + onturis.tree + '> ; \n \
+                                        dc:creator <{{{creator}}}> ; \n \
+                                        dc:created "{{date}}"^^xsd:date ;\n \
+                                        <' + onturis.prHasPrimaryPosition + '> <{{{annotation}}}> .\n \
+            }'
+});
+// Añadir anotación a árbol
+queriesArray.push({
+    'name': nameQueries.addAnnotationTree,
+    'query': 'INSERT DATA \n \
+            { <'+ queryPrefixes.tree + '{{id}}> <{{{hasAnnotation}}}> <{{{annotation}}}> .\n \
+            }'
+});
+// Actualizar anotación primaria de un árbol
+queriesArray.push({
+    'name': nameQueries.updatePrimaryAnnotation,
+    'query': 'DELETE { \n \
+        <{{{idTree}}}> <{{{hasPrimary}}}> ?o . \n \
+        ?o a <{{{typePrimary}}}> . \n \
+       } \n \
+       INSERT { \n \
+        <{{{idTree}}}> <{{{hasAnnot}}}> ?o . \n \
+        ?o a <{{{type}}}> . \n \
+       }\n \
+       WHERE  {\n \
+        <{{{idTree}}}> <{{{hasPrimary}}}> ?o . \n \
+       }'
+});
 
+/**
+ * Anotaciones
+ */
+// Recuperar iris de anotaciones creadas por un usuario concreto
+queriesArray.push({
+    'name': nameQueries.annotationsUrisCreator,
+    'query': 'CONSTRUCT { \n \
+                ?ann dc:creator ?creator .  \n \
+        }  \n \
+            WHERE { \n \
+                ?types rdfs:subClassOf* <' + onturis.annotation + '> . \n \
+                ?ann a ?types ; \n \
+                     dc:creator ?creator . \n \
+            FILTER ( ?creator IN ( <{{{uri_creator}}}> )). \n \
+            } \n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}'
+});
+// Crear anotación de posición (del tipo que se reciba por parámetro: primaria, afirmada...)
+queriesArray.push({
+    'name': nameQueries.createAnnotationPosition,
+    'query': 'INSERT DATA \n \
+            { <'+ queryPrefixes.annotation + '{{id}}> a <{{{type}}}> ; \n \
+                                        dc:creator <{{{creator}}}> ; \n \
+                                        dc:created "{{date}}"^^xsd:date ;\n \
+                                        geo:lat {{lat}} ; \n \
+                                        geo:long {{long}} . \n \
+            }'
+});
+// Crear anotación de imagen
+queriesArray.push({
+    'name': nameQueries.createAnnotationImage,
+    'query': 'INSERT DATA \n \
+            { <'+ queryPrefixes.annotation + '{{id}}> a <{{{type}}}> ; \n \
+                                        dc:creator <{{{creator}}}> ; \n \
+                                        dc:created "{{date}}"^^xsd:date ;\n \
+                                        <'+ onturis.prHasImage + '> <{{{imageId}}}> . \n \
+            }'
+});
+//Crear anotación de especie
+queriesArray.push({
+    'name': nameQueries.createAnnotationSpecies,
+    'query': 'INSERT DATA \n \
+            { <'+ queryPrefixes.annotation + '{{id}}> a <{{{type}}}> ; \n \
+                                        dc:creator <{{{creator}}}> ; \n \
+                                        dc:created "{{date}}"^^xsd:date ;\n \
+                                        <'+ onturis.prHasTaxon + '> <{{{species}}}> . \n \
+            }'
+});
+/**
+ * Imágenes
+ */
+// Crear imagen
+queriesArray.push({
+    'name': nameQueries.createImage,
+    'query': 'INSERT DATA \n \
+            { <{{{imageId}}}> a <'+ onturis.image + '> ; \n \
+            <'+ onturis.prResource + '> <{{{image}}}> ; \n \
+                dc:type <http://purl.org/dc/dcmitype/Image> ; \n \
+                {{{varTriplesImg}}} \n \
+                dc:created "{{date}}"^^xsd:date .\n \
+            }'
+});
+
+/**
+ * Usuarios
+ */
+// Crear usuario
+queriesArray.push({
+    'name': nameQueries.createUser,
+    'query': 'INSERT DATA \n \
+            { <{{{uri}}}> a foaf:Person ;\n \
+            foaf:name "{{name}}" ; \n \
+            foaf:nick "{{id}}"^^rdf:langString ; \n \
+            foaf:mbox "{{email}}"^^rdf:langString ; \n \
+            dc:created "{{date}}"^^xsd:date .\n \
+            }'
+});
+
+/**
+ * Generales
+ */
+// Individuos de una clase => utilizo construct en vez de select para poder devolver los datos en json-ld (como la dbpedia)
+queriesArray.push({
+    'name': nameQueries.individuals,
+    'query': 'CONSTRUCT \n \
+            WHERE { \n \
+                ?uri a <{{{cluri}}}> . \n \
+            }\n \
+            LIMIT {{limit}} \n \
+            OFFSET {{offset}}'
+});
+// Recuperar los valores de una propiedad de un individuo
+queriesArray.push({
+    'name': nameQueries.details,
+    'query': 'CONSTRUCT { \n \
+                ?iri <{{{propiri}}}> ?value . \n \
+            }  \n \
+            WHERE { \n \
+                ?iri <{{{propiri}}}> ?value . \n \
+                FILTER (  ?iri IN ( <{{{uri}}}> )). \n \
+            }'
+});
+// Recuperar todas las propiedades y sus valores de un indiviuo
+queriesArray.push({
+    'name': nameQueries.detailsAll,
+    'query': 'SELECT * \n \
+            WHERE { \n \
+                ?iri ?prop ?value . \n \
+                FILTER (  ?iri IN ( <{{{uri}}}> )). \n \
+            }'
+});
+// Recuperar todas las relaciones de subclases a partir de una clase base
+queriesArray.push({
+    'name': nameQueries.subclasses,
+    //	'prefixes': ['rdfs', 'ifn', 'mfe', 'epsg', 'patch', 'poly', 'plot', 'tree', 'is'],
+    'query': 'SELECT DISTINCT ?sup ?sub \n \
+WHERE { \n \
+  ?sup rdfs:subClassOf* <{{{uri}}}> . \n \
+  ?sub rdfs:subClassOf ?sup . \n \
+}'
+});
+// Recuperar los valores de una propiedad de un individuo (con select)
+queriesArray.push({
+    'name': nameQueries.propvalues,
+    //	'prefixes': ['ifn', 'mfe', 'epsg', 'patch', 'poly', 'plot', 'tree', 'is'],
+    'query': 'SELECT DISTINCT ?uri ?value \n \
+            WHERE { \n \
+            ?uri <{{{propuri}}}> ?value . \n \
+            FILTER (?uri IN ( {{{furis}}} )) }'
+});
+
+
+/**
+ * Querys que no se están utilizando
+ */
+
+/* 
 //Árboles en un área dada por 4 puntos
 queriesArray.push({
     'name': 'treesinArea_pos',
@@ -81,7 +336,6 @@ queriesArray.push({
             } \n \
             ORDER BY (?tree)'
 });
-
 //Recuperar todos los árboles y sus anotaciones
 queriesArray.push({
     'name': 'treesAndAnnotations',
@@ -90,8 +344,7 @@ queriesArray.push({
                 ?p rdfs:subPropertyOf+ sta:hasAnnotation . \n \
                 ?tree ?p ?annot . \n \
             }'
-});
-
+}); 
 queriesArray.push({
     'name': 'allTrees_pos',
     'query': 'CONSTRUCT { \n \
@@ -110,7 +363,6 @@ queriesArray.push({
               LIMIT {{limit}} \n \
               OFFSET {{offset}}'
 });
-
 queriesArray.push({
     'name': 'allTrees_species',
     'query': 'CONSTRUCT { \n \
@@ -122,31 +374,6 @@ queriesArray.push({
                     ?annotation <' + onturis.prHasTaxon + '> ?taxon . \n \
                  VALUES ?tree { {{{treesArea}}} } \n \
               }'
-});
-/*?has ?annotation . \n \
-                ?has rdfs:subPropertyOf* <' + onturis.prHasPrimaryAnnotation + '> .  \n \
-*/
-
-/* Consultas cambios que me comentó Guillermo 27/4/2020 */
-queriesArray.push({
-    'name': 'trees_uris',
-    'query': 'CONSTRUCT \n \
-            WHERE { \n \
-                ?tree a <' + onturis.tree + '> . \n \
-            } \n \
-            LIMIT {{limit}} \n \
-            OFFSET {{offset}}'
-});
-
-queriesArray.push({
-    'name': 'trees_prop_annotation',
-    'query': 'CONSTRUCT { \n \
-                ?iri <{{{propiri}}}> ?value . \n \
-            } \n \
-            WHERE { \n \
-                ?iri <{{{propiritype}}}>/<{{{propiri}}}> ?value . \n \
-                FILTER ( ?iri IN ( <{{{uri}}}> )). \n \
-            }'
 });
 //NO VA BIEN SIEMPRE. A VECES SI
 queriesArray.push({
@@ -161,184 +388,6 @@ queriesArray.push({
                 FILTER ( ?iri IN ( <{{{uri}}}> )). \n \
             }'
 });
-
-queriesArray.push({
-    'name': 'trees_uris_zone',
-    'query': 'CONSTRUCT { \n \
-                ?tree geo:lat ?lat ;  \n \
-                      geo:long ?long .  \n \
-                }  \n \
-            WHERE { \n \
-                ?tree a <' + onturis.tree + '> . \n \
-                ?tree <' + onturis.prHasPrimaryPosition + '> ?ann. \n \
-                ?ann geo:lat ?lat ; \n \
-                     geo:long ?long . \n \
-                     FILTER (?lat > {{latsouth}}) . \n \
-                     FILTER (?lat < {{latnorth}}) . \n \
-                     FILTER (?long > {{longwest}}) . \n \
-                     FILTER (?long < {{longeast}}) . \n \
-            } \n \
-            LIMIT {{limit}} \n \
-            OFFSET {{offset}}'
-});
-
-queriesArray.push({
-    'name': 'trees_uris_specie',
-    'query': 'CONSTRUCT { \n \
-                ?tree <' + onturis.prHasTaxon + '>   ?species_iris .  \n \
-                }  \n \
-            WHERE { \n \
-                ?tree a <' + onturis.tree + '> . \n \
-                ?tree <' + onturis.prHasPrimarySpecies + '> ?ann. \n \
-                ?ann  <' + onturis.prHasTaxon + '>  ?species_iris . \n \
-                FILTER ( ?species_iris IN ( <{{{uri_specie}}}> )). \n \            } \n \
-            LIMIT {{limit}} \n \
-            OFFSET {{offset}}'
-});
-
-queriesArray.push({
-    'name': 'trees_uris_creator',
-    'query': 'CONSTRUCT { \n \
-                ?tree dc:creator ?creator .  \n \
-                }  \n \
-            WHERE { \n \
-                ?tree a <' + onturis.tree + '> . \n \
-                ?tree dc:creator ?creator. \n \
-                FILTER ( ?creator IN ( <{{{uri_creator}}}> )). \n \            } \n \
-            LIMIT {{limit}} \n \
-            OFFSET {{offset}}'
-});
-/*prefix sta: <http://timber.gsic.uva.es/sta/ontology/>
-SELECT DISTINCT ?ann ?value
-WHERE {
-?type rdfs:subClassOf* sta:PrimaryAnnotation .
-?iri ?prop ?annotation .
-?ann a ?type;
-sta:hasTaxon ?value .
-}*/
-
-
-queriesArray.push({
-    'name': 'annotations_uris_creator',
-    'query': 'CONSTRUCT { \n \
-                ?ann dc:creator ?creator .  \n \
-        }  \n \
-            WHERE { \n \
-                ?types rdfs:subClassOf* <' + onturis.annotation + '> . \n \
-                ?ann a ?types ; \n \
-                     dc:creator ?creator . \n \
-            FILTER ( ?creator IN ( <{{{uri_creator}}}> )). \n \
-            } \n \
-            LIMIT {{limit}} \n \
-            OFFSET {{offset}}'
-});
-
-
-queriesArray.push({
-    'name': 'create_tree',
-    'query': 'INSERT DATA \n \
-            { <'+ queryPrefixes.tree + '{{id}}> a <' + onturis.tree + '> ; \n \
-                                        dc:creator <{{{creator}}}> ; \n \
-                                        dc:created "{{date}}"^^xsd:date ;\n \
-                                        <' + onturis.prHasPrimaryPosition + '> <{{{annotation}}}> .\n \
-            }'
-});
-
-queriesArray.push({
-    'name': 'create_annotation_position',
-    'query': 'INSERT DATA \n \
-            { <'+ queryPrefixes.annotation + '{{id}}> a <{{{type}}}> ; \n \
-                                        dc:creator <{{{creator}}}> ; \n \
-                                        dc:created "{{date}}"^^xsd:date ;\n \
-                                        geo:lat {{lat}} ; \n \
-                                        geo:long {{long}} . \n \
-            }'
-});
-
-queriesArray.push({
-    'name': 'create_annotation_image',
-    'query': 'INSERT DATA \n \
-            { <'+ queryPrefixes.annotation + '{{id}}> a <{{{type}}}> ; \n \
-                                        dc:creator <{{{creator}}}> ; \n \
-                                        dc:created "{{date}}"^^xsd:date ;\n \
-                                        <'+ onturis.prHasImage + '> <{{{imageId}}}> . \n \
-            }'
-});
-
-queriesArray.push({
-    'name': 'create_image',
-    'query': 'INSERT DATA \n \
-            { <{{{imageId}}}> a <'+ onturis.image + '> ; \n \
-            <'+ onturis.prResource + '> <{{{image}}}> ; \n \
-                dc:type <http://purl.org/dc/dcmitype/Image> ; \n \
-                {{{varTriplesImg}}} \n \
-                dc:created "{{date}}"^^xsd:date .\n \
-            }'
-});
-
-queriesArray.push({
-    'name': 'create_annotation_species',
-    'query': 'INSERT DATA \n \
-            { <'+ queryPrefixes.annotation + '{{id}}> a <{{{type}}}> ; \n \
-                                        dc:creator <{{{creator}}}> ; \n \
-                                        dc:created "{{date}}"^^xsd:date ;\n \
-                                        <'+ onturis.prHasTaxon + '> <{{{species}}}> . \n \
-            }'
-});
-
-queriesArray.push({
-    'name': 'add_annotation_tree',
-    'query': 'INSERT DATA \n \
-            { <'+ queryPrefixes.tree + '{{id}}> <{{{hasAnnotation}}}> <{{{annotation}}}> .\n \
-            }'
-});
-
-queriesArray.push({
-    'name': 'update_primary_annotation',
-    'query': 'DELETE { \n \
-        <{{{idTree}}}> <{{{hasPrimary}}}> ?o . \n \
-        ?o a <{{{typePrimary}}}> . \n \
-       } \n \
-       INSERT { \n \
-        <{{{idTree}}}> <{{{hasAnnot}}}> ?o . \n \
-        ?o a <{{{type}}}> . \n \
-       }\n \
-       WHERE  {\n \
-        <{{{idTree}}}> <{{{hasPrimary}}}> ?o . \n \
-       }'
-});
-/*
-queriesArray.push({
-    'name': 'get_primary_annotation',
-    'query': 'SELECT ?oldAnnot { \n \
-        WHERE { \n \
-        <{{{idTree}}}> <{{{hasPrimary}}}> ?oldAnnot . \n \
-        <{{{oldAnnot}}}> a <{{{typePrimary}}}> . \n \
-       }'
-});
-*/
-
-/**
- * INSERT DATA
-{ <http://timber.gsic.uva.es/sta/data/user/12345> a foaf:Person ;
- foaf:firstName "Demo" ;
- foaf:lastName "García" ;
- foaf:nick "12345" ;
- foaf:mbox "user12345@gmail.com"
-}
- */
-
-queriesArray.push({
-    'name': 'create_user',
-    'query': 'INSERT DATA \n \
-            { <{{{uri}}}> a foaf:Person ;\n \
-            foaf:name "{{name}}" ; \n \
-            foaf:nick "{{id}}"^^rdf:langString ; \n \
-            foaf:mbox "{{email}}"^^rdf:langString ; \n \
-            dc:created "{{date}}"^^xsd:date .\n \
-            }'
-});
-
 queriesArray.push({
     'name': 'test_delete',
     'query': 'DELETE { \n \
@@ -350,7 +399,6 @@ queriesArray.push({
                 ?tree ?p ?o .\n \
                 }'
 });
-
 queriesArray.push({
     'name': 'test_create',
     'query': 'INSERT DATA \n \
@@ -358,64 +406,9 @@ queriesArray.push({
     dc:creator  <http://timber.gsic.uva.es/sta/data/user/12345> .\n \
     }'
 });
-
-/**
- * Generales
- */
-
-// Individuos de una clase => utilizo construct en vez de select para poder devolver los datos en json-ld (como la dbpedia)
-queriesArray.push({
-    'name': nameQueries.individuals,
-    'query': 'CONSTRUCT \n \
-            WHERE { \n \
-                ?uri a <{{{cluri}}}> . \n \
-            }\n \
-            LIMIT {{limit}} \n \
-            OFFSET {{offset}}'
-});
-
-queriesArray.push({
-    'name': 'details',
-    'query': 'CONSTRUCT { \n \
-                ?iri <{{{propiri}}}> ?value . \n \
-            }  \n \
-            WHERE { \n \
-                ?iri <{{{propiri}}}> ?value . \n \
-                FILTER (  ?iri IN ( <{{{uri}}}> )). \n \
-            }'
-});
+*/
 
 
-queriesArray.push({
-    'name': nameQueries.detailsAll,
-    'query': 'SELECT * \n \
-            WHERE { \n \
-                ?iri ?prop ?value . \n \
-                FILTER (  ?iri IN ( <{{{uri}}}> )). \n \
-            }'
-});
-
-// get subclass relations from a base class
-queriesArray.push({
-    'name': 'subclasses',
-    //	'prefixes': ['rdfs', 'ifn', 'mfe', 'epsg', 'patch', 'poly', 'plot', 'tree', 'is'],
-    'query': 'SELECT DISTINCT ?sup ?sub \n \
-WHERE { \n \
-  ?sup rdfs:subClassOf* <{{{uri}}}> . \n \
-  ?sub rdfs:subClassOf ?sup . \n \
-}'
-});
-
-
-// get values for properties
-queriesArray.push({
-    'name': 'propvalues',
-    //	'prefixes': ['ifn', 'mfe', 'epsg', 'patch', 'poly', 'plot', 'tree', 'is'],
-    'query': 'SELECT DISTINCT ?uri ?value \n \
-            WHERE { \n \
-            ?uri <{{{propuri}}}> ?value . \n \
-            FILTER (?uri IN ( {{{furis}}} )) }'
-});
 module.exports = {
     queriesArray,
     nameQueries,
