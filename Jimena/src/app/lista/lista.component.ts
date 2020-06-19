@@ -1,16 +1,21 @@
+/*                            ListaComponent
+    Componente que recibe un array con todos los árboles de una zona y los muestra en formato de lista
+    indicando su especie, creador y localización.
+    También carga la información del árbol que seleccione el usuario así como el array con todas las 
+    anotaciones del mismo.
+*/
+
 import { Component, OnInit, Input } from '@angular/core';
+//-----------------------------------------------------
 import { Tree} from '.././tree';
 import { Annotation } from '.././Annotation';
-//----------------- SERVICES ---------------------------------------
+//----------------- SERVICES ---------------------------
 import { APIService } from '../api.service';
 import { UtilService } from './../services/util.service';
 import { AnnotationService } from './../services/annotation.service';
 import { UsersService } from '../services/users.service';
 import { ImagesService } from '../services/images.service';
 import { TreeService } from '../services/tree.service';
-
-
-
 
 @Component({
   selector: 'app-lista',
@@ -22,23 +27,25 @@ export class ListaComponent implements OnInit {
   @Input() trees: Tree[]; // Los árboles a mostrar llegan como parámetro de entrada
   @Input() SPECIES: object;
   
-  tree_selected: Tree;
-  objInfoTree: object = [];
-  objAnnot: object = [];
+  //Variables de almacenamiento de datos -------------------------
+  public tree_selected: Tree;
+  public objInfoTree: object = [];
+  public objAnnot: object = [];
+  public objImage: object = [];
   public imageInfo: object = [];
-  public imageURL: string;
-  annotations: Annotation[]=[];
-  IsPossitionAsserted: boolean = false; // Estas dos variables controlan si los datos son oficiales
-  IsSpeciesAsserted: boolean = false;   // para que se muestre una indicación en la interfaz
+  public annotations: Annotation[]=[];
+  public imageAnnotations: Array<string> = [];
+  public IsPossitionAsserted: boolean = false; // Estas dos variables controlan si los datos son oficiales
+  public IsSpeciesAsserted: boolean = false;   // para que se muestre una indicación en la interfaz
 
 
   //Variables de control -------------------------
-  submitted = false;
-  error: boolean = false;
-  terminado: boolean = false;
-  error_anot: boolean = false;
-  terminado_anot: boolean = false;
-  i: number = 0; //controla el numero de anotaciones que tiene el árbol
+  public submitted = false;
+  public error: boolean = false;
+  public terminado: boolean = false;
+  public error_anot: boolean = false;
+  public terminado_anot: boolean = false;
+  public i: number = 0; //controla el numero de anotaciones que tiene el árbol
 
   constructor(private api: APIService, private util: UtilService, private annot: AnnotationService,
     private user: UsersService, private imageService: ImagesService, private treeServ: TreeService) { }
@@ -48,18 +55,25 @@ export class ListaComponent implements OnInit {
   }
   
   //-------------------------------------------------------
-  obtenerIdSelecionado(tree: Tree){
+  /**
+   * obtenerIdSelecionado
+tree: Tree   */
+  public obtenerIdSelecionado(tree: Tree) {
     this.tree_selected = tree;  // obtengo el arbol que se ha elegido para ver
     // Recupero toda la info que hay de ese arbol en el servidor
     this.getInfoTree(this.tree_selected.id);
   }
 
-  // Método que oculta la vista de todos los árboles
-  onSubmit() { 
-    this.submitted = true; 
+  /**
+   * onSubmit: oculta la vista de todos los árboles
+   */
+  public onSubmit() {
+    this.submitted = true;
   }
-
-  volver(){
+  /**
+   * volver
+   */
+  public volver() {
     let j=0;
     this.submitted = false;
     this.annotations.splice(0,this.annotations.length); // borro las anotaciones
@@ -68,13 +82,15 @@ export class ListaComponent implements OnInit {
     this.i = 0;
   }
 
-  // Recojo el JSON con toda la información del árbol seleccionado
-  getInfoTree(url: string){
+  /**
+   * getInfoTree: recupera el JSON con toda la información del árbol seleccionado
+url: string   */
+  public getInfoTree(url: string) {
     this.api.getInfoTree(url).subscribe(
       (data: any) =>{
         //this.nextUrl = data.nextPage.url;
         this.objInfoTree = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
-        console.log(this.objInfoTree);
+        //console.log(this.objInfoTree);
       },
       (error) =>{
         console.error(error); // si se ha producido algún error
@@ -90,6 +106,7 @@ export class ListaComponent implements OnInit {
       );
   }
 
+
   /**
    * sacarFecha
    */
@@ -101,12 +118,13 @@ export class ListaComponent implements OnInit {
       }else{
         this.tree_selected.date = '1/01/2020'; // Los árboles del ifn no tienen fecha de creación
       }
-      
     }
   }
 
-  // Método que va recogiendo las url necesarias para recuperar cada anotacion del árbol
-  sacarAnotaciones(){
+  /**
+   * sacarAnotaciones: va recogiendo las url necesarias para recuperar cada anotacion del árbol
+   */
+  public sacarAnotaciones() {
     let i=0;
     for (let clave in this.objInfoTree){ 
       /********* POSITION *************/
@@ -158,10 +176,12 @@ export class ListaComponent implements OnInit {
         }
       } 
     }
-
   }
 
-  getInfoAnnot(url: string, isAsserted: boolean, isPrimary: boolean){
+  /**
+   * getInfoAnnot
+   */
+  public getInfoAnnot(url: string, isAsserted: boolean, isPrimary: boolean) {
     this.api.getAnnotation(url).subscribe(
       (data: any) =>{
         this.objAnnot = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
@@ -179,8 +199,11 @@ export class ListaComponent implements OnInit {
       }
       );
   }
-    // creo un objeto TypeScritp de tipo Annotation[] con el objeto JSON devuelto para mostrarse en la pantalla adecuadamente
-    convertirAnnot(isAsserted: boolean, isPrimary: boolean){
+
+  /**
+   * convertirAnnot: crea un objeto TypeScritp de tipo Annotation[] con el objeto JSON devuelto 
+   */
+  public convertirAnnot(isAsserted: boolean, isPrimary: boolean) {
       let tipo: string;
       let date: string;
       let lat, long, especie;
@@ -206,6 +229,7 @@ export class ListaComponent implements OnInit {
           case "http://timber.gsic.uva.es/sta/ontology/ImageAnnotation":
               tipo = "image";
               imageURL = this.objAnnot[clave][this.annot.buscador_image].value;
+              this.getImageInfo(imageURL);
               break;
           case "http://timber.gsic.uva.es/sta/ontology/PositionAnnotation":
               tipo = "location";
@@ -215,7 +239,7 @@ export class ListaComponent implements OnInit {
           case "http://timber.gsic.uva.es/sta/ontology/SpeciesAnnotation":
               tipo = "specie";
               especie = this.objAnnot[clave][this.annot.buscador_taxon].value;
-              console.log(especie);
+              //console.log(especie);
               break;
         }
         
@@ -251,16 +275,43 @@ export class ListaComponent implements OnInit {
             this.annotations[this.i] = {id: clave, creator: creador, date: date, primary: isPrimary, asserted: isAsserted, type: {image: imageURL}};
             break;
         }
+        //console.log(this.annotations[this.i]);
         this.i++;
       }
 
     }
 
 
+    /**
+     * getImageInfo
+     */
+    public getImageInfo(imageUrl: string) {
+      this.api.getAnnotImage(imageUrl).subscribe(
+        (data: any) =>{
+          this.objImage = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
+          //console.log(this.objAnnot);
+          this.buscarInfoImagen(this.objImage, imageUrl);
+        },
+        (error) =>{
+          console.error(error); // si se ha producido algún error
+          //this.error_anot = true;
+          alert("Ha habido un error al intentar cargar la información de las imágenes. Por favor, inténtelo de nuevo más tarde.");
+          //this.terminado_anot = true;
+        },
+        () =>{ 
 
+        }
+        );    
+    }
 
-
-  
-
-
-}
+    /**
+     * buscarInfoImagen
+     */
+    public buscarInfoImagen(objImage: object, imageURL: string){
+      console.log(objImage[imageURL]);
+      let imageJPG = objImage['http://timber.gsic.uva.es/sta/ontology/resource'].value;
+      let title = objImage['http://purl.org/dc/elements/1.1/title'].value;
+      this.imageAnnotations.push(imageJPG);
+      console.log(this.imageAnnotations);
+    }
+  }

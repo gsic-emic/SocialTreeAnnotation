@@ -26,7 +26,14 @@ export class ImagesService {
 /************** RECUPERAR DATOS DE UNA IMAGEN ************************/ 
 /**
  * getImageInfo
-imageURL */
+uriImage: string : Observable<any[]>*/
+public getImageInfo(uriImage: string): Observable<any[]> {
+  return this.http.get<any[]>(uriImage);
+}
+
+/**
+ * getImageInfo
+imageURL 
 public getImageInfo(imageURL) {
 let urlJPG;
   this.api.getImageInfo(imageURL).subscribe(
@@ -42,7 +49,7 @@ let urlJPG;
       return this.imageInfo;
     }
   );
-}
+}*/
 
 
 
@@ -68,7 +75,7 @@ public sacarDatosImagen(id: string, imageInfo: Object){
   console.log(this.arrayInfo);  
 }
 
-/************** PARTES DE UN ARBOL ************************/ 
+/************** PARTES DE UN ARBOL EN LA IMAGEN ************************/ 
 
 // Obtención de las partes de un árbol para el campo DEPICTS
 public getTreeParts(): Observable<any[]> {

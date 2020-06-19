@@ -61,8 +61,8 @@ export class APIService {
     return this.http.get<any[]>(urlComplete);
   }
 
-  /************** RECUPERAR DATOS DE UNA IMAGEN ************************/ 
-  public getImageInfo(url): Observable<any[]> {
+  /************** RECUPERAR ANOTACIÓN DE IMAGEN ************************/ 
+  public getAnnotImage(url): Observable<any[]> {
     return this.http.get<any[]>(url);
   }
 
