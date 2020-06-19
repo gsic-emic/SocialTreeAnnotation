@@ -1,11 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Tree} from '.././tree';
 import { Annotation } from '.././Annotation';
+//----------------- SERVICES ---------------------------------------
 import { APIService } from '../api.service';
 import { UtilService } from './../services/util.service';
 import { AnnotationService } from './../services/annotation.service';
 import { UsersService } from '../services/users.service';
 import { ImagesService } from '../services/images.service';
+import { TreeService } from '../services/tree.service';
 
 
 
@@ -39,7 +41,7 @@ export class ListaComponent implements OnInit {
   i: number = 0; //controla el numero de anotaciones que tiene el árbol
 
   constructor(private api: APIService, private util: UtilService, private annot: AnnotationService,
-    private user: UsersService, private imageService: ImagesService) { }
+    private user: UsersService, private imageService: ImagesService, private treeServ: TreeService) { }
 
   ngOnInit(): void {
      
@@ -81,9 +83,24 @@ export class ListaComponent implements OnInit {
       () =>{
         this.terminado = true;
         this.sacarAnotaciones();
-
+        this.sacarFecha(this.objInfoTree);
       }
       );
+  }
+
+  /**
+   * sacarFecha
+   */
+  public sacarFecha(infoTree: object) {
+    for (let clave in infoTree){
+      if(infoTree[clave][this.treeServ.buscadorFecha]){
+        let fechaCompleta = infoTree[clave][this.treeServ.buscadorFecha].value;
+        this.tree_selected.date = this.util.formatearFecha(fechaCompleta);
+      }else{
+        this.tree_selected.date = '1/01/2020'; // Los árboles del ifn no tienen fecha de creación
+      }
+      
+    }
   }
 
   // Método que va recogiendo las url necesarias para recuperar cada anotacion del árbol

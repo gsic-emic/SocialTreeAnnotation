@@ -44,7 +44,7 @@ export class MapaComponent implements OnInit {
   ngOnInit(): void { /*se ejecuta en cuanto angular tenga listo el componente*/
 
     /* Creación del objeto mapa y su capa de diseño */
-    this.mymap = this.crearMapa(41.75, -5.01093, 13); // mapa centrado en españa 
+    this.mymap = this.crearMapa(41.69, -5.09, 13); // mapa centrado en españa 
     var layer = this.crearLayer_gray();
     layer.addTo(this.mymap);
 
