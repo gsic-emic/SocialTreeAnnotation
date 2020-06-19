@@ -16,7 +16,7 @@ export class AnnotationService {
   Possition: string = "http://timber.gsic.uva.es/sta/ontology/hasPositionAnnotation"; // Una cualquiera
   AssertedSpecies: string = "http://timber.gsic.uva.es/sta/ontology/hasAssertedSpecies";
   PrimarySpecies: string = "http://timber.gsic.uva.es/sta/ontology/hasPrimarySpecies";
-  Species: string = "http://timber.gsic.uva.es/sta/ontology/SpeciesAnnotation";
+  Species: string = "http://timber.gsic.uva.es/sta/ontology/hasSpeciesAnnotation";
   Image: string = "http://timber.gsic.uva.es/sta/ontology/hasImageAnnotation";
   tipoAnnot: string = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
   buscadorFecha: string = "http://purl.org/dc/elements/1.1/created";

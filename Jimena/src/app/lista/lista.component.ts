@@ -63,6 +63,8 @@ export class ListaComponent implements OnInit {
     let j=0;
     this.submitted = false;
     this.annotations.splice(0,this.annotations.length); // borro las anotaciones
+    this.IsPossitionAsserted = false
+    this.IsSpeciesAsserted = false;
     this.i = 0;
   }
 
@@ -72,7 +74,7 @@ export class ListaComponent implements OnInit {
       (data: any) =>{
         //this.nextUrl = data.nextPage.url;
         this.objInfoTree = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
-        //console.log(this.objInfoTree);
+        console.log(this.objInfoTree);
       },
       (error) =>{
         console.error(error); // si se ha producido algún error
@@ -124,8 +126,9 @@ export class ListaComponent implements OnInit {
 
       // Compruebo si hay otras anotaciones de posicion
       if(this.objInfoTree[clave][this.annot.Possition]){
-        this.getInfoAnnot(this.objInfoTree[clave][this.annot.Possition].value, false, false);
-        //this.getInfoAnnot("http://localhost:8888/sta/data/annotation/004", false, false); //PROVISIONAL
+        for (let j=0; j<this.objInfoTree[clave][this.annot.Possition].length;j++){
+          this.getInfoAnnot(this.objInfoTree[clave][this.annot.Possition][j].value, false, false);
+        }
       }
 
       /********* SPECIES *************/
@@ -140,14 +143,19 @@ export class ListaComponent implements OnInit {
         }
       }
 
-      // Compruebo si hay otras anotaciones de posicion
+      // Compruebo si hay otras anotaciones de especie
       if(this.objInfoTree[clave][this.annot.Species]){
-        this.getInfoAnnot(this.objInfoTree[clave][this.annot.Species].value, false, false);
+        for (let k=0; k<this.objInfoTree[clave][this.annot.Species].length;k++){
+          this.getInfoAnnot(this.objInfoTree[clave][this.annot.Species][k].value, false, false);
+        }
       }
 
       /********* IMAGEN *************/
+      // Cargo todas las anotaciones de imagen que hay
       if(this.objInfoTree[clave][this.annot.Image]){
-        this.getInfoAnnot(this.objInfoTree[clave][this.annot.Image].value, false, false);
+        for (let k=0; k<this.objInfoTree[clave][this.annot.Image].length;k++){
+          this.getInfoAnnot(this.objInfoTree[clave][this.annot.Image][k].value, false, false);
+        }
       } 
     }
 
