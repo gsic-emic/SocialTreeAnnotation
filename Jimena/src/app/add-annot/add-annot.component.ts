@@ -102,6 +102,29 @@ export class AddAnnotComponent implements OnInit {
     this.submitted2 = true;
     //console.log(this.newAnnot);
   }
+  
+  /**
+   * volver: acción que vuelve al formulario de elegir el tipo de anotación
+   */
+  public volver() {
+    this.borrarDatos();
+    this.submitted = false;
+  }
+  
+  /**
+   * borrarDatos: método que borra los datos introducidos por el usuario
+   */
+  public borrarDatos() {
+    this.lat = null;
+    this.long = null;
+    this.especie = null;
+    this.imagen = null;
+    this.base64 = null;
+    this.title = null;
+    this.depicts = null;
+    this.description = null;
+    this.imageSrc = null;
+  }
 
   /**
    * crearAnotacion
@@ -191,20 +214,4 @@ codeFile(event) {
     }
   }
   
-
-  //acción que vuelve al formulario CON los datos que se han introducido
-  volver(){
-    this.submitted = false;
-  }
-
-  //método que borra los datos introducidos por el usuario y vuelve al formulacio de nueva anotación
-  public borrarDatos(){
-    this.lat = null;
-    this.long = null;
-    this.especie = null;
-    this.imagen = null;
-
-    this.volver();
-  }
-
 }

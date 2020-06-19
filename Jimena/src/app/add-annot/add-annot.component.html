@@ -72,7 +72,8 @@
                     </div>
                 </div>
           </div>
-          <button type="button" class="btn btn-outline-danger mr-3" (click)="borrarDatos()"><i class="far fa-times-circle"></i> Cancelar </button>
+          <button type="button" class="btn btn-outline-danger mr-3" (click)="volver()"><i class="far fa-times-circle"></i> Cancelar </button>
+          <button type="button" class="btn btn-outline-warning mr-3" (click)="borrarDatos()"><i class="far fa-times-circle"></i> Borar </button>
           <button type="submit" class="btn btn-success" [disabled]="!AnnotForm.form.valid"><i class="fas fa-plus-circle"></i> Crear</button>   
         </form>
     </div>
