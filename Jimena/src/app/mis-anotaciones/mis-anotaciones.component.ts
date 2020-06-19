@@ -1,7 +1,14 @@
+/*                            MisAnotacionesComponent
+     Componente que se encarga de recuperar del servidor todos los árboles y anotaciones del usuario que ha
+     inicado sesión y los muestra en la interfaz
+*/
 import { Component, OnInit } from '@angular/core';
-import { APIService} from '../api.service';
+import { Router } from '@angular/router';
+//-----------------------------------------------------
 import { Tree} from '.././tree';
 import { Annotation } from '../Annotation';
+//------------------- SERVICIOS -----------------------------
+import { APIService} from '../api.service';
 import { AnnotationService } from './../services/annotation.service';
 import { UtilService } from './../services/util.service';
 import { TreeService } from './../services/tree.service';
@@ -16,37 +23,45 @@ import { UsersService } from './../services/users.service';
 export class MisAnotacionesComponent implements OnInit {
 
   // Variables de control -----------------------
-  arboles: boolean = true;
-  existen: boolean = true; // variable que controla si el usuario tiene arboles creados
-  existen_anot: boolean = true;
-  error: boolean = false;
-  error_anot: boolean = false;
-  terminado: boolean = false;
-  terminado_species: boolean = false;
-  terminado_anot: boolean = false;
-  user: string;
+  public arboles: boolean = true;
+  public existen: boolean = true; // variable que controla si el usuario tiene arboles creados
+  public existen_anot: boolean = true;
+  public error: boolean = false;
+  public error_anot: boolean = false;
+  public terminado: boolean = false;
+  public terminado_species: boolean = false;
+  public terminado_anot: boolean = false;
+  public user: string;
 
-  // Variables de almacenamiento de los daros recuperados------------------------
-  objSpecies: object[]=[];
-  objTrees: Tree[]; // Objeto JSON que almacena todos los árboles devueltos
-  trees: Tree[]=[]; // Array con todos los árboles del sistema con formato adecuado para visualización
-  objAnnotations: Annotation[] = []; // Objeto JSON que almacena todas las anotaciones del usuario
-  annotations: Annotation[] = []; // datos de las anotaciones modelados
+  // Variables de almacenamiento de los datos recuperados------------------------
+  public objSpecies: object[]=[];
+  public objTrees: Tree[]; // Objeto JSON que almacena todos los árboles devueltos
+  public trees: Tree[]=[]; // Array con todos los árboles del sistema con formato adecuado para visualización
+  public objAnnotations: Annotation[] = []; // Objeto JSON que almacena todas las anotaciones del usuario
+  public annotations: Annotation[] = []; // datos de las anotaciones modelados
 
   constructor(private api: APIService, private annot: AnnotationService, private util: UtilService,
-    private tree: TreeService, private userService: UsersService) { }
+    private tree: TreeService, private userService: UsersService, private router: Router) { }
 
   ngOnInit(): void {
-    this.getSpecies();
-    // Recojo el username 
-    this.user = this.userService.getSessionName();
+    // Compruebo si hay autenticación de usuario para que no se pueda acceder sin estar registrado
+    if(!this.userService.comprobarLogIn()){
+      this.router.navigate(['/inicio_sesion']); // el usuario no está loggeado, le mando a que inicie sesión
+    } else{
+      // El usuario si que está loggeado
+      // Recojo el username 
+      this.user = this.userService.getSessionName();
 
-    this.getMyAnnotatios(this.user);
-
+      this.getSpecies();
+      this.getMyAnnotatios(this.user);
+      }
   }
    
   /****************************** SPECIES **************************/
-  getSpecies(){
+  /**
+   * getSpecies
+   */
+  public getSpecies() {
     this.api.getSpecies().subscribe(
       (data: any) =>{
         this.objSpecies = data.response;
@@ -66,7 +81,10 @@ export class MisAnotacionesComponent implements OnInit {
   }
 
     /****************************** TREES **************************/
-  getMyTrees(user: string){
+  /**
+   * getMyTrees
+   */
+  public getMyTrees(user: string) {
     this.api.getUserTrees(user).subscribe(
       (data: any) =>{
         //this.nextUrl = data.nextPage.url;
@@ -91,30 +109,35 @@ export class MisAnotacionesComponent implements OnInit {
   }
 
     /****************************** ANNOTATIONS **************************/
-  getMyAnnotatios(user: string){
-    this.api.getUserAnnotatios(user).subscribe(
-      (data: any) =>{
-        if(data == null){
-          this.existen_anot = false; // no tiene arboles
-        } else {
-          this.objAnnotations = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
+    /**
+     * getMyAnnotatios
+     */
+    public getMyAnnotatios(user: string) {
+      this.api.getUserAnnotatios(user).subscribe(
+        (data: any) =>{
+          if(data == null){
+            this.existen_anot = false; // no tiene arboles
+          } else {
+            this.objAnnotations = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
+          }
+          this.convertirAnnot();
+        },
+        (error) =>{
+          console.error(error); // si se ha producido algún error
+          this.error_anot = true;
+          alert("Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde o recargue la página");
+          this.terminado_anot = true;
+        },
+        () =>{
+          this.terminado_anot = true;
         }
-        this.convertirAnnot();
-      },
-      (error) =>{
-        console.error(error); // si se ha producido algún error
-        this.error_anot = true;
-        alert("Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde o recargue la página");
-        this.terminado_anot = true;
-      },
-      () =>{
-        this.terminado_anot = true;
-      }
-      );
+        );
     }
 
-  // creo un objeto TypeScritp de tipo Annotation[] con el objeto JSON devuelto para mostrarse en la pantalla adecuadamente
-  convertirAnnot(){
+  /**
+    * convertirAnnot: crea un objeto TypeScritp de tipo Annotation[] con el objeto JSON devuelto 
+  */
+  public convertirAnnot() {
     let i=0;
     let primary;
     let asserted;
@@ -173,7 +196,5 @@ export class MisAnotacionesComponent implements OnInit {
       i++;
     }
   }
-  
-  
 
 }

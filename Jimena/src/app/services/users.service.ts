@@ -84,6 +84,7 @@ export class UsersService {
     let username = this.getSessionName();
       
     if(username == null){ // el usuario no está loggeado
+      console.log("No se ha iniciado sesión");
       return false;
     }else{
       return true;
