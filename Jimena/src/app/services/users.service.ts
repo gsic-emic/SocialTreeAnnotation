@@ -18,13 +18,19 @@ export class UsersService {
   constructor(private http: HttpClient) { }
 
   /*********************** RECUPERAR DATOS UN USUARIO ******************************/
-  getUserInfo (username): Observable<any[]> {
+  /**
+   * getUserInfo
+   */
+  public getUserInfo(username): Observable<any[]>{
     let urlComplete = this.userUrl+username; // creo la url de la consulta con el nombre de usuario
     return this.http.get<any[]>(urlComplete);
   }
 
   /*********************** INICIO DE SESION ******************************/
-  login(datos: string): Observable<string> {
+  /**
+   * login
+   */
+  public login(datos: string): Observable<string> {
     let headers = new HttpHeaders().set('Content-Type','application/json'); // Cabecera necesaria
     let url = 'http://timber.gsic.uva.es/sta/';
     return this.http.post<string>(url, datos, {headers: headers});
@@ -33,6 +39,9 @@ export class UsersService {
 
 
     /*********************** CREACION DE USUARIOS ******************************/
+    /**
+     * createUser
+     */
     public createUser(datos: string, username: string,): Observable<string> {
       // Cabecera necesaria
       let urlComplete = this.userUrl+username;
@@ -42,11 +51,17 @@ export class UsersService {
     }
 
     /********************** CONTROL DE LA SESIÓN SEL USUARIO ACTUAL *******************/
+    /**
+     * getSessionName
+     */
     public getSessionName(): string{
       let username = sessionStorage.getItem('username');
       return username;
     }
 
+    /**
+     * getUserAutentication
+     */
     public getUserAutentication(): string{
       let username = sessionStorage.getItem('username');
       let password = sessionStorage.getItem('password');
@@ -55,11 +70,30 @@ export class UsersService {
       return autentication;
     }
 
-    public clearSession(){
+    /**
+     * clearSession
+     */
+    public clearSession() {
       sessionStorage.clear();
     }
 
+    /**
+   * comprobarLogIn: comprueba si el usuario tiene la sesión iniciada
+   */
+  public comprobarLogIn(): boolean {
+    let username = this.getSessionName();
+      
+    if(username == null){ // el usuario no está loggeado
+      return false;
+    }else{
+      return true;
+    }
+  }
+
     /************* Creación de un usuario a partir de los datos devueltos por el servidor **********/
+    /**
+     * createInfoUser
+     */
     public createInfoUser(objUser: object): User{
       for (let clave in objUser){
         let nombreCompleto = objUser[clave][this.buscadorNombre].value;
@@ -75,14 +109,15 @@ export class UsersService {
         return infoUSer;
       }
     }
-
-    // Conversión de la url completa de un usuario a su username
-      // http://timber.gsic.uva.es/sta/data/user/jimena22 -----> jimena22
+      
+    /**
+      * adaptarUsername: conversión de la url completa de un usuario a su username
+    */
     public adaptarUsername(userUrl: string): string{
+      // http://timber.gsic.uva.es/sta/data/user/jimena22 -----> jimena22
       let array = userUrl.split('/');
       let username = array[6];
       return username;
-
     }
 
 }
