@@ -23,7 +23,7 @@ export class InfoAnotacionComponent implements OnInit {
 
   ngOnInit(): void {
 
-    console.log(this.annotations);
+    //console.log(this.annotations);
     console.log(this.tree.id);
 
     document.getElementById("mas").addEventListener("click", ()=>{
