@@ -1,4 +1,13 @@
+/*                            NuevoArbolComponent
+     Componente que se encarga de recoger mediante un formulario los datos para crear un árbol:
+     - Localización (obligatorio)
+     - Imagen (tamaño máximo de 10MB)
+     - Especie
+     Además, crea el árbol (POST a la api del servidor)
+*/
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+//-----------------------------------------------------
 import { Tree_complete } from '../tree_complete';
 //------------------- SERVICIOS -----------------------------
 import { APIService} from '../api.service';
@@ -7,9 +16,6 @@ import { SpeciesService } from '../services/species.service';
 import { ImagesService } from '../services/images.service';
 import { UsersService } from './../services/users.service';
 //-------------------------------------------------
-//import {EXIF as exifShim, EXIFStatic } from '../../../node_modules/exif-js/exif';
-
-//declare var EXIF : EXIFStatic;
 
 @Component({
   selector: 'app-nuevo-arbol',
@@ -19,76 +25,90 @@ import { UsersService } from './../services/users.service';
 export class NuevoArbolComponent implements OnInit {
 
   // ESPCIES **************************
-  objSpecies: object[]=[]; // Objeto JSON que almacena todas las especies/familias/generos existentes
-  ESPECIES: Array<string> = [];
+  public objSpecies: object[]=[]; // Objeto JSON que almacena todas las especies/familias/generos existentes
+  public ESPECIES: Array<string> = [];
 
   // Variables para recoger los datos del cuestionario
-  newTree: Tree_complete;
-  lat: number;
-  long: number;
-  especie: string;
-  hoja: string;
-  fruto: string;
-  imagen: string;
-  creador:string = 'http://timber.gsic.uva.es/sta/data/user/';
-  fecha: string;
+  public newTree: Tree_complete;
+  public lat: number;
+  public long: number;
+  public especie: string;
+  public hoja: string;
+  public fruto: string;
+  public imagen: string;
+  public fecha: string;
 
   // DATOS DE LA SESIÓN
-  basicAuth: string;
+  public basicAuth: string;
+  public creador:string = 'http://timber.gsic.uva.es/sta/data/user/';
   
 
-  //variables de control
-  submitted: boolean = false;
-  confirmacion: boolean = false;
-  mensajeError: string;
-  error: boolean = false; // controla especies
-  terminado: boolean = false;
-  terminado2: boolean = false; // controla creacion arboles
-  error2: boolean = false;
+  //variables de control de la interfaz
+  public submitted: boolean = false;
+  public confirmacion: boolean = false;
+  public mensajeError: string;
+  public error: boolean = false; // controla especies
+  public terminado: boolean = false;
+  public terminado2: boolean = false; // controla creacion arboles
+  public error2: boolean = false;
 
   // Imágenes
-  base64: string; // guarda la codificacion de la imagen
-  title: string;
-  description: string;
-  depicts: string;
-  imageSrc: string; //Para la previsualizacion de la imagen al subirla
-  imageSrc_default: string = "./../assets/images/no-image.png";
-  PARTES: Array<string> = [];
+  public base64: string; // guarda la codificacion de la imagen
+  public title: string;
+  public description: string;
+  public depicts: string;
+  public imageSrc: string; //Para la previsualizacion de la imagen al subirla
+  public imageSrc_default: string = "./../assets/images/no-image.png"; // imagen por defecto
+  public PARTES: Array<string> = []; // partes de la imagen
 
   constructor(private api: APIService, private UtilService: UtilService, private SpeciesService: SpeciesService,
-    private ImagesService: ImagesService, private UsersService: UsersService) { }
+    private ImagesService: ImagesService, private UsersService: UsersService, private router: Router) { }
 
   ngOnInit(): void {
-    this.getSpecies(); // cargo las especies disponibles para ponerlas en el formulario
-    this.PARTES = this.ImagesService.PARTES;
-    
-    // Recojo el username para crear la url del usuario
-    let username = this.UsersService.getSessionName();
-    this.creador = this.creador+username; // url completa: http://timber.gsic.uva.es/sta/data/user/username
+    // Compruebo si hay autenticación de usuario para que no se pueda acceder sin estar registrado
+    if(!this.UsersService.comprobarLogIn()){
+      this.router.navigate(['/inicio_sesion']); // el usuario no está loggeado, le mando a que inicie sesión
+    } else{
+      // El usuario si que está loggeado
+      // Recojo el username para crear la url del usuario
+      let username = this.UsersService.getSessionName();
+      this.creador = this.creador+username; // url completa: http://timber.gsic.uva.es/sta/data/user/username
 
-    // Guardo la autenticación del usuario
-    this.basicAuth = this.UsersService.getUserAutentication();
+      // Guardo la autenticación del usuario
+      this.basicAuth = this.UsersService.getUserAutentication();
 
-
+      // cargo las especies disponibles para ponerlas en el formulario
+      this.getSpecies(); 
+      this.PARTES = this.ImagesService.PARTES;
+      }
+     
   }
 
-
-  // método que pasa a la página para confirmar la nueva anotación
-  public onSubmit() { 
+  /**
+   * onSubmit: pasa a la página de confirmar si crear el nuevo árbol
+   */
+  public onSubmit() {
     this.submitted = true;
     this.fecha = this.UtilService.construirFecha(); 
   }
-  public onSubmit2(){
+  /**
+   * onSubmit2: pasa a la página que indica si se ha creado correctamente o ha habido error
+   */
+  public onSubmit2() {
     this.confirmacion = true;
   }
 
-  //acción que vuelve al formulario CON los datos que se han introducido
-  volver(){
+  /**
+   * volver: vuelve al formulario CON los datos que se han introducido
+   */
+  public volver() {
     this.submitted = false;
   }
 
-  //método que borra los datos introducidos por el usuario y vuelve al formulacio de nueva anotación
-  public borrarDatos(){
+  /**
+   * borrarDatos: borra los datos introducidos por el usuario y vuelve al formulacio de nuevo árbol
+   */
+  public borrarDatos() {
     this.lat = null;
     this.long = null;
     this.especie = null;
@@ -103,8 +123,10 @@ export class NuevoArbolComponent implements OnInit {
     this.confirmacion = false;
   }
 
-   // Cargo todas las especies disponibles del sistema
-   public getSpecies(){
+   /**
+    * getSpecies: Carga todas las especies disponibles del sistema
+    */
+   public getSpecies() {
     this.api.getSpecies().subscribe(
       (data: any) =>{
         this.objSpecies = data.response;
@@ -123,8 +145,10 @@ export class NuevoArbolComponent implements OnInit {
       );
   }
   
-  // Metodo que manda la informacion al servidor
-  public createTree(){
+  /**
+   * createTree: manda la informacion al servidor
+   */
+  public createTree() {
     this.createJsonTree(); // Creo el JSON con los datos necesarios
     console.log("Se va a crear el árbol...");
     
@@ -151,8 +175,10 @@ export class NuevoArbolComponent implements OnInit {
     this.imagen = null;
   }
 
-
-  createJsonTree(){
+  /**
+   * createJsonTree
+   */
+  public createJsonTree() {
     let si = false;
     
     // creo el campo depics para no tener que repetir codigo en los if
@@ -181,19 +207,19 @@ export class NuevoArbolComponent implements OnInit {
         
       }
     }
-      
     // Si no se ha metido en ninguna condicion anterior, es que solo ha metido la lat y lon
     if(!si){
       // Solo ha metido la localización 
       this.newTree = {creator:  this.creador, lat: this.lat, long: this.long};
     }
-    
     //console.log(JSON.stringify(this.newTree));
-
   }
 
-  /******* Conversión de las imágenes a base64 para madar al servidor */
-  selectFile(event){
+  /*********************** IMAGEN *******************/
+  /**
+   * selectFile: almacena la imagen escogida y la codifica en base64
+   */
+  public selectFile(event) {
     var files = event.target.files;
     var file = files[0];
 
@@ -210,11 +236,12 @@ export class NuevoArbolComponent implements OnInit {
     }
   }
 
-
-codeFile(event) {
+  /**
+   * codeFile: codifica la imagen en base64 y comprueba que no supera los 10MB
+   */
+  public codeFile(event) {
     var binaryString = event.target.result;
     this.base64= btoa(binaryString);
-    //console.log(this.base64);
     
     // Compruebo si la imagen ocupa menos de 10 Mb
     if (this.base64.length > 10000000){

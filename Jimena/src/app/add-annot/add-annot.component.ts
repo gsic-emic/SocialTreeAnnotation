@@ -1,5 +1,11 @@
+/*                            AddAnnotComponent
+     Componente que se encarga de crear anotaciones de tipo:
+     - Imagen
+     - Especie
+     - Localización
+*/
 import { Component, OnInit } from '@angular/core';
-import { Annotation } from '../Annotation';
+import { Router } from '@angular/router';
 //------------------- SERVICIOS -----------------------------
 import { UsersService } from './../services/users.service';
 import { SpeciesService } from '../services/species.service';
@@ -21,63 +27,68 @@ export class AddAnnotComponent implements OnInit {
   public urlUser: string = 'http://timber.gsic.uva.es/sta/data/user/';
   public basicAuth: string;
 
-  objSpecies: object[]=[]; // Objeto JSON que almacena todas las especies/familias/generos existentes
-  ESPECIES: Array<string> = [];
+  public objSpecies: object[]=[]; // Objeto JSON que almacena todas las especies/familias/generos existentes
+  public ESPECIES: Array<string> = [];
 
 
   //--------------------------------
   // Variables recogidas en el formulario
-  tipo: Array<string> = ["Imagen", "Ubicación", "Especie"];
-  type: string;
-  imagen: string;
-  lat: number;
-  long: number;
-  especie: string;
-  title: string;
-  description: string;
-  PARTES: Array<string> = [];
-  depicts: string;
-  imageSrc_default: string = "./../assets/images/no-image.png";
-  imageSrc: string; //Para la previsualizacion de la imagen al subirla
-  base64: string; // guarda la codificacion de la imagen
-
-
-
+  public tipo: Array<string> = ["Imagen", "Ubicación", "Especie"];
+  public type: string;
+  public imagen: string;
+  public lat: number;
+  public long: number;
+  public especie: string;
+  public title: string;
+  public description: string;
+  public PARTES: Array<string> = [];
+  public depicts: string;
+  public imageSrc_default: string = "./../assets/images/no-image.png";
+  public imageSrc: string; //Para la previsualizacion de la imagen al subirla
+  public base64: string; // guarda la codificacion de la imagen
 
  //-----------------------------------
  // Variables de control
-  submitted: boolean = false;
-  submitted2: boolean = false;
-  errorCreacion: boolean = false;
-  mensajeError: string;
-  terminado: boolean = false;
+ public submitted: boolean = false;
+ public submitted2: boolean = false;
+ public errorCreacion: boolean = false;
+ public mensajeError: string;
+ public terminado: boolean = false;
  //-----------------------------------
 
   constructor(private UsersService: UsersService, private SpeciesService: SpeciesService, private api: APIService,
-    private annotServ: AnnotationService, private util: UtilService, private imageServ: ImagesService) { }
+    private annotServ: AnnotationService, private util: UtilService, private imageServ: ImagesService, private router: Router) { }
 
   ngOnInit(): void {
-    // Cargo las especies
-    this.getSpecies(); // cargo las especies disponibles para ponerlas en el formulario
+    // Compruebo si hay autenticación de usuario para que no se pueda acceder sin estar registrado
+    if(!this.UsersService.comprobarLogIn()){
+      this.router.navigate(['/inicio_sesion']); // el usuario no está loggeado, le mando a que inicie sesión
+    } else{
+      // El usuario si que está loggeado
 
-    this.PARTES = this.imageServ.PARTES;
 
+      // Cargo las especies
+      this.getSpecies(); // cargo las especies disponibles para ponerlas en el formulario
+      this.PARTES = this.imageServ.PARTES;
 
-    // Obtengo la url del árbol al que se va  a añadir la anotacion
-    this.urlTree = sessionStorage.getItem('urlTree');
-    console.log(this.urlTree);
+      // Obtengo la url del árbol al que se va  a añadir la anotacion
+      this.urlTree = sessionStorage.getItem('urlTree');
+      console.log(this.urlTree);
 
-    // Recojo el username para crear la url del usuario
-    let username = this.UsersService.getSessionName();
-    this.urlUser = this.urlUser+username; // url completa: http://timber.gsic.uva.es/sta/data/user/username
+      // Recojo el username para crear la url del usuario
+      let username = this.UsersService.getSessionName();
+      this.urlUser = this.urlUser+username; // url completa: http://timber.gsic.uva.es/sta/data/user/username
 
-    // Guardo la autenticación del usuario
-    this.basicAuth = this.UsersService.getUserAutentication();
-
+      // Guardo la autenticación del usuario
+      this.basicAuth = this.UsersService.getUserAutentication();
+      }
   }
+//--------------------------------------------------------------------
 
-   // Cargo todas las especies disponibles del sistema
-   public getSpecies(){
+  /**
+   * getSpecies: Carga todas las especies disponibles del sistema
+   */
+  public getSpecies() {
     this.api.getSpecies().subscribe(
       (data: any) =>{
         this.objSpecies = data.response;
@@ -93,14 +104,19 @@ export class AddAnnotComponent implements OnInit {
       );
   }
 
-  //-------------------------------------
-  public onSubmit(){
+  //---------------------------------------------------------
+  /**
+   * onSubmit
+   */
+  public onSubmit() {
     this.submitted = true;
   }
-  public onSubmit2(){
+  /**
+   * onSubmit2
+   */
+  public onSubmit2() {
     this.crearAnotacion();
     this.submitted2 = true;
-    //console.log(this.newAnnot);
   }
   
   /**
@@ -181,8 +197,11 @@ export class AddAnnotComponent implements OnInit {
     return JSON.stringify(arrayAnot);
   }
 
-  /******* Conversión de las imágenes a base64 para madar al servidor */
-  selectFile(event){
+  /***************** ANOTACIÓN DE IMAGEN  *********************/
+  /**
+   * selectFile: Conversión de las imágenes a base64 para madar al servidor
+   */
+  public selectFile(event) {
     var files = event.target.files;
     var file = files[0];
 
@@ -198,9 +217,10 @@ export class AddAnnotComponent implements OnInit {
         reader2.readAsDataURL(event.target.files[0]);
     }
   }
-
-
-codeFile(event) {
+  /**
+   * codeFile
+   */
+  public codeFile(event) {
     var binaryString = event.target.result;
     this.base64= btoa(binaryString);
     //console.log(this.base64);

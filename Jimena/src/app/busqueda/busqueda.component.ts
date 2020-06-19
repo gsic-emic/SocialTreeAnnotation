@@ -1,8 +1,12 @@
+/*                            BusquedaComponent
+     
+*/
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-//--------------------------
+import { Router } from '@angular/router';
+//------------------- SERVICIOS -----------------------------
 import {APIService} from '../api.service';
-import {Tree} from '.././tree';
 import { SpeciesService } from '../services/species.service';
+import { UsersService } from './../services/users.service';
 //-----------------------------
 
 @Component({
@@ -30,10 +34,17 @@ export class BusquedaComponent implements OnInit {
   public existen: boolean = false; //controla si hay algún árbol con los filtros introducidos
   public activar_filtro: boolean = false;
 
-  constructor(private api: APIService, private speciesServ: SpeciesService) { }
+  constructor(private api: APIService, private speciesServ: SpeciesService, private router: Router,
+    private UsersService: UsersService) { }
 
   ngOnInit(): void {
-    this.getSpecies(); // nada más cargarse que recoja las especies, dentro de esta funcion ya se llama a la de getTrees 
+    // Compruebo si hay autenticación de usuario para que no se pueda acceder sin estar registrado
+    if(!this.UsersService.comprobarLogIn()){
+      this.router.navigate(['/inicio_sesion']); // el usuario no está loggeado, le mando a que inicie sesión
+    } else{
+      // El usuario si que está loggeado
+      this.getSpecies(); // nada más cargarse que recoja las especies, dentro de esta funcion ya se llama a la de getTrees 
+    }
  }
   
   // --------------------------------
