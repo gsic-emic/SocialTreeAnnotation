@@ -1,3 +1,6 @@
+/**
+ * Fichero que contiene todo lo relacionado con las consultas SPARQL 
+ */
 var onturis = require('./onturis');
 
 // Prefijos

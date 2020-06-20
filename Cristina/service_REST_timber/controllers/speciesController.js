@@ -2,71 +2,50 @@ const queryInterface = require('../helpers/queryInterface');
 var onturis = require('../config/onturis');
 const _ = require('underscore');
 const config = require('../config/onturis');
+const { nameQueries } = require('../config/queries');
+const { errorCache } = require('../config/errorCodes');
+const errorCodes = require('../config/errorCodes');
+const { response } = require('express');
 var especies = require('../models/cache').species;
 
-async function getSpecies(req, res) {
-    var arg = {};
-    let nextPage = undefined;
-    var response = {};
-    var fullUrl = "";
+async function getSpecies(fullUrl) {
+    return new Promise((resolve, reject) => {
 
-    let queryParameters = req.query;
-    arg.offset = 0; //por defecto
-    arg.limit = 1000; //por defecto
+        var arg = {};
+        let nextPage = undefined;
+        var finalResp = {};
+        var page = undefined;
+        var response = {};
 
-    if (queryParameters.page != undefined) {
-        arg.offset = Number(queryParameters.page) * arg.limit;
-    }
-    else {
-        queryParameters.page = 0;
-    }
-    fullUrl = req.protocol + '://' + req.hostname + req.originalUrl.split('?page')[0];
+        arg.offset = config.offset; //por defecto
+        arg.limit = config.limit; //por defecto
 
-    if (Object.keys(especies).length == 0 ){
-        getSpeciesInfo(function() {
-            console.info("Info de especies cargada");
+        page = fullUrl.split('?page=')[1];
+        if (page != undefined) {
+            arg.offset = Number(page) * arg.limit;
+        }
+        else {
+            page = 0;
+        }
+        fullUrl = fullUrl.split('?page=')[0];
+
+        if (Object.keys(especies).length == 0) {
+            getSpeciesInfo(function () {
+                console.info("Info de especies cargada");
+                finalResp.code = 200;
+                response = especies;
+                finalResp.msg = { response, nextPage };
+                resolve(finalResp);
+            });
+        }
+        else {
+            console.info("Info de especies cacheada");
+            finalResp.code = 200;
             response = especies;
-            res.status(200).send({response , nextPage});
-        });
-    }
-    else{
-        console.info("Info de especies cacheada");
-        response = especies;
-        res.status(200).send({response , nextPage});
-    }
-   
-
-    /*arg.cluri = onturis.ifn_species;
-    queryInterface.getData("indivs", arg, sparqlClient)
-        .then((data) => {
-            // Las keys de data forman un array con todas las IRIs de los árboles
-            irisSpecies = Object.keys(data);
-            if (irisSpecies.length == 0) {
-                res.status(204).send();
-            }
-            else {
-                //Si hay más páginas las incluyo
-                if (irisSpecies.length == arg.limit) {
-                    nextPage = { "url": `${fullUrl}?page=${Number(queryParameters.page) + 1}` };
-                }
-                arg.uri = irisSpecies.toString().replace(/,/g, '>,<');
-                return queryInterface.getData("details_allprop", arg, sparqlClient);
-            }
-
-        }).then((data) => {
-            res.status(200).send({data , nextPage});
-        })
-        .catch((err) => {
-            console.log("Error en conexión con endpoint");
-            if (err.statusCode != null && err.statusCode != undefined) {
-                res.status(err.statusCode).send({ message: err });
-            }
-            else {
-                err = err.message;
-                res.status(500).send(err);
-            }
-        });*/
-
+            finalResp.msg = { response, nextPage };
+            resolve(finalResp);
+        }
+    });
 }
 
 function getSpeciesInfo(callback) {
@@ -120,7 +99,7 @@ function getSubclassesSpecies(sturis, callback) {
     var nrequests = sturis.length;
     _.each(sturis, function (sturi) {
         // obtengo lista de pares de superclase-subclase a partir de la clase sturi
-        queryInterface.getData("subclasses", { 'uri': sturi }, sparqlClient).then((data) => {
+        queryInterface.getData(nameQueries.subclasses, { 'uri': sturi }, sparqlClient).then((data) => {
             // fue todo bien, inicializo clase sturi			
             initClass(especies, sturi);
             // analizo cada fila
@@ -140,16 +119,17 @@ function getSubclassesSpecies(sturis, callback) {
             if (nrequests <= 0 && callback != undefined)
                 callback();
         })
-        .catch((err) => {
-            console.log("Error en conexión con endpoint");
-            if (err.statusCode != null && err.statusCode != undefined) {
-                res.status(err.statusCode).send({ message: err });
-            }
-            else {
-                err = err.message;
-                res.status(500).send(err);
-            }
-        });
+            .catch((err) => {
+                console.log("Error en conexión con endpoint ", err);
+                /*if (err.statusCode != null && err.statusCode != undefined) {
+                    res.status(err.statusCode).send({ message: err });
+                }
+                else {
+                    err = err.message;
+                    res.status(500).send(err);
+                }*/
+                resolve(errorCodes.conexionVirtuoso)
+            });
     });
 }
 function initClass(objbase, cluri) {

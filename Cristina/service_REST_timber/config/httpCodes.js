@@ -1,5 +1,6 @@
-// Fichero para definir mensajes OK http que se van a lanzar por el resto de la aplicación
-
+/**
+ * Fichero para definir los códigos y mensajes de respuestas satisfactorias
+ */
 module.exports = {
     "authorized": {
         "code": 200,
@@ -12,5 +13,13 @@ module.exports = {
     "empty":{
         "code":204,
         "msg": ""
+    },
+    "treeCreated":{
+        "code": 201,
+        "msg": "Árbol creado correctamente"
+    },
+    "annotCreated":{
+        "code": 201,
+        "msg": "Anotación creada correctamente"
     },
 }

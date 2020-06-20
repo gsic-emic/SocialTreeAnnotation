@@ -16,15 +16,15 @@ var cacheMiddleware = (duration) => {
     return (req, res, next) => {
         let key =  req.originalUrl || req.url
         let cacheContent = memCache.get(key);
-        //console.log(key,"\n",cacheContent,"\n",memCache)
         res.setHeader('Content-Type', 'application/json');
+
         if(cacheContent){
-            res.send( cacheContent );
+            res.status(cacheContent.code).send( cacheContent.msg );
             return
         }else{
             res.sendResponse = res.send
             res.send = (body) => {
-                memCache.put(key,body,duration);
+                memCache.put(key,{"code":res.statusCode, "msg":body},duration);
                 res.sendResponse(body)
             }
             next()
@@ -116,7 +116,7 @@ function putNewCreationInCache(id, type, object){
 
 function clearCache() {
     console.log("\n#################################################################################################\n")
-    console.log("Limpieza de la caché: \n", Object.keys(trees).length, " árboles" + "\n" , Object.keys(annotations).length, " anotaciones", Object.keys(images).length, " imágenes" , Object.keys(users).length, " usuarios", Object.keys(species).length, " especies");
+    console.log("Limpieza de la caché: \n", Object.keys(trees).length, " árboles" + "\n" , Object.keys(annotations).length, " anotaciones"+ "\n" , Object.keys(images).length, " imágenes" + "\n" , Object.keys(users).length, " usuarios"+ "\n" , Object.keys(species).length, " especies");
     console.log("\n#################################################################################################\n")
     trees = {};
     annotations = {};
