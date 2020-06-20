@@ -63,7 +63,6 @@ function ConvertDMSToDD(degrees, minutes, seconds, direction) {
     return dd;
 }
 
-
 function getCoordinates(gps){
     var coord = [];
     coord.push(ConvertDMSToDD(gps.GPSLatitude[0], gps.GPSLatitude[1], gps.GPSLatitude[2],gps.GPSLatitudeRef));

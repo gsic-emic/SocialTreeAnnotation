@@ -5,67 +5,28 @@ const generateId = require('../helpers/helpers').generateId;
 const dirname = require('../config/config').directorySaveImages;
 const uri_images = require('../config/config').uri_images;
 var ExifImage = require('exif').ExifImage;
-const helpers = require('../helpers/helpers')
+const helpers = require('../helpers/helpers');
 const queryInterface = require('../helpers/queryInterface');
 var cache = require('../models/cache');
 const onturis = require('../config/onturis');
+const { nameQueries } = require('../config/queries');
+const errorCodes = require('../config/errorCodes');
 
-function getImage(req, res) {
-  var arg = {};
-  var id = req.params.imageId;
-  arg.uri = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
-
-  var response = {};
-
-
-  res.format({
-    'application/json': function () {
+function getImage(uri,id,) {
       //Devuelve info triplas
-      if (cache.images[arg.uri] != undefined && cache.images[arg.uri][onturis.dc_created] != undefined) {
-        response[arg.uri] = (response[arg.uri] == undefined) ? {} : response[arg.uri];
-        response[arg.uri] = cache.images[arg.uri];
-        res.status(200).send({ response });
-      }
-      else {
-        queryInterface.getData("details_allprop", arg, sparqlClient)
-          .then((data) => {
-            if (data.results.bindings.length == 0) {
-              res.status(404).send({ response: "La imagen no existe" });
+      return new Promise((resolve, reject) => {
+        let finalResp = {};
+        queryInterface.getIndiv(uri, cache.images).then((data) => {
+            if (data == null) {
+                resolve(errorCodes.annotationNotFound);
             }
             else {
-              cache.images[arg.uri] == undefined ? cache.images[arg.uri] = {} : cache.images[arg.uri];
-              response[arg.uri] = {};
-
-              data.results.bindings.forEach(element => {
-                cache.images[arg.uri][element.prop.value] = element.value;
-                response[arg.uri][element.prop.value] = cache.images[arg.uri][element.prop.value];
-              });
-              res.status(200).send({ response });
+                finalResp.code = 200;
+                finalResp.msg = data;
+                resolve(finalResp);
             }
-
-          })
-          .catch((err) => {
-            console.log("Error en conexión con endpoint");
-            if (err.statusCode != null && err.statusCode != undefined) {
-              res.status(err.statusCode).send({ message: err });
-            }
-            else {
-              err = err.message;
-              res.status(500).send(err);
-            }
-          });
-      }
-    },
-    'image/jpeg': function () {
-      res.redirect(uri_images + id + ".jpg");
-      //res.redirect(uri_images+id+".jpg");
-    },
-    default: function () {
-      // log the request and respond with 406
-      res.status(406).send('Not Acceptable')
-    }
-
-  })
+        });
+    });
 }
 
 /* Para crear una anotación de tipo imagen, 1º creo la imagen en el sistema de ficheros, así tengo la uri y posteriormente creo la anotación de tipo imagen en el Virtuoso
@@ -76,7 +37,6 @@ function uploadImage2SF(idTree, imageBlob) {
 
   return id_image;
 }
-
 
 /**
  * @param  {string} base64str
@@ -157,9 +117,9 @@ function setDataImage(idImage) {
       //Aqui va en forma de promise o callbak 
       resolve(exif);
     })
-    .catch((err) =>{
-      reject(err);
-    })
+      .catch((err) => {
+        reject(err);
+      })
   });
 }
 function getExifData(image_path) {
@@ -179,16 +139,16 @@ function getExifData(image_path) {
           exif_metadata.height = (exifData.exif.ExifImageHeight != undefined) ? exifData.exif.ExifImageHeight : 0;
           exif_metadata.date = (exifData.exif.DateTimeOriginal != undefined) ? exifData.exif.DateTimeOriginal : 0;
 
-          if(exif_metadata.date == 0 ){
-            exif_metadata=helpers.getDateCreated();
+          if (exif_metadata.date == 0) {
+            exif_metadata = helpers.getDateCreated();
           }
-          else{
+          else {
             var parseDate = exif_metadata.date.split(' ')[0].replace(":", "-");
             var date = parseDate + "T" + exif_metadata.date.split(' ')[1] + "Z";
             parseDate = new Date(parseISOString(date));
             exif_metadata.date = parseDate.toISOString().slice(0, -1);
           }
-          
+
           exif_metadata.latImg = 0;
           exif_metadata.longImg = 0;
 
@@ -229,10 +189,87 @@ function parseISOString(s) {
   var b = s.split(/\D+/);
   return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
 }
+
+function createImageVirtuoso(arg, imageBlob, idTree, title, description, depicts) {
+  //const annotationController = require('./annotationController'); // dependencia circular, si se coloca arriba no funciona
+  var idImage = uploadImage2SF(idTree, imageBlob);
+  arg.image = uri_images + idImage;
+  arg.imageId = onturis.data + "image/" + idImage.split('.')[0];//quito la extensión
+  arg.varTriplesImg = "";
+  if (title != undefined) {
+    arg.varTriplesImg = "dc:title \"" + title + "\";";
+  }
+  if (description != undefined) {
+    arg.varTriplesImg += "dc:description \"" + description + "\";";
+  }
+  if (depicts != undefined) {
+    arg.varTriplesImg += "rdf:type <" + depicts + ">;";
+  }
+
+  setDataImage(idImage, arg).then((exif) => {
+    Object.keys(exif).forEach((prop) => {
+      if (prop != undefined)
+        arg[prop] = exif[prop];
+    });
+    if (arg.width != 0 && arg.width != undefined) {
+      arg.varTriplesImg += "exif:imageWidth " + arg.width + ";";
+    }
+    if (arg.height != 0 && arg.width != undefined) {
+      arg.varTriplesImg += "exif:imageLength " + arg.height + ";";
+    }
+    if (arg.latImg != 0 && arg.width != undefined) {
+      arg.varTriplesImg += "geo:lat " + arg.latImg + ";";
+    }
+    if (arg.longImg != 0 && arg.width != undefined) {
+      arg.varTriplesImg += "geo:long " + arg.longImg + ";";
+    }
+
+    //Si la imagen no tiene fecha de creación en los metadatos le pongo la actual
+    if (arg.date == undefined) {
+      arg.date = helpers.getDateCreated();
+    }
+
+    //elimiar arg.varTriplesImg si esta vacio
+    //console.log(arg)
+    queryInterface.getData(nameQueries.createImage, arg, sparqlClient)
+      .then((data) => {
+        if (data.results.bindings.length > 0) {
+          //console.log("Imagen creada correctamente en Virtuoso")
+          //Falta cachear imágenes
+          //Cachéo la anotación recién creada
+          cache.putNewCreationInCache(idImage.split('.')[0], onturis.image, cache.images).then((id) => {
+            //console.log("Imagen " + id + " cacheada");
+          }).catch((err) => {
+            console.log("Error cacheando imagen ", err);
+            /*if (err.statusCode != null && err.statusCode != undefined) {
+                res.status(err.statusCode).send({ message: err });
+            }
+            else {
+                err = err.message;
+                res.status(500).send(err);
+            }*/
+            resolve(errorCodes.errorCache)
+          });
+        }
+      }).catch((err) => {
+        console.log("Error creando imagen en virtuoso ", err);
+        /*if (err.statusCode != null && err.statusCode != undefined) {
+            res.status(err.statusCode).send({ message: err });
+        }
+        else {
+            err = err.message;
+            res.status(500).send(err);
+        }*/
+        resolve(errorCodes.conexionVirtuoso);
+      });
+  });
+
+}
 module.exports = {
   createImage,
   uploadImage2SF,
   setDataImage,
   getImage,
+  createImageVirtuoso
   //getExifData
 }

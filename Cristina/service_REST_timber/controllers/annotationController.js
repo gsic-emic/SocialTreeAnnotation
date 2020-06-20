@@ -1,143 +1,121 @@
-const _ = require('underscore');
 const queryInterface = require('../helpers/queryInterface');
 var cache = require('../models/cache');
 const onturis = require('../config/onturis');
 const config = require('../config/config');
 const imageController = require('./imageController');
-const treeController = require('./treeController');
 const userController = require('./userController');
 const nameQueries = require('../config/queries').nameQueries;
 const errorCodes = require('../config/errorCodes');
-const errorHandler = require('../handlers/errorHandler');
+const helpers = require('../helpers/helpers');
+const httpCodes = require('../config/httpCodes');
 
-async function getAnnotations(req, res) {
-    var arg = {};
-    let nextPage = undefined;
-    var response = {};
-    var fullUrl = "";
-    var irisAnnotations = [];
-    var noCache = [];
-    var id;
+async function getAnnotations(queryParameters, fullUrl) {
+    return new Promise((resolve, reject) => {
+        var arg = {};
+        let nextPage = undefined;
+        var response = {};
+        var irisAnnotations = [];
+        var noCache = [];
+        var id;
+        let finalResp = {};
 
-    let queryParameters = req.query;
-    arg.offset = 0; //por defecto
-    arg.limit = 1000; //por defecto
+        arg.offset = config.offset; //por defecto
+        arg.limit = config.limit; //por defecto
 
-    if (queryParameters.page != undefined) {
-        //Obtener número de página si se ha pasado por parámetro en la url. Si la página solicitada no existe (p.e es un número muy grande) devuelve status code 500, SPARQL Request Failed al hacer la consulta
-        arg.offset = Number(queryParameters.page) * arg.limit;
-    }
-    else {
-        queryParameters.page = 0;
-    }
-    //Listar todas las anotaciones de un usuario
-    if (queryParameters.creator != undefined) {
-        if (queryParameters.creator == "") {
-            res.status(400).send();
+        if (queryParameters.page != undefined) {
+            //Obtener número de página si se ha pasado por parámetro en la url. Si la página solicitada no existe (p.e es un número muy grande) devuelve status code 500, SPARQL Request Failed al hacer la consulta
+            arg.offset = Number(queryParameters.page) * arg.limit;
         }
         else {
-            fullUrl = req.protocol + '://' + req.hostname + req.originalUrl.split('&page')[0];
-            arg.uri_creator = (queryParameters.creator == "ifn") ? onturis.ifn_ontology : onturis.user + queryParameters.creator;
+            queryParameters.page = 0;
+        }
+        //Listar todas las anotaciones de un usuario
+        if (queryParameters.creator != undefined) {
+            if (queryParameters.creator == "") {
+                resolve(errorCodes.userNoExist);
+            }
+            else {
+                arg.uri_creator = (queryParameters.creator == "ifn") ? onturis.ifn_ontology : onturis.user + queryParameters.creator;
 
-            queryInterface.getData("annotations_uris_creator", arg, sparqlClient)
-                .then((data) => {
-                    irisAnnotations = Object.keys(data);
-                    if (irisAnnotations.length == 0) {
-                        res.status(204).send();
-                    }
-                    else {
-                        //Si hay más páginas las incluyo
-                        if (irisAnnotations.length == arg.limit) {
-                            nextPage = { "url": `${fullUrl}&page=${Number(queryParameters.page) + 1}` };
-                        }
-                        //COMPROBAR SI ESTÁN CACHEADAS
-                        irisAnnotations.forEach(annot => {
-                            if (cache.annotations[annot] != undefined) {
-                                noCache = noCache.filter(e => e !== annot);
-                                response[annot] = cache.annotations[annot];
-                            }
-                            else {
-                                noCache.push(annot);
-                            }
-                        });
-
-                        // Si hay alguna anotación no cacheada consulto al virtuoso sobre él
-                        if (noCache.length != 0) {
-                            arg = {};
-                            arg.uri = noCache.toString().replace(/,/g, '>, <');
-                            queryInterface.getData("details_allprop", arg, sparqlClient)
-                                .then((data) => {
-                                    data.results.bindings.forEach(element => {
-                                        id = element.iri.value;
-                                        cache.annotations[id] = cache.annotations[id] == undefined ? {} : cache.annotations[id];
-                                        response[id] = response[id] == undefined ? {} : response[id];
-                                        cache.annotations[id][element.prop.value] = element.value;
-                                        response[id][element.prop.value] = cache.annotations[id][element.prop.value];
-                                        noCache = noCache.filter(e => e !== id);
-                                    })
-                                    res.status(200).send({ response, nextPage });
-                                })
+                queryInterface.getData(nameQueries.annotationsUrisCreator, arg, sparqlClient)
+                    .then((data) => {
+                        irisAnnotations = Object.keys(data);
+                        if (irisAnnotations.length == 0) {
+                            resolve(httpCodes.empty);
                         }
                         else {
-                            res.status(200).send({ response, nextPage });
+                            //Si hay más páginas las incluyo
+                            if (irisAnnotations.length == arg.limit) {
+                                nextPage = { "url": `${fullUrl}&page=${Number(queryParameters.page) + 1}` };
+                            }
+                            //COMPROBAR SI ESTÁN CACHEADAS
+                            irisAnnotations.forEach(annot => {
+                                if (cache.annotations[annot] != undefined) {
+                                    noCache = noCache.filter(e => e !== annot);
+                                    response[annot] = cache.annotations[annot];
+                                }
+                                else {
+                                    noCache.push(annot);
+                                }
+                            });
+
+                            // Si hay alguna anotación no cacheada consulto al virtuoso sobre él
+                            if (noCache.length != 0) {
+                                arg = {};
+                                arg.uri = noCache.toString().replace(/,/g, '>, <');
+                                queryInterface.getData(nameQueries.detailsAll, arg, sparqlClient)
+                                    .then((data) => {
+                                        data.results.bindings.forEach(element => {
+                                            id = element.iri.value;
+                                            cache.annotations[id] = cache.annotations[id] == undefined ? {} : cache.annotations[id];
+                                            response[id] = response[id] == undefined ? {} : response[id];
+                                            cache.annotations[id][element.prop.value] = element.value;
+                                            response[id][element.prop.value] = cache.annotations[id][element.prop.value];
+                                            noCache = noCache.filter(e => e !== id);
+                                        })
+                                        finalResp.code = 200;
+                                        finalResp.msg = { response, nextPage };
+                                        resolve(finalResp);
+                                    })
+                            }
+                            else {
+                                finalResp.code = 200;
+                                finalResp.msg = { response, nextPage };
+                                resolve(finalResp);
+                            }
                         }
-                    }
-                }).catch((err) => {
-                    console.log("Error en conexión con endpoint");
-                    if (err.statusCode != null && err.statusCode != undefined) {
-                        res.status(err.statusCode).send({ message: err });
-                    }
-                    else {
-                        err = err.message;
-                        res.status(500).send(err);
-                    }
-                });
-        }
-    }
-}
-async function getAnnotation(req, res) {
-    var arg = {};
-    arg.uri = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
-    var response = {};
-
-    if (cache.annotations[arg.uri] != undefined && cache.annotations[arg.uri][onturis.dc_created] != undefined) {
-        response[arg.uri] = (response[arg.uri] == undefined) ? {} : response[arg.uri];
-        response[arg.uri] = cache.annotations[arg.uri];
-        res.status(200).send({ response });
-    }
-    else {
-        queryInterface.getData("details_allprop", arg, sparqlClient)
-            .then((data) => {
-                if (data.results.bindings.length == 0) {
-                    res.status(404).send({ response: "La anotación no existe" });
-                }
-                else {
-                    var id = req.params.annotationId;
-                    cache.annotations[arg.uri] == undefined ? cache.annotations[arg.uri] = {} : cache.annotations[arg.uri];
-                    response[arg.uri] = {};
-
-                    data.results.bindings.forEach(element => {
-                        cache.annotations[arg.uri][element.prop.value] = element.value;
-                        response[arg.uri][element.prop.value] = cache.annotations[arg.uri][element.prop.value];
+                    }).catch((err) => {
+                        console.log("Error en conexión con endpoint ", err);
+                        /*if (err.statusCode != null && err.statusCode != undefined) {
+                            res.status(err.statusCode).send({ message: err });
+                        }
+                        else {
+                            err = err.message;
+                            res.status(500).send(err);
+                        }*/
+                        resolve(errorCodes.conexionVirtuoso);
                     });
-                    res.status(200).send({ response });
-                }
-
-            })
-            .catch((err) => {
-                console.log("Error en conexión con endpoint");
-                if (err.statusCode != null && err.statusCode != undefined) {
-                    res.status(err.statusCode).send({ message: err });
-                }
-                else {
-                    err = err.message;
-                    res.status(500).send(err);
-                }
-            });
-    }
+            }
+        }
+    });
+}
+async function getAnnotation(uri) {
+    return new Promise((resolve, reject) => {
+        let finalResp = {};
+        queryInterface.getIndiv(uri, cache.annotations).then((data) => {
+            if (data == null) {
+                resolve(errorCodes.annotationNotFound);
+            }
+            else {
+                finalResp.code = 200;
+                finalResp.msg = data;
+                resolve(finalResp);
+            }
+        });
+    });
 }
 
-function createAnnotation(req, res) {
+function createAnnotation(url_Base_sta, bodyParameters, authorization) {
     /**
      * Siempre pasar estos 3 paramétros:
      * id => uri del árbol
@@ -153,138 +131,100 @@ function createAnnotation(req, res) {
      *   image (la imagen en base64)
      *   Optativos: title, description, depicts (bueno este último igual debería ser obligatorio...)
      */
-
-
-    // Primero ver si es un usuario autenticado, sino no puede crear datos:
-    if (req.headers.authorization != undefined) {
-        // parse login and password from headers
-        const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
-        const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':');
-
-        //console.log(login, password);
-        var bodyParameters = req.body;
+    return new Promise((resolve, reject) => {
         var creator = bodyParameters.creator;
+
         if (creator == undefined) {
-            res.status(400).send({ error: "Faltan campos obligatorios para la creación de la anotación: creador" });
+            resolve(errorCodes.emptyRequiredFields)
         }
         else {
-            if (login == creator.split("user/")[1]) { //Daría problemas si  creator es undefined
-                //Comprobar que el login coindice con creator para modificaciones del usuario y el password con el hash almacenado en el fichero .passwd
-                userController.processLineByLine(login, password).then((userValidate) => {
-                    if (userValidate) {
-                        //console.log("Usuario autenticado");
-                        sparqlClient.setDefaultGraph(config.defaultGraph);
+            var idUser = creator.split("user/")[1];
+            userController.checkAuth(authorization, idUser).then((auth) => {
+                if (auth === httpCodes.authorized) {
+                    //console.log("Usuario autenticado");
+                    sparqlClient.setDefaultGraph(config.defaultGraph);
+                    var idTree = bodyParameters.id.split("tree/")[1]; //me quedo el id solo
+                    var uri_tree = bodyParameters.id;
+                    var type = bodyParameters.type;
+                    var typeEnum = {
+                        position: "position",
+                        species: "species",
+                        image: "image"
+                    };
+                    var validate = false;
 
-                        var idTree = bodyParameters.id.split("tree/")[1]; //me quedo el id solo
-                        var uri_tree = bodyParameters.id;
-                        var type = bodyParameters.type;
-                        var typeEnum = {
-                            position: "position",
-                            species: "species",
-                            image: "image"
-                        };
+                    if (url_Base_sta.slice(-1) != "/")
+                        url_Base_sta += "/";
 
-                        var validate = false;
+                    if (idTree == undefined)
+                        resolve(errorCodes.treeNoExist)
 
-
-                        var url_Base_sta = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
-                        if (url_Base_sta.slice(-1) != "/")
-                            url_Base_sta += "/";
-
-                        var idAnnot = null;
-
-                        //console.log(bodyParameters);
-
-
-                        if (idTree == undefined) {
-                            res.status(404).send({ "error": uri_tree + " no existe" });
-                        }
-                        else {
-                            // Comprobar que estos 3 campos están sino 400 Bad Request
-                            if (uri_tree != undefined && type != undefined && creator != undefined) {
-                                //Habría que comprobar que el árbol y el usuario existen y que el tipo es uno de los definidos (no lo compruebo, ya que habria que ver si está en la caché y sino en  el virtuoso. Líneas futuras)
-
-                                var promiseCheckData = new Promise((resolve, reject) => {
-                                    //Comprobar si el árbol está cacheado y sino consulto al virtuoso.
-                                    if (cache.trees[uri_tree] != undefined) {
-                                        //console.log("Árbol " + idTree + " cacheado");
-                                        //Habría que comprobar que el usuario existe (ánalogo al árbol)
-                                        //console.log("Comprobar si el usuario existe");
-                                        validate = true;
-                                        resolve(validate);
-                                    }
-                                    else {
-                                        treeController.getTreeVirtuoso(uri_tree).then((data) => {
-                                            if (data == null) {
-                                                reject(errorCodes.treeNoExist);
-                                            }
-                                            else {
-                                                //Árbol existe
-                                                //console.log("El árbol existe");
-                                                //Habría que comprobar que el usuario existe (ánalogo al árbol)
-                                                //console.log("Comprobar si el usuario existe");
-                                                validate = true;
-                                                resolve(validate);
-                                            }
-                                        }).catch((err) => {
-                                            console.log(err)
-                                            reject(err);
-                                        })
-                                    }
-                                });
-
-                                promiseCheckData.then((validate) => {
-                                    if (validate) {
-                                        //Compruebo el tipo
-                                        if (Object.values(typeEnum).includes(type)) {
-                                            return createAnn(bodyParameters, typeEnum, cache.trees[uri_tree]);
-                                        }
-                                    }
-                                })
-                                    .then((response) => {
-                                        res.status(response.statusCode).send(response.message);
-                                    })
-                                    .catch((err) => {
-                                        errorHandler.sendError(res, err)
-                                    })
-                            }
-                            /*/else
-                                res.status(400).send({ "error": "La anotación de tipo " + type + " no existe" });
-                        }
-                        else
-                            res.status(400).send({ "error": "El usuario " + creator + " no existe" });
-                        }
-                        else
-                        res.status(400).send({ "error": "El árbol " + idTree + " no existe" });
-                        }*/
-                            else {
-                                res.status(400).send({ "error": "Faltan campos obligatorios para crear la anotación" });
-                            }
-                        }
-                    }
                     else {
-                        res.status(401).send('Unauthorized: Contraseña incorrecta')
-                    }
-                });
-            }
-            else {
-                res.status(401).send('Unauthorized: El creador no coincide con la autenticación')
-            }
-        }
-    }
-    else {
-        res.status(401).send('Unauthorized')
-    }
-}
+                        // Comprobar que estos 3 campos están sino 400 Bad Request
+                        if (uri_tree != undefined && type != undefined && creator != undefined) {
+                            //Habría que comprobar que el árbol y el usuario existen y que el tipo es uno de los definidos (no lo compruebo, ya que habria que ver si está en la caché y sino en  el virtuoso. Líneas futuras)
 
+                            var promiseCheckData = new Promise((resolve, reject) => {
+                                //Comprobar si el árbol está cacheado y sino consulto al virtuoso.
+                                if (cache.trees[uri_tree] != undefined) {
+                                    //console.log("Árbol " + idTree + " cacheado");
+                                    //Habría que comprobar que el usuario existe (ánalogo al árbol)
+                                    //console.log("Comprobar si el usuario existe");
+                                    validate = true;
+                                    resolve(validate);
+                                }
+                                else {
+                                    queryInterface.getIndiv(uri_tree, cache.trees).then((data) => {
+                                        if (data == null) {
+                                            resolve(errorCodes.treeNoExist);
+                                        }
+                                        else {
+                                            //Árbol existe
+                                            //console.log("El árbol existe");
+                                            //Habría que comprobar que el usuario existe (ánalogo al árbol)
+                                            //console.log("Comprobar si el usuario existe");
+                                            validate = true;
+                                            resolve(validate);
+                                        }
+                                    }).catch((err) => {
+                                        console.log(err)
+                                        resolve(errorCodes.conexionVirtuoso);
+                                    })
+                                }
+                            });
+
+                            promiseCheckData.then((validate) => {
+                                if (validate==true) {
+                                    //Compruebo el tipo
+                                    if (Object.values(typeEnum).includes(type)) {
+                                        return createAnn(bodyParameters, typeEnum, cache.trees[uri_tree]);
+                                    }
+                                }
+                                else{
+                                    resolve(validate);
+                                }
+                            }).then((response) => {
+                                resolve(response);
+                            }).catch((err) => {
+                                console.log(err)
+                                //errorHandler.sendError(res, err)
+                                resolve(errorCodes.conexionVirtuoso);
+                            })
+                        }
+                        else
+                            resolve(errorCodes.emptyRequiredFields);
+                    }
+                }
+                else
+                    resolve(auth);
+            });
+        }
+    });
+}
 
 function createAnn(bodyParameters, typeEnum, tree) {
     sparqlClient.setDefaultGraph(config.defaultGraph);
 
-    var response = {
-        statusCode: "",
-        message: ""
-    }
     var querys = [];
     var querysFirst = [];
     var arg = {};
@@ -313,7 +253,7 @@ function createAnn(bodyParameters, typeEnum, tree) {
                 arg.type = onturis.positionAnnotation;
                 arg.typePrimary = onturis.primaryPosition;
 
-                querysFirst.push(queryInterface.getData("update_primary_annotation", arg, sparqlClient));
+                querysFirst.push(queryInterface.getData(nameQueries.updatePrimaryAnnotation, arg, sparqlClient));
                 nameQuery = nameQueries.createAnnotationPosition;
                 //Actualizar caché
                 tree.lat = arg.lat;
@@ -344,50 +284,13 @@ function createAnn(bodyParameters, typeEnum, tree) {
                     arg.type = onturis.speciesAnnotation;
                     arg.typePrimary = onturis.primarySpecies;
 
-                    querysFirst.push(queryInterface.getData("update_primary_annotation", arg, sparqlClient));
+                    querysFirst.push(queryInterface.getData(nameQueries.updatePrimaryAnnotation, arg, sparqlClient));
                     nameQuery = nameQueries.createAnnotationSpecies;
 
                     //Actualizar caché
                     tree.species = arg.species;
                     delete tree[onturis.prHasPrimarySpecies]; //Borrar la antigua
 
-                    /*nameQuery = "create_annotation_species";
-                    var idAnnot = treeController.createAnnotation(arg, idTree, onturis.primarySpecies, querys, nameQuery);
-
-
-                    console.log("Anotación " + idAnnot);
-                    arg.annotation = onturis.data + "annotation/" + idAnnot;
-
-                    // Asociar anotación creada al árbol
-                    arg.id = idTree; //solo el id no a uri completa... (prefiero cambiar la query y madar la uri completa). Cambiar
-
-                    arg.hasAnnotation = onturis.prHasPrimarySpecies;
-
-                    querys.push(queryInterface.getData("add_annotation_tree", arg, sparqlClient));
-
-                    Promise.all(querys).then((data) => {
-                        console.log("Árbol actualizado: se han asociado las anotaciones");
-                        querys = [];
-                        response.statusCode = 201;
-                        response.message = "Anotación " + idAnnot + " creada correctamente.";
-
-                        resolve(response);
-                    })
-                        .catch((err) => {
-                            console.log("Error asociando anotación al árbol en virtuoso");
-                            err.statusCode = 500;
-                            reject(err);
-                        });
-
-                    //Posteriormente cachear todo.
-                    tree.species = arg.species;
-
-                })
-                    .catch((err) => {
-                        console.log("Error asociando anotación al árbol en virtuoso");
-                        err.statusCode = 500;
-                        reject(err);
-                    });*/
                 }
                 else {
                     //console.log("No tiene especie");
@@ -437,7 +340,7 @@ function createAnn(bodyParameters, typeEnum, tree) {
                     }
                     //eliminar arg.varTriplesImg si esta vacio
                     //console.log(arg)
-                    queryInterface.getData("create_image", arg, sparqlClient)
+                    queryInterface.getData(nameQueries.createImage, arg, sparqlClient)
                         .then((data) => {
                             if (data.results.bindings.length > 0) {
                                 //console.log("Imagen creada correctamente en Virtuoso");
@@ -445,29 +348,25 @@ function createAnn(bodyParameters, typeEnum, tree) {
                                     //console.log("Imagen " + id + " cacheada");
                                 }).catch((err) => {
                                     console.log("Error cacheando imagen");
-                                    reject(err);
+                                    reject(errorCodes.errorCache);
                                 });
                             }
                         }).catch((err) => {
-                            console.log("Error creando imagen en virtuoso");
-                            err.statusCode = 500;
-                            reject(err);
+                            console.log("Error creando imagen en virtuoso", err);
+                            reject(errorCodes.internalError);
                         });
-                })
-                    .catch((err) => {
-                        console.log("Error leyendo exif imagen, no se puede continuar");
-                        err.statusCode = 400;
-                        err.statusMessage = "Error leyendo exif imagen";
-                        reject(err);
-                    });
+                }).catch((err) => {
+                    console.log("Error leyendo exif imagen, no se puede continuar ", err);
+                    reject(errorCodes.errorExif);
+                });
 
-                nameQuery = "create_annotation_image";
+                nameQuery = nameQueries.createAnnotationImage;
 
                 break;
         }
 
         Promise.all(querysFirst).then((data) => {
-            idAnnot = treeController.createAnnotation(arg, idTree, type, querys, nameQuery);
+            idAnnot = createAnnotationVirtuoso(arg, idTree, type, querys, nameQuery);
 
             // Asociar anotación creada al árbol
             arg.annotation = onturis.data + "annotation/" + idAnnot;
@@ -482,7 +381,7 @@ function createAnn(bodyParameters, typeEnum, tree) {
             else if (idAnnot.split("-")[0] == "i") {
                 arg.hasAnnotation = onturis.prHasImageAnnotation;
             }
-            querys.push(queryInterface.getData("add_annotation_tree", arg, sparqlClient));
+            querys.push(queryInterface.getData(nameQueries.addAnnotationTree, arg, sparqlClient));
 
 
             Promise.all(querys).then((data) => {
@@ -494,7 +393,7 @@ function createAnn(bodyParameters, typeEnum, tree) {
                 cache.putNewCreationInCache(idAnnot, onturis.annotation, cache.annotations).then((id) => {
                     //console.log("Anotación " + id + " cacheada");
                 }).catch((err) => {
-                    reject(err);
+                    reject(errorCodes.errorCache);
                 });
 
                 //Cachear árbol
@@ -502,32 +401,51 @@ function createAnn(bodyParameters, typeEnum, tree) {
                 cache.putNewCreationInCache(idTree, onturis.tree, cache.trees).then((id) => {
                     //console.log("Árbol " + id + " cacheado");
                 }).catch((err) => {
-                    console.log("Error cacheando árbol");
-                    reject(err);
+                    console.log("Error cacheando árbol", err);
+                    reject(errorCodes.errorCache);
                 });
                 querys = [];
-                response.statusCode = 201;
-                response.message = "Anotación " + idAnnot + " creada correctamente.";
-                resolve(response);
-            })
-                .catch((err) => {
-                    console.log("Error en conexión con endpoint");
-                    err.statusCode = 400;
-                    err.statusMessage += ": Error asociando anotaciones al árbol";
-                    reject(err);
-                });
+                resolve(httpCodes.annotCreated);
+            }).catch((err) => {
+                console.log("Error en conexión con endpoint", err);
+                /*err.statusCode = 400;
+                err.statusMessage += ": Error asociando anotaciones al árbol";*/
+                reject(errorCodes.conexionVirtuoso);
+            });
         })
-    })
-        .catch((err) => {
-            err.statusCode = 400;
-            err.statusMessage += ": Error en querysFirst";
-            reject(err);
-        });
+    }).catch((err) => {
+        console.log("Error en conexión con endpoint", err);
+        /*err.statusCode = 400;
+            err.statusMessage += ": Error en querysFirst";*/
+        reject(errorCodes.conexionVirtuoso);
+    });
+}
 
+function createAnnotationVirtuoso(arg, idTree, type, querys, nameQuery) {
+    var dateISO = helpers.getDateCreated();
+    arg.date = dateISO;
+    arg.type = type;
+    var idAnnot = helpers.generateId().id;
+    var stringType = "";
+    if (type == onturis.imageAnnotation)
+        stringType = "i";
+    else if (type == onturis.positionAnnotation || type == onturis.primaryPosition || type == onturis.assertedPosition)
+        stringType = "p";
+    else if (type == onturis.speciesAnnotation || type == onturis.primarySpecies || type == onturis.assertedSpecies)
+        stringType = "s";
+    else // No se debería dar nunca
+        stringType = "a";
 
+    idAnnot = stringType + "-" + idTree + "_" + idAnnot;
+    arg.id = idAnnot;
+    //console.log(arg)
+
+    querys.push(queryInterface.getData(nameQuery, arg, sparqlClient));
+    return idAnnot;
 }
 
 //Podría hacerse una función para validar que los datos son correctos antes de crear la anotación ya que ahora mismo se puede crear una anotación de un árbol que no existe.
+/*
 function validateData(params) {
     var validate = false;
 
@@ -550,9 +468,11 @@ function validateData(params) {
 
     return validate;
 }
+*/
 
 module.exports = {
     getAnnotations,
     getAnnotation,
-    createAnnotation
+    createAnnotation,
+    createAnnotationVirtuoso
 }

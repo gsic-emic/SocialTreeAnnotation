@@ -1,5 +1,6 @@
-// Fichero para definir mensajes de error que se van a lanzar por el resto de la aplicación
-
+/**
+ * Fichero para definir los códigos y mensajes de error que se van a lanzar
+ */
 module.exports = {
     "notFound": " no encontrado",
     "notAllowed": "no permitido",
@@ -64,8 +65,29 @@ module.exports = {
         "msg":"Login ya usado"
     },
     "userNotFound":{
-        "code": 400,
+        "code": 404,
         "msg":"El usuario no existe"
-    }
+    },
+    "treeNotFound":{
+        "code": 404,
+        "msg":"El árbol no existe"
+    },
+    "userNoExist":{
+        "code": 400,
+        "msg":"Es necesario indicar un creador"
+    },
+    "annotationNotFound":{
+        "code": 404,
+        "msg":"La anotación no existe"
+    },
+    "errorCache":{
+        "code": 500,
+        "msg":"Erro cacheando objeto"
+    },
+    "errorExif":{
+        "code": 400,
+        "msg": "Error leyendo exif imagen"
+
+    },
 
 }

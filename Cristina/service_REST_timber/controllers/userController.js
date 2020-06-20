@@ -2,19 +2,15 @@ const queryInterface = require('../helpers/queryInterface');
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
-const errorHandler = require('../handlers/errorHandler');
 const nameQueries = require('../config/queries').nameQueries;
 const helpers = require('../helpers/helpers');
-
-var config = require('../config/config');
+const config = require('../config/config');
 var cache = require('../models/cache');
-var bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const errorCodes = require('../config/errorCodes');
 const httpCodes = require('../config/httpCodes');
-
 const onturis = require('../config/onturis');
-const { resolve } = require('path');
-const { reject } = require('underscore');
+
 /**
  * Usuarios: => foaf:Person
  *  - Nombre => nombre => foaf:firstName
@@ -25,7 +21,6 @@ const { reject } = require('underscore');
  */
 async function getUsers(queryParameters, fullUrl) {
     return new Promise((resolve, reject) => {
-
         var arg = {};
         let nextPage = undefined;
         var response = {};
@@ -34,8 +29,8 @@ async function getUsers(queryParameters, fullUrl) {
         var id;
         var finalResp = {};
 
-        arg.offset = 0; //por defecto
-        arg.limit = 1000; //por defecto
+        arg.offset = config.offset; //por defecto
+        arg.limit = config.limit; //por defecto
 
         if (queryParameters.page != undefined)
             //Obtener número de página si se ha pasado por parámetro en la url. Si la página solicitada no existe (p.e es un número muy grande) devuelve status code 500, SPARQL Request Failed al hacer la consulta
@@ -82,18 +77,17 @@ async function getUsers(queryParameters, fullUrl) {
                                     noCache = noCache.filter(e => e !== id);
                                 })
                                 finalResp.code = 200;
-                                finalResp.msg = {response, nextPage};
+                                finalResp.msg = { response, nextPage };
                                 resolve(finalResp)
                             })
                     }
                     else {
                         finalResp.code = 200;
-                        finalResp.msg = {response, nextPage};
+                        finalResp.msg = { response, nextPage };
                         resolve(finalResp)
                     }
                 }
             }).catch((err) => {
-                console.log("Error en conexión con endpoint");
                 /*if (err.statusCode != null && err.statusCode != undefined) {
                     res.status(err.statusCode).send({ message: err });
                 }
@@ -102,51 +96,25 @@ async function getUsers(queryParameters, fullUrl) {
                     res.status(500).send(err);
                 }*/
                 console.log("Error en conexión con endpoint: ", err);
-                resolve(errorCodes.conexionVirtuoso)
-
+                resolve(errorCodes.conexionVirtuoso);
             });
     });
 }
 
 async function getUser(uri) {
+    console.log("getUser",cache.users)
     return new Promise((resolve, reject) => {
-
-        var arg = {};
-        arg.uri = uri;
-        var response = {};
-        var finalResp = {};
-
-        if (cache.users[arg.uri] != undefined && cache.users[arg.uri][onturis.dc_created] != undefined) {
-            response[arg.uri] = (response[arg.uri] == undefined) ? {} : response[arg.uri];
-            response[arg.uri] = cache.users[arg.uri];
-            finalResp.code = 200;
-            finalResp.msg = response;
-            resolve(finalResp);
-        }
-        else {
-            queryInterface.getData(nameQueries.detailsAll, arg, sparqlClient)
-                .then((data) => {
-                    if (data.results.bindings.length == 0)
-                        resolve(errorCodes.userNotFound)
-                    else {
-                        cache.users[arg.uri] == undefined ? cache.users[arg.uri] = {} : cache.users[arg.uri];
-                        response[arg.uri] = {};
-
-                        data.results.bindings.forEach(element => {
-                            cache.users[arg.uri][element.prop.value] = element.value;
-                            response[arg.uri][element.prop.value] = cache.users[arg.uri][element.prop.value];
-                        });
-                        finalResp.code = 200;
-                        finalResp.msg = response;
-                        resolve(finalResp);
-                    }
-
-                })
-                .catch((err) => {
-                    console.log("Error en conexión con endpoint: ", err);
-                    resolve(errorCodes.conexionVirtuoso)
-                });
-        }
+        let finalResp = {};
+        queryInterface.getIndiv(uri, cache.users).then((data) => {
+            if (data == null) {
+                resolve(errorCodes.userNotFound);
+            }
+            else {
+                finalResp.code = 200;
+                finalResp.msg = data;
+                resolve(finalResp);
+            }
+        });
     });
 }
 
@@ -176,7 +144,7 @@ async function createUpdateUser(idUser, uri_user, bodyParameters, authorization)
                     if (cache.users[uri_user] != undefined)
                         resolve(errorCodes.usedLogin)
                     else {
-                        getUserVirtuoso(uri_user).then((user) => {
+                        queryInterface.getIndiv(uri_user, cache.users).then((user) => {
                             if (user == null) {
                                 password = password.toString();
                                 bcrypt.hash(password, config.saltRounds).then((hashPass) => {
@@ -242,61 +210,7 @@ async function createUpdateUser(idUser, uri_user, bodyParameters, authorization)
     });
 }
 
-async function getUserVirtuoso(id) {
-    sparqlClient.setDefaultGraph();
-    var arg = {};
-    arg.uri = id;
-    var existe = false;
-
-    return new Promise((resolve, reject) => {
-        queryInterface.getData("details_allprop", arg, sparqlClient)
-            .then((data) => {
-                if (data.results.bindings.length == 0) {
-                    resolve(null);
-                }
-                else {
-                    cache.users[arg.uri] == undefined ? cache.users[arg.uri] = {} : cache.users[arg.uri];
-
-                    data.results.bindings.forEach(element => {
-                        if (cache.users[arg.uri][element.prop.value] != undefined) //para cachear un objeto que tiene una propiedad repetida- Por ejemplo un árbol con múltiples hasImgeAnnotation
-                        {
-                            exite = false;
-                            if (!Array.isArray(cache.users[arg.uri][element.prop.value])) {
-                                //No está creado el array
-                                if (Object.is(cache.users[arg.uri][element.prop.value], element.value)) {
-                                    //console.log("existe")
-                                    existe = true;
-                                }
-                                if (!existe) {
-                                    cache.users[arg.uri][element.prop.value] = [cache.users[arg.uri][element.prop.value]];
-                                    cache.users[arg.uri][element.prop.value].push(element.value);
-                                }
-                            }
-                            else {
-                                // Si ya existe el elemento en el array no lo añado
-                                for (var i = 0; i < cache.users[arg.uri][element.prop.value].length; i++) {
-                                    if (element.value.value == cache.users[arg.uri][element.prop.value][i].value) {
-                                        existe = true;
-                                    }
-                                }
-                                if (!existe)
-                                    cache.users[arg.uri][element.prop.value].push(element.value);
-                            }
-                        }
-                        else {
-                            cache.users[arg.uri][element.prop.value] = element.value;
-                        }
-                    });
-                    resolve(cache.users[arg.uri]);
-                }
-            })
-            .catch((err) => {
-                reject(err.statusCode);
-            });
-    });
-}
-
-async function processLineByLine(login, password) {
+async function checkLoginInFile(login, password) {
     return new Promise((resolve, reject) => {
         const fileStream = fs.createReadStream(path.resolve(config.filenamePasswd));
         var user;
@@ -334,7 +248,7 @@ async function processLineByLine(login, password) {
 async function loginUser(login, password) {
     return new Promise((resolve, reject) => {
         if (login != undefined && password != undefined)
-            processLineByLine(login, password).then((userValidate) => resolve(userValidate));
+            checkLoginInFile(login, password).then((userValidate) => resolve(userValidate));
         else
             resolve(errorCodes.emptyUserPass);
     });
@@ -350,7 +264,7 @@ function checkAuth(auth_header, idUser) {
 
             if (login == idUser)
                 //Comprobar que el login coindice con idUser para modificaciones del usuario y el password con el hash almacenado en el fichero .passwd
-                processLineByLine(login, password).then((userValidate) => resolve(userValidate))
+                checkLoginInFile(login, password).then((userValidate) => resolve(userValidate))
             else
                 //Login de autenticación básica no coincide con el id de la url
                 resolve(errorCodes.badLogin)
@@ -364,6 +278,6 @@ module.exports = {
     getUsers,
     getUser,
     createUpdateUser,
-    processLineByLine,
-    loginUser
+    loginUser,
+    checkAuth
 }
