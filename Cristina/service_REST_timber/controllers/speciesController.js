@@ -30,12 +30,17 @@ async function getSpecies(fullUrl) {
         fullUrl = fullUrl.split('?page=')[0];
 
         if (Object.keys(especies).length == 0) {
-            getSpeciesInfo(function () {
+            getSpeciesInfo(function (err) {
+                if (err != undefined) {
+                    resolve(err);
+                }
+                else {
                 console.info("Info de especies cargada");
                 finalResp.code = 200;
                 response = especies;
                 finalResp.msg = { response, nextPage };
                 resolve(finalResp);
+                }
             });
         }
         else {
@@ -52,49 +57,55 @@ function getSpeciesInfo(callback) {
     // inicializo lista con las especies top
     var suristop = _.toArray(onturis.ifn_especiesTop);
     // obtengo subclases de suristop
-    getSubclassesSpecies(suristop, function () { // aquí ya tengo la taxonomía de especies
-        var suris = _.keys(especies);
-        queryInterface.getPropsResources(queryInterface, suris, [onturis.prifnScientificName, onturis.prifnVulgarName,
-        onturis.prifnWikipediaPage, onturis.prifnSameAs],
-            especies, function () {
-                // callback?
-                if (callback != undefined)
-                    callback();
-            });
+    getSubclassesSpecies(suristop, function (err) { // aquí ya tengo la taxonomía de especies
+        if (err != undefined) {
+            callback(err);
+        }
+        else {
+            var suris = _.keys(especies);
+            queryInterface.getPropsResources(queryInterface, suris, [onturis.prifnScientificName, onturis.prifnVulgarName,
+            onturis.prifnWikipediaPage, onturis.prifnSameAs],
+                especies, function () {
+                    // callback?
+                    if (callback != undefined)
+                        callback();
+                })
 
-        // guardo la lista expandida de especies para cada una (lo hace rápido y bien)
-        var evsuris = _.keys(especies);
-        while (evsuris.length > 0) {
-            var newevsuris = [];
-            _.each(evsuris, function (suri) {
-                // recupero especie
-                var especie = especies[suri];
-                // ajusto nivel (para determinar si es especie/género/familia/clase)
-                if (especie.nivel == undefined)
-                    especie.nivel = 0;
-                else
-                    especie.nivel++;
-                // obtengo la uri de cualquier subespecie sin expandir
-                var algsubsuri = _.find(especie.subclasses, function (subsuri) {
-                    return especies[subsuri].expuris == undefined;
-                });
-                // si no está definida, puedo hacer la expansión de uris
-                if (algsubsuri == undefined) {
-                    // inicializo con la uri de la propia especie
-                    especie.expuris = [suri];
-                    // y ahora incluimos las de la subclases
-                    _.each(especie.subclasses, function (subsuri) {
-                        especie.expuris = _.union(especie.expuris, especies[subsuri].expuris);
+            // guardo la lista expandida de especies para cada una (lo hace rápido y bien)
+            var evsuris = _.keys(especies);
+            while (evsuris.length > 0) {
+                var newevsuris = [];
+                _.each(evsuris, function (suri) {
+                    // recupero especie
+                    var especie = especies[suri];
+                    // ajusto nivel (para determinar si es especie/género/familia/clase)
+                    if (especie.nivel == undefined)
+                        especie.nivel = 0;
+                    else
+                        especie.nivel++;
+                    // obtengo la uri de cualquier subespecie sin expandir
+                    var algsubsuri = _.find(especie.subclasses, function (subsuri) {
+                        return especies[subsuri].expuris == undefined;
                     });
-                }
-                else // hay que esperar a la siguiente iteración
-                    newevsuris.push(suri);
-            });
-            // actualizo lista de tipos a evaluar
-            evsuris = newevsuris;
+                    // si no está definida, puedo hacer la expansión de uris
+                    if (algsubsuri == undefined) {
+                        // inicializo con la uri de la propia especie
+                        especie.expuris = [suri];
+                        // y ahora incluimos las de la subclases
+                        _.each(especie.subclasses, function (subsuri) {
+                            especie.expuris = _.union(especie.expuris, especies[subsuri].expuris);
+                        });
+                    }
+                    else // hay que esperar a la siguiente iteración
+                        newevsuris.push(suri);
+                });
+                // actualizo lista de tipos a evaluar
+                evsuris = newevsuris;
+            }
         }
     });
 }
+
 function getSubclassesSpecies(sturis, callback) {
     var nrequests = sturis.length;
     _.each(sturis, function (sturi) {
@@ -118,18 +129,10 @@ function getSubclassesSpecies(sturis, callback) {
             // callback?
             if (nrequests <= 0 && callback != undefined)
                 callback();
-        })
-            .catch((err) => {
-                console.log("Error en conexión con endpoint ", err);
-                /*if (err.statusCode != null && err.statusCode != undefined) {
-                    res.status(err.statusCode).send({ message: err });
-                }
-                else {
-                    err = err.message;
-                    res.status(500).send(err);
-                }*/
-                resolve(errorCodes.conexionVirtuoso)
-            });
+        }).catch((err) => {
+            console.log("Error en conexión con endpoint SPECIES", err);
+            callback(errorCodes.conexionVirtuoso);
+        });
     });
 }
 function initClass(objbase, cluri) {

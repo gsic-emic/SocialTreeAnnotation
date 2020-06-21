@@ -11,22 +11,23 @@ var cache = require('../models/cache');
 const onturis = require('../config/onturis');
 const { nameQueries } = require('../config/queries');
 const errorCodes = require('../config/errorCodes');
+const { reject } = require('underscore');
 
-function getImage(uri,id,) {
-      //Devuelve info triplas
-      return new Promise((resolve, reject) => {
-        let finalResp = {};
-        queryInterface.getIndiv(uri, cache.images).then((data) => {
-            if (data == null) {
-                resolve(errorCodes.annotationNotFound);
-            }
-            else {
-                finalResp.code = 200;
-                finalResp.msg = data;
-                resolve(finalResp);
-            }
-        });
+function getImage(uri, id,) {
+  //Devuelve info triplas
+  return new Promise((resolve, reject) => {
+    let finalResp = {};
+    queryInterface.getIndiv(uri, cache.images).then((data) => {
+      if (data == null) {
+        resolve(errorCodes.annotationNotFound);
+      }
+      else {
+        finalResp.code = 200;
+        finalResp.msg = data;
+        resolve(finalResp);
+      }
     });
+  });
 }
 
 /* Para crear una anotación de tipo imagen, 1º creo la imagen en el sistema de ficheros, así tengo la uri y posteriormente creo la anotación de tipo imagen en el Virtuoso
@@ -191,79 +192,83 @@ function parseISOString(s) {
 }
 
 function createImageVirtuoso(arg, imageBlob, idTree, title, description, depicts) {
-  //const annotationController = require('./annotationController'); // dependencia circular, si se coloca arriba no funciona
-  var idImage = uploadImage2SF(idTree, imageBlob);
-  arg.image = uri_images + idImage;
-  arg.imageId = onturis.data + "image/" + idImage.split('.')[0];//quito la extensión
-  arg.varTriplesImg = "";
-  if (title != undefined) {
-    arg.varTriplesImg = "dc:title \"" + title + "\";";
-  }
-  if (description != undefined) {
-    arg.varTriplesImg += "dc:description \"" + description + "\";";
-  }
-  if (depicts != undefined) {
-    arg.varTriplesImg += "rdf:type <" + depicts + ">;";
-  }
+  return new Promise((resolve, reject) => {
 
-  setDataImage(idImage, arg).then((exif) => {
-    Object.keys(exif).forEach((prop) => {
-      if (prop != undefined)
-        arg[prop] = exif[prop];
-    });
-    if (arg.width != 0 && arg.width != undefined) {
-      arg.varTriplesImg += "exif:imageWidth " + arg.width + ";";
+
+    //const annotationController = require('./annotationController'); // dependencia circular, si se coloca arriba no funciona
+    var idImage = uploadImage2SF(idTree, imageBlob);
+    arg.image = uri_images + idImage;
+    arg.imageId = onturis.data + "image/" + idImage.split('.')[0];//quito la extensión
+    arg.varTriplesImg = "";
+    if (title != undefined) {
+      arg.varTriplesImg = "dc:title \"" + title + "\";";
     }
-    if (arg.height != 0 && arg.width != undefined) {
-      arg.varTriplesImg += "exif:imageLength " + arg.height + ";";
+    if (description != undefined) {
+      arg.varTriplesImg += "dc:description \"" + description + "\";";
     }
-    if (arg.latImg != 0 && arg.width != undefined) {
-      arg.varTriplesImg += "geo:lat " + arg.latImg + ";";
-    }
-    if (arg.longImg != 0 && arg.width != undefined) {
-      arg.varTriplesImg += "geo:long " + arg.longImg + ";";
+    if (depicts != undefined) {
+      arg.varTriplesImg += "rdf:type <" + depicts + ">;";
     }
 
-    //Si la imagen no tiene fecha de creación en los metadatos le pongo la actual
-    if (arg.date == undefined) {
-      arg.date = helpers.getDateCreated();
-    }
-
-    //elimiar arg.varTriplesImg si esta vacio
-    //console.log(arg)
-    queryInterface.getData(nameQueries.createImage, arg, sparqlClient)
-      .then((data) => {
-        if (data.results.bindings.length > 0) {
-          //console.log("Imagen creada correctamente en Virtuoso")
-          //Falta cachear imágenes
-          //Cachéo la anotación recién creada
-          cache.putNewCreationInCache(idImage.split('.')[0], onturis.image, cache.images).then((id) => {
-            //console.log("Imagen " + id + " cacheada");
-          }).catch((err) => {
-            console.log("Error cacheando imagen ", err);
-            /*if (err.statusCode != null && err.statusCode != undefined) {
-                res.status(err.statusCode).send({ message: err });
-            }
-            else {
-                err = err.message;
-                res.status(500).send(err);
-            }*/
-            resolve(errorCodes.errorCache)
-          });
-        }
-      }).catch((err) => {
-        console.log("Error creando imagen en virtuoso ", err);
-        /*if (err.statusCode != null && err.statusCode != undefined) {
-            res.status(err.statusCode).send({ message: err });
-        }
-        else {
-            err = err.message;
-            res.status(500).send(err);
-        }*/
-        resolve(errorCodes.conexionVirtuoso);
+    setDataImage(idImage, arg).then((exif) => {
+      Object.keys(exif).forEach((prop) => {
+        if (prop != undefined)
+          arg[prop] = exif[prop];
       });
-  });
+      if (arg.width != 0 && arg.width != undefined) {
+        arg.varTriplesImg += "exif:imageWidth " + arg.width + ";";
+      }
+      if (arg.height != 0 && arg.width != undefined) {
+        arg.varTriplesImg += "exif:imageLength " + arg.height + ";";
+      }
+      if (arg.latImg != 0 && arg.width != undefined) {
+        arg.varTriplesImg += "geo:lat " + arg.latImg + ";";
+      }
+      if (arg.longImg != 0 && arg.width != undefined) {
+        arg.varTriplesImg += "geo:long " + arg.longImg + ";";
+      }
 
+      //Si la imagen no tiene fecha de creación en los metadatos le pongo la actual
+      if (arg.date == undefined) {
+        arg.date = helpers.getDateCreated();
+      }
+
+      //elimiar arg.varTriplesImg si esta vacio
+      //console.log(arg)
+      queryInterface.getData(nameQueries.createImage, arg, sparqlClient)
+        .then((data) => {
+          if (data.results.bindings.length > 0) {
+            //console.log("Imagen creada correctamente en Virtuoso")
+            //Falta cachear imágenes
+            //Cachéo la anotación recién creada
+            cache.putNewCreationInCache(idImage.split('.')[0], onturis.image, cache.images).then((id) => {
+              //console.log("Imagen " + id + " cacheada");
+              resolve(true);
+            }).catch((err) => {
+              console.log("Error cacheando imagen ", err);
+              /*if (err.statusCode != null && err.statusCode != undefined) {
+                  res.status(err.statusCode).send({ message: err });
+              }
+              else {
+                  err = err.message;
+                  res.status(500).send(err);
+              }*/
+              reject(errorCodes.errorCache)
+            });
+          }
+        }).catch((err) => {
+          console.log("Error creando imagen en virtuoso ", err);
+          /*if (err.statusCode != null && err.statusCode != undefined) {
+              res.status(err.statusCode).send({ message: err });
+          }
+          else {
+              err = err.message;
+              res.status(500).send(err);
+          }*/
+          reject(errorCodes.conexionVirtuoso);
+        });
+    });
+  });
 }
 module.exports = {
   createImage,

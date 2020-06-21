@@ -102,7 +102,6 @@ async function getUsers(queryParameters, fullUrl) {
 }
 
 async function getUser(uri) {
-    console.log("getUser",cache.users)
     return new Promise((resolve, reject) => {
         let finalResp = {};
         queryInterface.getIndiv(uri, cache.users).then((data) => {
@@ -202,7 +201,11 @@ async function createUpdateUser(idUser, uri_user, bodyParameters, authorization)
                             else {
                                 resolve(errorCodes.usedLogin)
                             }
-                        })
+                        }) .catch((err) => {
+                            console.log("Error en conexión con endpoint ", err);
+                            resolve(errorCodes.conexionVirtuoso);
+                        });
+                        
                     }
                 }
             }
