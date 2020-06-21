@@ -33,46 +33,9 @@
           <i class="fas fa-exclamation-circle"></i>
           Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde
         </div>
-        <app-mapa [objSpecies]="objSpecies" [mapa]="true" ></app-mapa>
+        <!--<app-mapa [objSpecies]="objSpecies" [mapa]="true" ></app-mapa>-->
       </ng-template>
     </div>
    
-  <!--      
-    <div [hidden]="!submitted">
-        <app-mapa [objSpecies]="objSpecies" [mapa]="true" [filtroEspecie]="specie"></app-mapa>
-
-        <div class="spinner-grow text-primary" role="status" *ngIf="!terminado; else verLista">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <ng-template #verLista>
-            <button class="btn btn-outline-success mb-2" (click)="volver()" [hidden]="!filtro"><i class="fas fa-angle-left"></i></button>
-            <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error; else mostrar">
-                <i class="fas fa-exclamation-circle"></i>
-                 Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde o recargue la página
-            </div>
-                <ng-template #mostrar>
-                    <div class="container" [hidden]="!filtro">
-                        <div class="card border-primary mb-3" style="max-width: 50rem;">
-                            <div class="card-header"><i class="fas fa-search"></i> Resultados de la búsqueda con: </div>
-                            <div class="card-body text-primary">
-                                <p class="card-text" [hidden]="!specie"><i class="fab fa-pagelines"></i> ESPECIE: {{specie}}</p>
-                                <p class="card-text" [hidden]="!creator"><i class="fas fa-user"></i> CREADOR: {{creator}}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div *ngIf="!existen; else mostrarLista">
-                        <div class="alert alert-danger ml-2 mr-2 mt-1" role="alert" >
-                            <i class="fas fa-exclamation-circle"></i>
-                            No existe ningún árbol registrado con las características introducidas
-                        </div>
-                        <button type="button" class="btn btn-outline-primary" (click)="recargar()"><i class="fas fa-search"></i> Realizar otra búsqueda</button>
-                    </div>
-                    <ng-template #mostrarLista>
-                        <app-lista-completa [trees]="filterTrees" (filtro)="comprobarFiltro($event)"></app-lista-completa>
-                    </ng-template>
-                </ng-template>
-                
-            </ng-template>
-    </div>    
--->    
+  
 </div>

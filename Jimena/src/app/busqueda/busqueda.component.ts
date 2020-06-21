@@ -38,13 +38,14 @@ export class BusquedaComponent implements OnInit {
     private UsersService: UsersService) { }
 
   ngOnInit(): void {
+    /*
     // Compruebo si hay autenticación de usuario para que no se pueda acceder sin estar registrado
     if(!this.UsersService.comprobarLogIn()){
       this.router.navigate(['/inicio_sesion']); // el usuario no está loggeado, le mando a que inicie sesión
     } else{
       // El usuario si que está loggeado
       this.getSpecies(); // nada más cargarse que recoja las especies, dentro de esta funcion ya se llama a la de getTrees 
-    }
+    }*/
  }
   
   // --------------------------------

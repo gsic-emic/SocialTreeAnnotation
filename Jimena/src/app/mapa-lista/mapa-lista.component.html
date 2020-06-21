@@ -1,0 +1,9 @@
+<div class="contenedor">
+    <div class="btn-group" role="group" aria-label="Basic example">
+      <button type="button" class="btn btn-success" (click)="mapa=true"><i class="fas fa-location-arrow"></i> Mapa</button>
+      <button type="button" class="btn btn-outline-success" (click)="mapa=false"><i class="fas fa-list-ul"></i> Lista</button>
+    </div>
+        
+    <app-mapa [objSpecies]="objSpecies" [mapa]="mapa"></app-mapa>
+    
+</div>

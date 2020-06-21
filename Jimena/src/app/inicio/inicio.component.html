@@ -1,27 +1,26 @@
 <app-menu></app-menu>
 
 <div class="contenedor">
-  <div class="btn-group" role="group" aria-label="Basic example">
-    <button type="button" class="btn btn-success" (click)="mapa=true"><i class="fas fa-location-arrow"></i> Mapa</button>
-    <button type="button" class="btn btn-outline-success" (click)="mapa=false"><i class="fas fa-list-ul"></i> Lista</button>
+  <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="errorConexion; else hayConex">
+    <i class="fas fa-exclamation-circle"></i>
+    Parece que tenemos problemas con el servidor. Por favor, inténtelo de nuevo más tarde
   </div>
-
-  <!-- Divido el flujo del programa en dos, para poder ver la página de inicio con el mapa o con la lista-->
-  <!-- La variable mapa está inicializada a true, en el momento que se pinche a lista, cambia a false y se muestra la lista-->
-
-  <!--Código para que se muestre el mapa-->
+  <ng-template #hayConex>
+    <!--Código para que se muestre el mapa-->
     <div class="d-flex justify-content-center mt-10" *ngIf="!terminado_species; else mostrarResultado">
       <div class="spinner-grow text-success" role="status">
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-  
+
     <ng-template #mostrarResultado>
       <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error">
         <i class="fas fa-exclamation-circle"></i>
-        Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde
+        Ha habido un error al cargar las especies del sistema. Por favor, inténtelo de nuevo más tarde
       </div>
-      <app-mapa [objSpecies]="objSpecies" [mapa]="mapa"></app-mapa>
+      <app-mapa-lista [objSpecies]="objSpecies"></app-mapa-lista>
     </ng-template>
+  </ng-template>
   
 </div>
+
