@@ -36,7 +36,7 @@ echo -e "\n\n##################### Listar árboles de una especie - error param 
 curl -X GET  -i $uriRoot/sta/data/tree/?specie=$species
 
 echo -e "\n\n##################### Listar árboles de una especie - 204 ########################\n"
-curl -X GET  -i $uriRoot/sta/data/tree/?specie=Genus213
+curl -X GET  -i $uriRoot/sta/data/tree/?species=Genus213
 
 echo -e "\n\n##################### Listar árboles de un usuario ########################\n"
 curl -X GET  -i $uriRoot/sta/data/tree/?creator=$creator
@@ -80,6 +80,7 @@ echo -e "\n---------------------------------------------------------------------
 
 echo ------------------------------------- Recurso Users ---------------------------------------
 curl -X GET  -i $uriRoot/sta/data/user
+curl -X GET  -i $uriRoot/sta/data/user/$userNoTree
 echo -e "\n------------------------------------------------------------------------------------\n"
 
 echo ------------------------------------- Recurso No Existe ---------------------------------------

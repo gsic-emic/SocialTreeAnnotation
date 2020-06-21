@@ -29,6 +29,7 @@ async function getAnnotations(queryParameters, fullUrl) {
         else {
             queryParameters.page = 0;
         }
+
         //Listar todas las anotaciones de un usuario
         if (queryParameters.creator != undefined) {
             if (queryParameters.creator == "") {
@@ -76,7 +77,17 @@ async function getAnnotations(queryParameters, fullUrl) {
                                         finalResp.code = 200;
                                         finalResp.msg = { response, nextPage };
                                         resolve(finalResp);
-                                    })
+                                    }).catch((err) => {
+                                        console.log("Error en conexión con endpoint ", err);
+                                        /*if (err.statusCode != null && err.statusCode != undefined) {
+                                            res.status(err.statusCode).send({ message: err });
+                                        }
+                                        else {
+                                            err = err.message;
+                                            res.status(500).send(err);
+                                        }*/
+                                        resolve(errorCodes.conexionVirtuoso);
+                                    });
                             }
                             else {
                                 finalResp.code = 200;
@@ -97,6 +108,9 @@ async function getAnnotations(queryParameters, fullUrl) {
                     });
             }
         }
+        else{
+            resolve(errorCodes.badRequest);
+        }
     });
 }
 async function getAnnotation(uri) {
@@ -111,6 +125,9 @@ async function getAnnotation(uri) {
                 finalResp.msg = data;
                 resolve(finalResp);
             }
+        }).catch((err) => {
+            console.log("Error en conexión con endpoint ", err);
+            resolve(errorCodes.conexionVirtuoso);
         });
     });
 }
@@ -133,7 +150,6 @@ function createAnnotation(url_Base_sta, bodyParameters, authorization) {
      */
     return new Promise((resolve, reject) => {
         var creator = bodyParameters.creator;
-
         if (creator == undefined) {
             resolve(errorCodes.emptyRequiredFields)
         }
@@ -187,7 +203,7 @@ function createAnnotation(url_Base_sta, bodyParameters, authorization) {
                                             resolve(validate);
                                         }
                                     }).catch((err) => {
-                                        console.log(err)
+                                        console.log("Error recuperando árbol del virtuoso",err)
                                         resolve(errorCodes.conexionVirtuoso);
                                     })
                                 }
@@ -206,7 +222,7 @@ function createAnnotation(url_Base_sta, bodyParameters, authorization) {
                             }).then((response) => {
                                 resolve(response);
                             }).catch((err) => {
-                                console.log(err)
+                                console.log("Error creando anotación ", err)
                                 //errorHandler.sendError(res, err)
                                 resolve(errorCodes.conexionVirtuoso);
                             })

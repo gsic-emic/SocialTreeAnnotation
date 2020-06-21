@@ -683,11 +683,15 @@ async function createTree(url_Base_sta, bodyParameters, authorization) {
                             if (parametersOptional.image in bodyParameters) {
                                 var imageBlob = bodyParameters[parametersOptional.image];
 
-                                imageController.createImageVirtuoso(arg, imageBlob, idTree, bodyParameters.title, bodyParameters.description, bodyParameters.depicts);
+                                imageController.createImageVirtuoso(arg, imageBlob, idTree, bodyParameters.title, bodyParameters.description, bodyParameters.depicts).then((data)=> {
+                                    if(data)
+                                        console.log("Imagen creada en Virtuoso");
+                                }).catch((err) => {
+                                    console.log("Error creando imagen en virtuoso ", err);
+                                    resolve(errorCodes.conexionVirtuoso);
+                                  });
 
                                 idsAnnotation.push(annotationController.createAnnotationVirtuoso(arg, idTree, onturis.imageAnnotation, querys, nameQueries.createAnnotationImage));
-
-                                console.log(idAnnPosition);
                             }
                             //Hay especie
                             if (parametersOptional.species in bodyParameters) {

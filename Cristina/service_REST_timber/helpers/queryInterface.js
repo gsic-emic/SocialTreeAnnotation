@@ -200,7 +200,7 @@ function getIndiv(id, object) {
 					}
 				})
 				.catch((err) => {
-					reject(err.statusCode);
+					reject(err);
 				});
 		}
 	});
