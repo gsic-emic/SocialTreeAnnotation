@@ -10,14 +10,12 @@ import {APIService} from '../api.service';
 })
 export class InicioComponent implements OnInit {
 
-  constructor(private api: APIService) { }
-
-  //-----------------------------
-  public mapa: boolean = true;
-
   public error: boolean = false;
+  public errorConexion: boolean = false;
   public terminado_species: boolean = false;
   public objSpecies: object=[];
+
+  constructor(private api: APIService) { }
   
 
   ngOnInit(): void {
@@ -36,6 +34,7 @@ export class InicioComponent implements OnInit {
     (error) =>{
       console.error(error); // si se ha producido algún error
       alert("No se puede conectar con el servidor. Por favor, inténtelo de nuevo más tarde");
+      this.errorConexion = true;
     });
  }
 

@@ -31,6 +31,8 @@ import { ListaCompletaComponent } from './lista-completa/lista-completa.componen
 import { AddAnnotComponent } from './add-annot/add-annot.component';
 import { MilistaComponent } from './milista/milista.component';
 import { MilistaAnnotComponent } from './milista-annot/milista-annot.component';
+import { MapaUsuariosComponent } from './mapa-usuarios/mapa-usuarios.component';
+import { MapaListaComponent } from './mapa-lista/mapa-lista.component';
 
 const routes: Routes = [ 
   { path: 'inicio_sesion', component: IniciarSesionComponent },
@@ -42,6 +44,7 @@ const routes: Routes = [
   { path: 'comunidad', component: ComunidadComponent },
   { path: 'ajustes', component: AjustesComponent },
   { path: 'busqueda', component: BusquedaComponent },
+  { path: 'mapa', component: MapaUsuariosComponent },
   { path: 'mis_anot', component: MisAnotacionesComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'principal', component: PrincipalComponent },
@@ -78,7 +81,9 @@ const routes: Routes = [
     ListaCompletaComponent,
     AddAnnotComponent,
     MilistaComponent,
-    MilistaAnnotComponent
+    MilistaAnnotComponent,
+    MapaUsuariosComponent,
+    MapaListaComponent
   ],
   imports: [
     BrowserModule,
