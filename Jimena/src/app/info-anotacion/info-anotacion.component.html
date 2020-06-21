@@ -20,13 +20,32 @@
                     </p>
                   </div>
                   <span class="badge badge-success">Ver en el mapa</span>
+                  <p class="card-text"><small class="text-muted"><br><i class="fas fa-clock"></i> Creación: {{tree.date}}</small></p>
                 </div>
                </div>
-              <div class="col-md-4">
-                <p class="card-text"><small class="text-muted"><br><i class="fas fa-clock"></i> Creación: {{tree.date}}</small></p>
-                <div class="contenedor_mapa">
-                    <!--<app-mapa [trees]="tree"></app-mapa>-->
+              <div class="col-md-4" style="max-width: 18rem;">                
+                <!-- Carousel con las imágenes de las anotaciones-->
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                  <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" *ngFor="let item of imageAnnotations;let index = index" data-slide-to="index" ></li>
+                  </ol>
+                  <div class="carousel-inner">
+                    <div class="carousel-item" *ngFor="let img of imageAnnotations;let index = index;let isFirst = first" [ngClass]="{active:isFirst}">
+                      <img src="{{img}}" class="d-block w-100" alt="Imagen no disponible">
+                    </div>
+                  </div>
+                  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                  </a>
                 </div>
+
+
+
               </div>
             <br>
           </div>
@@ -48,9 +67,8 @@
           </div>
           <div class="tipo_anot" *ngIf="anot.type.image">
             <p class="card-text"><small class="text-muted">{{anot.creator}} añadió una anotación de tipo imagen: </small></p>
-            
-            <img src="{{anot.type.image}}" class="d-block w-100 h-50" alt="imagen no disponible">
             <!--<img src="{{anot.type.image}}" class="d-block w-100 h-50" alt="imagen no disponible">-->
+            Las imágenes se muestran arriba.
           </div>
           <div class="tipo_anot" *ngIf="anot.type.specie">
             <p class="card-text"><small class="text-muted">{{anot.creator}} añadió una anotación de tipo especie: </small></p>

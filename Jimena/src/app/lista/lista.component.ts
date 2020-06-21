@@ -77,6 +77,7 @@ tree: Tree   */
     let j=0;
     this.submitted = false;
     this.annotations.splice(0,this.annotations.length); // borro las anotaciones
+    this.imageAnnotations.splice(0,this.imageAnnotations.length); // Borro las imágenes
     this.IsPossitionAsserted = false
     this.IsSpeciesAsserted = false;
     this.i = 0;
@@ -130,15 +131,14 @@ url: string   */
       /********* POSITION *************/
       //si hay posicion validada, recupero los datos de la misma
       if(this.objInfoTree[clave][this.annot.AssertedPossition]){ 
+        console.log(this.objInfoTree[clave][this.annot.AssertedPossition].value);
         this.getInfoAnnot(this.objInfoTree[clave][this.annot.AssertedPossition].value, true, false);
-        //this.getInfoAnnot("http://localhost:8888/sta/data/annotation/p47-0036-A-1-1", true, false); //PROVISIONAL
         this.IsPossitionAsserted = true;
-        // Si existe anotación Asserted, entonces la primaria coindice, por lo que solo compruebo la primaria
+        // Si existe anotación Asserted, entonces la primaria coindice, por lo que no compruebo la primaria
         // si no hay anotacion Asserted
       } else{
         if(this.objInfoTree[clave][this.annot.PrimaryPossition]){ //aqui se mete solo si no hay anotacion Asserted
           this.getInfoAnnot(this.objInfoTree[clave][this.annot.PrimaryPossition].value, false, true);
-          //this.getInfoAnnot("http://localhost:8888/sta/data/annotation/p47-0036-A-1-1", false, true); //PROVISIONAL
         }
       }
 
@@ -169,10 +169,14 @@ url: string   */
       }
 
       /********* IMAGEN *************/
-      // Cargo todas las anotaciones de imagen que hay
+      // Cargo todas las anotaciones de imagen que hay --> tengo que diferenciar si solo hay 1
       if(this.objInfoTree[clave][this.annot.Image]){
-        for (let k=0; k<this.objInfoTree[clave][this.annot.Image].length;k++){
-          this.getInfoAnnot(this.objInfoTree[clave][this.annot.Image][k].value, false, false);
+        if(this.objInfoTree[clave][this.annot.Image].length == undefined){ // Solo hay una imagen
+          this.getInfoAnnot(this.objInfoTree[clave][this.annot.Image].value, false, false);
+        } else{
+          for (let k=0; k<this.objInfoTree[clave][this.annot.Image].length;k++){
+            this.getInfoAnnot(this.objInfoTree[clave][this.annot.Image][k].value, false, false);
+          }
         }
       } 
     }
@@ -308,10 +312,15 @@ url: string   */
      * buscarInfoImagen
      */
     public buscarInfoImagen(objImage: object, imageURL: string){
-      console.log(objImage[imageURL]);
-      let imageJPG = objImage['http://timber.gsic.uva.es/sta/ontology/resource'].value;
-      let title = objImage['http://purl.org/dc/elements/1.1/title'].value;
-      this.imageAnnotations.push(imageJPG);
-      console.log(this.imageAnnotations);
+      let title, description;
+      //console.log(imageURL);
+      if(objImage[imageURL]['http://purl.org/dc/elements/1.1/title']){
+        title = objImage[imageURL]['http://purl.org/dc/elements/1.1/title'].value;
+      }
+      if(objImage[imageURL]['http://purl.org/dc/elements/1.1/description']){
+        description = objImage[imageURL]['http://purl.org/dc/elements/1.1/description'].value;
+      }
+      this.imageAnnotations.push(objImage[imageURL]['http://timber.gsic.uva.es/sta/ontology/resource'].value);
+      //console.log(this.imageAnnotations);
     }
   }
