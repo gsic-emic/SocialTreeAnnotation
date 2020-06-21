@@ -23,7 +23,7 @@ export class InfoAnotacionComponent implements OnInit {
   @Input() annotations: Annotation[];
   @Input () IsPossitionAsserted: boolean;
   @Input() IsSpeciesAsserted: boolean;
-  @Input() imageAnnot: Array<string>;
+  @Input() imageAnnotations: Array<string>;
 
   public imageUrl: string;
 
@@ -32,8 +32,7 @@ export class InfoAnotacionComponent implements OnInit {
   ngOnInit(): void {
 
     console.log(this.annotations);
-    console.log(this.imageAnnot);
-    //this.imageUrl = this.imageAnnot[0];
+    //console.log(this.imageAnnotations);    
 
     document.getElementById("mas").addEventListener("click", ()=>{
       // Guardo la url del árbol al que quiere añadir una nueva anotación en la sesión

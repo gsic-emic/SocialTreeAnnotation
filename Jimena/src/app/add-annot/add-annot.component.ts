@@ -57,7 +57,8 @@ export class AddAnnotComponent implements OnInit {
  //-----------------------------------
 
   constructor(private UsersService: UsersService, private SpeciesService: SpeciesService, private api: APIService,
-    private annotServ: AnnotationService, private util: UtilService, private imageServ: ImagesService, private router: Router) { }
+    private annotServ: AnnotationService, private util: UtilService, private imageServ: ImagesService,
+    private router: Router) { }
 
   ngOnInit(): void {
     // Compruebo si hay autenticación de usuario para que no se pueda acceder sin estar registrado
@@ -125,6 +126,16 @@ export class AddAnnotComponent implements OnInit {
   public volver() {
     this.borrarDatos();
     this.submitted = false;
+  }
+
+  /**
+   * cancelar
+   */
+  public cancelar() {
+    // Borro de la sesión el id del árbol
+    this.util.borrarItemSesion('urlTree');
+    // Vuelvo a la página anterior
+    window.history.back(); 
   }
   
   /**

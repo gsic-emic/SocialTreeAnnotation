@@ -1,3 +1,6 @@
+/*                            FooterComponent
+     Componente que muestra el footer.
+*/
 import { Component, OnInit } from '@angular/core';
 
 @Component({

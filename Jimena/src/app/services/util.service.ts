@@ -6,6 +6,15 @@ import { Injectable } from '@angular/core';
 export class UtilService {
 
   constructor() { }
+
+  //*********** SESIONES *********/
+  /**
+   * borrarItemSesion
+  */
+  public borrarItemSesion(item: string) {
+    sessionStorage.removeItem(item);
+  }
+
    /*******  Funciones utiles que se usan en varios componentes *********/
 
    // Método que contruye la fecha actual en formato: DD/MM/AAAA
