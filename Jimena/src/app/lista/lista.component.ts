@@ -163,9 +163,14 @@ url: string   */
 
       // Compruebo si hay otras anotaciones de especie
       if(this.objInfoTree[clave][this.annot.Species]){
-        for (let k=0; k<this.objInfoTree[clave][this.annot.Species].length;k++){
-          this.getInfoAnnot(this.objInfoTree[clave][this.annot.Species][k].value, false, false);
+        if(this.objInfoTree[clave][this.annot.Species].length == undefined){ // Solo hay una 
+          this.getInfoAnnot(this.objInfoTree[clave][this.annot.Species].value, false, false);
+        } else{
+          for (let k=0; k<this.objInfoTree[clave][this.annot.Species].length;k++){
+            this.getInfoAnnot(this.objInfoTree[clave][this.annot.Species][k].value, false, false);
+          }
         }
+        
       }
 
       /********* IMAGEN *************/
