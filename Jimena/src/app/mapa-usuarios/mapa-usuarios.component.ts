@@ -1,5 +1,5 @@
 /*                            MapaUsuariosComponent
-
+    Componente que muestra el mapa en la zona de usuarios registrados
 */
 import { Component, OnInit } from '@angular/core';
 //--------------------------

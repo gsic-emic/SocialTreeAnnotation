@@ -1,3 +1,6 @@
+/*                            MenuUsuariosComponent
+     Componente que muestra el menú de los usuarios registrados
+*/
 import { Component, OnInit } from '@angular/core';
 
 @Component({

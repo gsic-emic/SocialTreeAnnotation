@@ -1,5 +1,10 @@
+/*                            MapaComponent
+     Componente que carga los árboles en función de las coordenadas del mapa y los pinta en el mismo
+*/
 import { Component, OnInit, Input } from '@angular/core';
+//------------------------------------------------------
 import {Tree} from '.././tree';
+//----------------- SERVICES ---------------------------
 import {APIService} from '../api.service';
 import { TreeService } from '../services/tree.service';
 
@@ -15,29 +20,28 @@ export class MapaComponent implements OnInit {
 
   @Input() objSpecies; // Las especies se cargan en el componente padre
   @Input() mapa;
-  //@Input() filtroEspecie; // Si estamos en el buscador, filtra los árboles por dicha especie
   //-----------------------------
   
-   muestra_info: boolean = false;
-   movido: boolean = false;
+  public muestra_info: boolean = false;
+  public movido: boolean = false;
 
    // Creación del objeto mapa
-   mymap;// mapa centrado en españa 
+  public mymap;// mapa centrado en españa 
 
   // Variables para la comunicacion con la API ----------------------------------
-  objTrees: Tree[]; // Objeto JSON que almacena todos los árboles devueltos
-  trees: Tree[]=[]; // Array con todos los árboles del sistema con formato adecuado para visualización
-  error: boolean = false;
-  terminado: boolean = false;
-  buscadorUri: string = "uri";
-  nohay: boolean = false;
-  ver: boolean = false;
+  public objTrees: Tree[]; // Objeto JSON que almacena todos los árboles devueltos
+  public trees: Tree[]=[]; // Array con todos los árboles del sistema con formato adecuado para visualización
+  public error: boolean = false;
+  public terminado: boolean = false;
+  public buscadorUri: string = "uri";
+  public nohay: boolean = false;
+  public ver: boolean = false;
 
-   // Coordenadas del area que abarca el mapa en cada momento
-   lat0: number;
-   long0: number;
-   lat1: number;
-   long1: number;
+  // Coordenadas del area que abarca el mapa en cada momento
+  public lat0: number;
+  public long0: number;
+  public lat1: number;
+  public long1: number;
 
   constructor(private api: APIService, private TreeService: TreeService) { }
 
@@ -90,13 +94,18 @@ export class MapaComponent implements OnInit {
 
   }
 
-  mostrar_info(){
+  /**
+   * mostrar_info
+   */
+  public mostrar_info() {
     this.muestra_info = true;
   }
 
 //---------------- Funciones relacionadas con la obtencion de los arboles -------------------------------
-  // Consulta a la api para que me devuelva el JSON con todos los árboles en la zona que muestra el mapa
-  actualizarTrees(lat0: number, long0: number, lat1: number, long1: number){
+  /**
+   * actualizarTrees: devuelve el JSON con todos los árboles en la zona que muestra el mapa
+   */
+  public actualizarTrees(lat0: number, long0: number, lat1: number, long1: number) {
     this.api.getTreesZone(lat0, long0, lat1, long1).subscribe(
         (data: any) =>{
           if (data != null){
@@ -127,14 +136,18 @@ export class MapaComponent implements OnInit {
 
   
   //---------------- Funciones relacionadas con el mapa -----------------------------------------
-  // Creación del objeto mapa
-  crearMapa (lat:number, long:number, zoom:number){
+  /**
+   * crearMapa: crea el objeto mapa
+   */
+  public crearMapa(lat:number, long:number, zoom:number) {
     var mymap = L.map('mapid').setView([lat, long], zoom); /* creo el objeto mymap */
     return mymap;
   }
 
-  // Creación de las capas del mapa 
-  crearLayer_gray(){
+  /**
+   * crearLayer_gray: Creación de las capas del mapa 
+   */
+  public crearLayer_gray() {
     var grayscale = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
         maxZoom: 22,
         minZoom: 12,
@@ -143,17 +156,20 @@ export class MapaComponent implements OnInit {
     return grayscale;
   }
 
-  crearLayer_streets(){
+  /*crearLayer_streets(){
     var streets = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 20,
       minZoom: 5,    
       attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
     });
     return streets;
-  }
+  }*/
 
   /* MARCADORES */
-  crearIcono(){
+  /**
+   * crearIcono
+   */
+  public crearIcono() {
     var treeIcon = L.icon({
       iconUrl: './../assets/icons/pino.png',
       shadowUrl: './../assets/icons/sombra.png',
@@ -165,14 +181,19 @@ export class MapaComponent implements OnInit {
   });
   return treeIcon;
 }
-  /* Función que crea una variable para añadir un marker en la latitud y longitud especificadas */
-  addMarker(latitud:number, longitud:number) {
+
+  /**
+   * addMarker: crea una variable para añadir un marker en la latitud y longitud especificadas
+   */
+  public addMarker(latitud:number, longitud:number) {
     var marker = L.marker([latitud, longitud]);
     return marker;
   }
 
-  // Función que crea un icono para cada arbol cargado en el mapa
-  pintarArboles(trees: Tree[]){
+  /**
+   * pintarArboles: crea un icono para cada arbol cargado en el mapa
+   */
+  public pintarArboles(trees: Tree[]) {
     var treeIcon = this.crearIcono();
     
    for (let clave in trees){
@@ -180,7 +201,7 @@ export class MapaComponent implements OnInit {
     addTo(this.mymap).bindPopup(
       '<h5 class="card-title"><i class="fab fa-pagelines"></i> '+trees[clave].species + 
       '</h5><h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> Creador: ' + trees[clave].creator +
-      /*'</h6><p class="card-text"><i class="far fa-clock"></i> '+trees[clave].date+*/'</p><button type="button" id="treeButton" (onclick)="verArbol('+ trees[clave] + ')"; class="btn btn-primary ml-4">Ver más</button>');
+      '</p><button type="button" id="treeButton" (onclick)="verArbol('+ trees[clave] + ')"; class="btn btn-primary ml-4">Ver más</button>');
    }
   }
  

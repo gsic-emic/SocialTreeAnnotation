@@ -1,5 +1,10 @@
+/*                            IniciarSesionComponent
+     Componente que comprueba la autenticación de un usuario. Si es correcta, le redirige a la página
+     principal de usuarios registrados
+*/
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+//----------------- SERVICES ---------------------------
 import { UsersService } from './../services/users.service';
 
 
@@ -10,7 +15,8 @@ import { UsersService } from './../services/users.service';
 })
 export class IniciarSesionComponent implements OnInit {
 
-  //public mensajeError: string;
+  public username: string;
+  public password: string;
 
   constructor(private router: Router, private UsersService: UsersService) { }
 
@@ -23,10 +29,12 @@ export class IniciarSesionComponent implements OnInit {
      alert("El navegador utilizado no es compatible con el inicio de sesión. Por favor, pruebe con uno más moderno");
     }
   }
-  public username: string;
-  public password: string;
-
-  public onSubmit(){
+  //-----------------------------------------------------
+  
+  /**
+   * onSubmit
+   */
+  public onSubmit() {
     // Creo el JSON con los datos del usuario
     let user = {idUser: this.username, password: this.password};
 
@@ -34,7 +42,10 @@ export class IniciarSesionComponent implements OnInit {
     this.comprobarLogIn(JSON.stringify(user));
   }
 
-  public comprobarLogIn(json: string){
+  /**
+   * comprobarLogIn
+   */
+  public comprobarLogIn(json: string) {
     let error = false;
 
     this.UsersService.login(json).subscribe(
@@ -68,5 +79,6 @@ export class IniciarSesionComponent implements OnInit {
       }
       );
   }
+  //-----------------------------------------------------
 
 }

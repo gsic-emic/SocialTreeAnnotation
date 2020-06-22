@@ -1,3 +1,6 @@
+/*                            MenuComponent
+     Componente que muestra el menú de la página de inicio
+*/
 import { Component, OnInit } from '@angular/core';
 
 @Component({

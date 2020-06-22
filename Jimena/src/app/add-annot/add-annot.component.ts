@@ -23,6 +23,7 @@ import { ImagesService } from '../services/images.service';
 })
 export class AddAnnotComponent implements OnInit {
 
+  //--------------------------------
   public urlTree: string;
   public urlUser: string = 'http://timber.gsic.uva.es/sta/data/user/';
   public username: string;

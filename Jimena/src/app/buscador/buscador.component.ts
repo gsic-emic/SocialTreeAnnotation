@@ -1,6 +1,7 @@
+/*                            BuscadorComponent
+     
+*/
 import { Component, OnInit } from '@angular/core';
-import {APIService} from '../api.service';
-import {Tree} from '../tree';
 
 
 @Component({
@@ -10,7 +11,7 @@ import {Tree} from '../tree';
 })
 export class BuscadorComponent implements OnInit {
 
-  constructor(private api: APIService) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
