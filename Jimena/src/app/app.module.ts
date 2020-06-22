@@ -48,7 +48,6 @@ const routes: Routes = [
   { path: 'registro', component: RegistroComponent },
   { path: 'principal', component: PrincipalComponent },
   { path: 'nuevaAnnot', component: AddAnnotComponent },
-  { path: 'info_anotacion', component: AddAnnotComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' }, /*ruta por defecto*/
   { path: '', component: InicioComponent, pathMatch: 'full'  },
 ];
