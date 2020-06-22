@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 //-----------------------------------------------------
 import { Tree} from '.././tree';
 import { Annotation } from '../Annotation';
+import { Image } from '../Image';
 //------------------- SERVICIOS -----------------------------
 import { APIService} from '../api.service';
 import { AnnotationService } from './../services/annotation.service';
@@ -14,6 +15,7 @@ import { UtilService } from './../services/util.service';
 import { TreeService } from './../services/tree.service';
 import { UsersService } from './../services/users.service';
 import { SpeciesService } from '../services/species.service';
+import { ImagesService } from '../services/images.service';
 
 
 @Component({
@@ -40,9 +42,13 @@ export class MisAnotacionesComponent implements OnInit {
   public trees: Tree[]=[]; // Array con todos los árboles del sistema con formato adecuado para visualización
   public objAnnotations: Annotation[] = []; // Objeto JSON que almacena todas las anotaciones del usuario
   public annotations: Annotation[] = []; // datos de las anotaciones modelados
+  public objImage: object = [];
+  public imageAnnotations: Image[] = [];
+  
 
   constructor(private api: APIService, private annot: AnnotationService, private util: UtilService,
-    private tree: TreeService, private userService: UsersService, private router: Router, private SpeciesService:SpeciesService) { }
+    private tree: TreeService, private userService: UsersService, private router: Router, 
+    private SpeciesService:SpeciesService, private ImagesService: ImagesService) { }
 
   ngOnInit(): void {
     // Compruebo si hay autenticación de usuario para que no se pueda acceder sin estar registrado
@@ -55,6 +61,7 @@ export class MisAnotacionesComponent implements OnInit {
 
       this.getSpecies();
       this.getMyAnnotatios(this.user);
+
       }
   }
    
@@ -165,6 +172,8 @@ export class MisAnotacionesComponent implements OnInit {
         case "http://timber.gsic.uva.es/sta/ontology/ImageAnnotation":
             tipo = "image";
             image = this.objAnnotations[clave][this.annot.buscador_image].value;
+            this.getImageInfo(image);
+            //console.log(image);
             break;
         case "http://timber.gsic.uva.es/sta/ontology/PositionAnnotation":
             tipo = "location";
@@ -198,7 +207,29 @@ export class MisAnotacionesComponent implements OnInit {
       }
       i++;
     }
-    console.log(this.annotations);
+    //console.log(this.annotations);
   }
 
+   /**
+     * getImageInfo
+     */
+    public getImageInfo(imageUrl: string) {
+      this.api.getAnnotImage(imageUrl).subscribe(
+        (data: any) =>{
+          this.objImage = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
+          let image = this.ImagesService.crearImage(this.objImage, imageUrl);
+          this.imageAnnotations.push(image);
+          console.log(this.imageAnnotations);
+        },
+        (error) =>{
+          console.error(error); // si se ha producido algún error
+          alert("Ha habido un error al intentar cargar la información de las imágenes.");
+        },
+        () =>{ 
+
+        }
+        );    
+    }
+
+ 
 }
