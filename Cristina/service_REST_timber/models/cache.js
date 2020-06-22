@@ -2,6 +2,8 @@ const onturis = require('../config/onturis');
 const queryInterface = require('../helpers/queryInterface');
 const errorCodes = require('../config/errorCodes');
 var cacheTEST = require('memory-cache');
+var os = require('os');
+const config = require('../config/config');
 
 var trees = {};
 var annotations = {};
@@ -123,6 +125,14 @@ function clearCache() {
     images = {};
     users = {}; 
 }
+
+function getFreeMemory(){
+    console.log("Free: ", os.freemem()/Math.pow(1024,3), "GB\n","Total: ",os.totalmem()/Math.pow(1024,3), "GB\n")
+    //En bytes
+    if(os.freemem() <= config.limitFreeMemory*1024*1024){
+        clearCache();
+    }
+}
 module.exports = {
     trees,
     annotations,
@@ -130,6 +140,6 @@ module.exports = {
     species,
     users,
     putNewCreationInCache,
-    clearCache,
+    getFreeMemory,
     cacheMiddleware
 }
