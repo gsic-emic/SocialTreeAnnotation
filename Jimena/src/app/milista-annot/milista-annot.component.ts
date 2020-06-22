@@ -1,4 +1,9 @@
+/*                            MilistaAnnotComponent
+     Elemento hijo de del componente MisAnotacionesComponent.
+     Se encarga de la visualización de las anotaciones de un usuario
+*/
 import { Component, OnInit, Input } from '@angular/core';
+//--------------------------------------------------------
 import { Annotation } from '../Annotation';
 import { Image } from '../Image';
 

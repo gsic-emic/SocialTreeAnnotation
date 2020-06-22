@@ -1,3 +1,6 @@
+/*                            EncabezadoComponent
+    Componente que muestra el encabezado con el logo
+*/
 import { Component, OnInit } from '@angular/core';
 
 @Component({

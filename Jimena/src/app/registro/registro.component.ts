@@ -1,8 +1,14 @@
+/*                            RegistroComponent
+     Componente que se encarga de la visualización del formulario de registro de usuarios, así como de
+     crear el nuevo usuario en el servicio
+*/
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+//------------------------------------------------------
 import { User } from './../user';
+//----------------- SERVICES ---------------------------
 import { UsersService } from './../services/users.service';
 import { UtilService } from './../services/util.service';
-import { Router } from '@angular/router';
 
 
 @Component({
@@ -16,14 +22,14 @@ export class RegistroComponent implements OnInit {
 
   public user: User;
 
-  /* Variables de recogida en el formulario*/
+  // Variables de recogida en el formulario----------
   public nombre: string;
   public apellidos:string;
   public username: string;
   public email: string;
   public password: string;
 
-  //Variables de control
+  //Variables de control---------
   public terminado: boolean;
   public mensajeError: string;
   public repetido: boolean = false;
@@ -40,6 +46,9 @@ export class RegistroComponent implements OnInit {
     }
   }
   
+  /**
+   * onSubmit
+   */
   public onSubmit() {
     this.user = {nombre: this.nombre, apellidos: this.apellidos, email: this.email, password: this.password};
     //console.log(JSON.stringify(this.user));
@@ -48,8 +57,10 @@ export class RegistroComponent implements OnInit {
     this.registrarUsuario(JSON.stringify(this.user), this.username);  
   }
 
-  public registrarUsuario(datosUsuario: string, username: string){
-
+  /**
+   * registrarUsuario
+   */
+  public registrarUsuario(datosUsuario: string, username: string) {
     this.UserService.createUser(datosUsuario, username).subscribe(
       (data) =>{
         console.log(data);
@@ -76,7 +87,10 @@ export class RegistroComponent implements OnInit {
   
   }
 
-  public borrarDatos(){
+  /**
+   * borrarDatos
+   */
+  public borrarDatos() {
     this.username = null;
     this.nombre = null;
     this.apellidos = null;

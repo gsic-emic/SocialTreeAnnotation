@@ -1,7 +1,10 @@
+/*                            InicioComponent
+     Componente que muestra la página principal. Si existe conexión con el servidor, muestra el mapa
+*/
 import { Component, OnInit } from '@angular/core';
-//--------------------------
+//----------------- SERVICES ---------------------------
 import {APIService} from '../api.service';
-//-----------------------------
+//------------------------------------------------------
 
 @Component({
   selector: 'app-inicio',
@@ -23,8 +26,11 @@ export class InicioComponent implements OnInit {
     this.comprobarConexion();
  }
 
- //-----------------------------
- public comprobarConexion(){
+ //---------------------------------
+ /**
+  * comprobarConexion
+  */
+ public comprobarConexion() {
    this.api.testConexion().subscribe(
     (data: any) =>{
       console.log('Hay conexión con el servidor');
@@ -39,7 +45,10 @@ export class InicioComponent implements OnInit {
  }
 
   //-----------------------------
-  getSpecies(){
+  /**
+   * getSpecies
+   */
+  public getSpecies() {
     this.api.getSpecies().subscribe(
       (data: any) =>{
         this.objSpecies = data.response;
