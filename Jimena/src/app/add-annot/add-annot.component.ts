@@ -25,6 +25,7 @@ export class AddAnnotComponent implements OnInit {
 
   public urlTree: string;
   public urlUser: string = 'http://timber.gsic.uva.es/sta/data/user/';
+  public username: string;
   public basicAuth: string;
 
   public objSpecies: object[]=[]; // Objeto JSON que almacena todas las especies/familias/generos existentes
@@ -39,6 +40,7 @@ export class AddAnnotComponent implements OnInit {
   public lat: number;
   public long: number;
   public especie: string;
+  public date: string;
   public title: string;
   public description: string;
   public PARTES: Array<string> = [];
@@ -54,6 +56,9 @@ export class AddAnnotComponent implements OnInit {
  public errorCreacion: boolean = false;
  public mensajeError: string;
  public terminado: boolean = false;
+ public isImage: boolean = false;
+ public isSpecie: boolean = false;
+ public isLocation: boolean = false;
  //-----------------------------------
 
   constructor(private UsersService: UsersService, private SpeciesService: SpeciesService, private api: APIService,
@@ -77,8 +82,8 @@ export class AddAnnotComponent implements OnInit {
       console.log(this.urlTree);
 
       // Recojo el username para crear la url del usuario
-      let username = this.UsersService.getSessionName();
-      this.urlUser = this.urlUser+username; // url completa: http://timber.gsic.uva.es/sta/data/user/username
+      this.username = this.UsersService.getSessionName();
+      this.urlUser = this.urlUser+this.username; // url completa: http://timber.gsic.uva.es/sta/data/user/username
 
       // Guardo la autenticación del usuario
       this.basicAuth = this.UsersService.getUserAutentication();
@@ -118,6 +123,7 @@ export class AddAnnotComponent implements OnInit {
   public onSubmit2() {
     this.crearAnotacion();
     this.submitted2 = true;
+    this.date = this.util.construirFecha();
   }
   
   /**
@@ -151,6 +157,8 @@ export class AddAnnotComponent implements OnInit {
     this.depicts = null;
     this.description = null;
     this.imageSrc = null;
+    this.isImage = false;
+    this.isSpecie = false;
   }
 
   /**
@@ -177,12 +185,6 @@ export class AddAnnotComponent implements OnInit {
         this.terminado = true;
       }
       );
-
-    // Tras mandar los datos al servidor, limpio las variables del formulario por si se crea otro
-    this.type = null;
-    this.long = null;
-    this.especie = null;
-    this.imagen = null;
     
   }
 
@@ -194,13 +196,16 @@ export class AddAnnotComponent implements OnInit {
     // Diferencio el tipo de anotacion que se ha seleccionado
     switch (this.type){
       case 'Especie': 
+        this.isSpecie = true;
         let especie_select = this.SpeciesService.buscarUri(this.objSpecies, this.especie);
         arrayAnot = {creator: this.urlUser, id: this.urlTree, type: "species", species: especie_select};
         break;
       case 'Ubicación': 
+      this.isLocation = true;
         arrayAnot = {creator: this.urlUser, id: this.urlTree, type: "position", lat: this.lat, long: this.long};
         break;
       case 'Imagen': 
+      this.isImage = true;
         arrayAnot = {creator: this.urlUser, id: this.urlTree, type: "image", image: this.base64};
         break;
     }   
