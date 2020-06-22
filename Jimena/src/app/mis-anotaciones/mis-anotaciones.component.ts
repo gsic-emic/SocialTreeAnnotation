@@ -13,6 +13,7 @@ import { AnnotationService } from './../services/annotation.service';
 import { UtilService } from './../services/util.service';
 import { TreeService } from './../services/tree.service';
 import { UsersService } from './../services/users.service';
+import { SpeciesService } from '../services/species.service';
 
 
 @Component({
@@ -41,7 +42,7 @@ export class MisAnotacionesComponent implements OnInit {
   public annotations: Annotation[] = []; // datos de las anotaciones modelados
 
   constructor(private api: APIService, private annot: AnnotationService, private util: UtilService,
-    private tree: TreeService, private userService: UsersService, private router: Router) { }
+    private tree: TreeService, private userService: UsersService, private router: Router, private SpeciesService:SpeciesService) { }
 
   ngOnInit(): void {
     // Compruebo si hay autenticación de usuario para que no se pueda acceder sin estar registrado
@@ -187,7 +188,9 @@ export class MisAnotacionesComponent implements OnInit {
           this.annotations[i] = {id: clave, creator: this.user, date: date, primary: primary, asserted: asserted, type: {location: {lat: lat, long: long}}};
           break;
         case "specie":
-          this.annotations[i] = {id: clave, creator: this.user, date: date, primary: primary, asserted: asserted, type: {specie: especie}};
+          // Sustituyo la especie por el nombre vulgar
+          let vulgarName = this.SpeciesService.adaptarNombreVulgar(this.objSpecies, especie);
+          this.annotations[i] = {id: clave, creator: this.user, date: date, primary: primary, asserted: asserted, type: {specie: vulgarName}};
           break;
         case "image":
           this.annotations[i] = {id: clave, creator: this.user, date: date, primary: primary, asserted: asserted, type: {image: image}};
@@ -195,6 +198,7 @@ export class MisAnotacionesComponent implements OnInit {
       }
       i++;
     }
+    console.log(this.annotations);
   }
 
 }

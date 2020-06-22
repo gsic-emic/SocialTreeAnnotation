@@ -35,6 +35,19 @@ export class SpeciesService {
     }
     return ESPECIES;
   }
+  /**
+   * adaptarNombreVulgar
+   */
+  public adaptarNombreVulgar(objSpecies: object[], uri: string): string {
+    let especie;
+    for (let clave in objSpecies){     
+      if (clave == uri){ // Las especies son de nivel 0
+        especie = objSpecies[clave][this.buscador_vulgarName]["lits"].es;
+        break;
+      }
+    }
+    return especie;
+  }
 
   public buscarUri(objSpecies: object[], especie: string){
 
