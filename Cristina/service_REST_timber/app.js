@@ -7,9 +7,7 @@
 const express = require('express');
 //const {Client}  = require('virtuoso-sparql-client');
 var compression = require('compression');
-
 var cors = require('cors')
-
 const bodyParser = require('body-parser');
 
 //Carga ficheros javascript
@@ -56,6 +54,7 @@ var TimberApp = function () {
 
 		//self.app.use(bodyParser.json());// Para crear objeto body en la petición y admitir métodos HTTP con Content-Type json
 		self.app.use('/sta', api);
+
 	};
 };
 
@@ -64,4 +63,4 @@ var myApp = new TimberApp();
 //myApp.initSPARQL();
 myApp.initialize();
 myApp.start();
-setInterval(cache.clearCache, config.timeClearCache_ms); 
+setInterval(cache.getFreeMemory, config.timeCheckFreeMemory_ms); 

@@ -17,8 +17,8 @@ module.exports = {
   offset: 0,
   // Longitud de la parte aleatoria identificadores únicos de los elementos que se crean con POST en el sistema
   lenghtId: 5,
-  // Tiempo de conservaión de los datos que se cahéan en objetos JS en memoria en ms (por defecto un día)
-  timeClearCache_ms: 24 * 3600 * 1000,
+  // Tiempo de comprobación del estado de la memoria libre disponible (por defecto 30min)
+  timeCheckFreeMemory_ms: 30 * 60 * 1000,
   // Directorio del servidor donde se almacenan las imágenes que suben los usuarios
   directorySaveImages: '/home/ubuntu/nginx/html/data/images/',
   // Uri donde se exponen las imágenes a través de un servidor nginx
@@ -26,5 +26,7 @@ module.exports = {
   // Fichero que almacena los usuarios y contraseñas de la aplicación
   filenamePasswd: '/home/ubuntu/SocialTreeAnnotation/Cristina/service_REST_timber/models/.passwd',
   // Factor de coste para calcular los hash de las contraseñas
-  saltRounds: 10
+  saltRounds: 10,
+  //Memoria RAM libre límite en megabytes antes de vaciar la caché
+  limitFreeMemory: 100
 }
