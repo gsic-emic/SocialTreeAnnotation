@@ -99,15 +99,36 @@
                 <div class="alert alert-warning" role="alert">
                     ¡La anotación se ha añadido correctamente!
                 </div>
-                <!-- AQUÍ ESTARÍA BIEN MOSTRAR LA ANOTACIÓN CREADA CON EL ÁRBOL EN CUESTIÓN-->
+                <!-- Se muestra la info de la anotación creada-->
+                <div class="card border-success m-3 flex-fill" style="max-width: 18rem;">
+                    <div class="card-header"><i class="far fa-user"></i> {{username}} </div>
+                    <!-- Distingo el tipo de anotación para mostrarlo de una manera u otra-->
+                      <div class="card-body text-success">
+                        <div class="tipo_anot" *ngIf="isImage">
+                          <p class="card-text"><small class="text-muted">Has añadido una anotación de tipo imagen: </small></p>
+                          <!--<img src="{{anot.type.image}}" class="d-block w-100 h-50" alt="imagen no disponible">-->
+                          Las imágenes se muestran arriba.
+                        </div>
+                        <div class="tipo_anot" *ngIf="isSpecie">
+                          <p class="card-text"><small class="text-muted">Has añadido una anotación de tipo especie: </small></p>
+                          <h5 class="card-title"><i class="fab fa-pagelines"></i> {{especie}}</h5>
+                        </div>
+                        <div class="tipo_anot" *ngIf="isLocation">
+                          <p class="card-text"><small class="text-muted">Has añadido una anotación de tipo ubicación: </small></p>
+                          <h5 class="card-title"><i class="fas fa-map-marker-alt"></i> [{{lat}}, {{long}}]</h5>
+                        </div>
+                        <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> Creación: {{date}}</small></p>
+                      </div>
+                  </div>
             </div>
         </ng-template>
 
            
         <div class="d-flex flex-nowrap justify-content-center ">
             <div class="mt-15 ml-15">
-                <button type="button" class="btn btn-primary text-center mr-3"> <a [routerLink]="['/mis_anot']"> Ver mis anotaciones </a></button>
-                <button type="submit" class="btn btn-success text-center " ><a [routerLink]="['/busqueda']"><i class="fas fa-search"></i> Ir al mapa</a></button>
+                <button type="submit" class="btn btn-success text-center mr-2"> <a [routerLink]="['/mis_anot']"> Ver mis anotaciones </a></button>
+                <button type="submit" class="btn btn-primary text-center mr-2" ><a [routerLink]="['/busqueda']"><i class="fas fa-search"></i> Búsqueda</a></button>
+                <button type="submit" class="btn btn-warning text-center " ><a [routerLink]="['/mapa']"><i class="fas fa-map"></i> Ir al mapa</a></button>
             </div>
         </div>
     </ng-template>
