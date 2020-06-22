@@ -29,11 +29,18 @@
 
     <div [hidden]="!submitted"> <!-- Se pincha en "Buscar" -->
 
-        <div class="alert alert-warning m-3 text-center" role="alert" *ngIf="!hay; else mostrarArboles">
-            No hay árboles con las características indicadas.
+        <div class="alert alert-danger m-3 text-center" role="alert" *ngIf="error; else noError">
+            <i class="far fa-frown"></i> Parece que tenemos problemas con el servidor <i class="far fa-frown"></i>
+            <br> Por favor, inténtelo de nuevo más tarde
         </div>
-        <ng-template #mostrarArboles>
-            <app-lista [trees]="treesFinal" [SPECIES]="objSpecies"></app-lista>
-        </ng-template>
+
+        <ng-template #noError>
+            <div class="alert alert-warning m-3 text-center" role="alert" *ngIf="!hay; else mostrarArboles">
+                No hay árboles con las características indicadas.
+            </div>
+            <ng-template #mostrarArboles>
+                <app-lista [trees]="treesFinal" [SPECIES]="objSpecies"></app-lista>
+            </ng-template>
+        </ng-template> 
     </div>
 </div>
