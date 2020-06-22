@@ -1,6 +1,11 @@
 .anotaciones{
     display: flex;
     flex-flow: row wrap;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
     justify-content: space-between;
+}
+.imagenes{
+    display: flex;
+    margin-bottom: 50px;
+    justify-content: center;
 }
