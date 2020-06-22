@@ -49,4 +49,15 @@ export class SpeciesService {
       }
     }
   }
+
+  /**
+   * adaptarNombreSpecie: devuelve el nombre de la especie, partiendo de la uri completa
+   */
+  public adaptarNombreSpecie(uriSpecie: string): string {
+    /* http://crossforest.eu/ifn/ontology/Species23 -----> Species23  */
+    let array = uriSpecie.split('/');
+    let specie = array[5];
+    return specie;
+    
+  }
 }

@@ -2,7 +2,7 @@
      Elemento hijo de del componente ListaComponent.
      Este componente se encarga de la vista de la información de un árbol
      Permite al usuario añadir una nueva anotación (si está registrado, si no lo está, le redirige al
-      componente de iniciar sesión)
+     componente de iniciar sesión)
 */
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
@@ -27,11 +27,15 @@ export class InfoAnotacionComponent implements OnInit {
 
   public imageUrl: string;
 
+  public registrado: boolean = false;
+
   constructor(private UsersService: UsersService, private router: Router) { }
 
   ngOnInit(): void {
+    // Control de si el usuario está registrado para mostrar alertas de registro
+    this.registrado = this.UsersService.comprobarLogIn();
 
-    console.log(this.annotations);
+    //console.log(this.annotations);
     //console.log(this.imageAnnotations);    
 
     document.getElementById("mas").addEventListener("click", ()=>{

@@ -46,12 +46,15 @@ export class ListaComponent implements OnInit {
   public error_anot: boolean = false;
   public terminado_anot: boolean = false;
   public i: number = 0; //controla el numero de anotaciones que tiene el árbol
+  public registrado: boolean = false;
 
   constructor(private api: APIService, private util: UtilService, private annot: AnnotationService,
     private user: UsersService, private imageService: ImagesService, private treeServ: TreeService) { }
 
   ngOnInit(): void {
-     
+    // Control de si el usuario está registrado para mostrar alertas de registro
+    this.registrado = this.user.comprobarLogIn();
+
   }
   
   //-------------------------------------------------------
