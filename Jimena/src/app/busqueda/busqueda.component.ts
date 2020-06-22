@@ -23,9 +23,9 @@ export class BusquedaComponent implements OnInit {
   // variables de control
   public submitted: boolean = false;
   public hay: boolean = true; // controla si hay árboles con los filtros selecionados
+  public error: boolean = false;
   
   //---------------------------------------
-  public error: boolean = false;
   public terminado_species: boolean = true;
   public objSpecies: object[]=[]; // Objeto JSON que almacena todas las especies/familias/generos existentes
   public ESPECIES: Array<string> = [];
@@ -58,14 +58,18 @@ export class BusquedaComponent implements OnInit {
    * onSubmit
    */
   public onSubmit() { 
-    // Antes de nada, borro las variables por si contenían datos de otra búsqueda
-    this.trees.splice(0, this.trees.length); 
-    this.treesFinal.splice(0, this.treesFinal.length);
-
     this.submitted = true;
-    let uriSpecie = this.speciesServ.buscarUri(this.objSpecies, this.especie);
-    let nombreSpecie = this.speciesServ.adaptarNombreSpecie(uriSpecie);
-    this.getTreeSpecies(nombreSpecie); // Filtro los árboles por especie
+    // Diferencio si filtra por especie o no
+    if(this.especie != undefined){ // filtro por especie primero
+      let uriSpecie = this.speciesServ.buscarUri(this.objSpecies, this.especie);
+      let nombreSpecie = this.speciesServ.adaptarNombreSpecie(uriSpecie);
+      this.getTreeSpecies(nombreSpecie); // Filtro los árboles por especie
+    } else{
+      //Filtro solo por nombre de usuario
+      this.getUserTrees(this.creador);
+
+    }
+    
   }
 
   /**
@@ -137,8 +141,33 @@ export class BusquedaComponent implements OnInit {
         
       },
       (error) =>{
-        alert("Ha habido un error al intentar cargar los árboles filtrados");
+        this.error = true;
+        alert("Ha habido un error al intentar cargar los árboles filtrados. Por favor, inténtelo de nuevo más tarde");
         this.hay = false;
+      },
+      () =>{
+      }
+      );
+  }
+
+  /**
+   * getUserTrees
+   */
+  public getUserTrees(user: string) {
+    this.api.getUserTrees(user).subscribe(
+      (data: any) =>{
+        if(data == null){
+          this.hay = false; // no tiene arboles
+        } else{
+          this.objTrees = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
+          // Convierto los datos devueltos en objetos tipo Tree
+        this.treesFinal = this.TreeService.crearTrees(this.objTrees, this.objSpecies);
+        }
+      },
+      (error) =>{
+        console.error(error); // si se ha producido algún error
+        this.error = true;
+        alert("Ha habido un error al intentar cargar los árboles filtrados. Por favor, inténtelo de nuevo más tarde");
       },
       () =>{
       }
