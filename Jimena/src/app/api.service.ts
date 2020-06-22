@@ -36,6 +36,12 @@ export class APIService {
     return this.http.get<any[]>(this.apiUrl+urlComplete);
   }
 
+  // Recuepera el árbol con el id que se le pase
+  getTreeSpecies (specie: string): Observable<any[]> {
+    var urlComplete = "data/tree?species="+specie;
+    return this.http.get<any[]>(this.apiUrl+urlComplete);
+  }
+
   // Devuelve todas las FAMILIAS, GENEROS y ESPECIES  que hay en la ontologia
   getSpecies(): Observable<any[]> {
     var urlComplete = "data/species";

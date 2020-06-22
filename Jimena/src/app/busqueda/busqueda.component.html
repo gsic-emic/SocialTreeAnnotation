@@ -1,41 +1,39 @@
 <app-menu-usuarios></app-menu-usuarios>
 <div class="contenedor">
-    <div [hidden]="submitted">
-        <div class="titulo">BÚSQUEDA</div>
+    <div class="titulo">BÚSQUEDA</div>
         <!-- Filtros aplicables a la búsqueda -->
         <div class="contenedor_filtros">
             <form class="formulario" (ngSubmit)="onSubmit()" #busquedaForm="ngForm">
                 <div class="d-flex justify-content-around">
                     <div class="input-group m-2">
                         <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputGroupSelect01"><i class="fab fa-pagelines"></i>  Especie</label>
+                        <label class="input-group-text" for="inputGroupSelect01"><i class="fab fa-pagelines"></i>    Especie</label>
                         </div>
-                        <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="specie" name="specie">
+                        <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="especie" name="especie">
                             <option  [value]="item" *ngFor="let item of ESPECIES">{{item}}</option>
                         </select>
+                        <div class="input-group mt-2">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-user"></i>    Creador</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" [(ngModel)]="creador" name="creador" placeholder="Inserte el nombre de usuario">
+                        </div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-outline-danger mr-2" (click)="borrarDatos()"><i class="far fa-times-circle"></i> Borrar </button>
+                    <button type="button" class="btn btn-outline-danger mr-2" (click)="borrarDatos()"><i class="far fa-times-circle"></i> Borrar filtros</button>
                     <button type="submit" class="btn btn-outline-primary"><i class="fas fa-search"></i> Buscar</button>
                 </div>
             </form>
         </div>
-        <!--Código para que se muestre el mapa-->
-    <div class="d-flex justify-content-center mt-10" *ngIf="!terminado_species; else mostrarResultado">
-        <div class="spinner-grow text-success" role="status">
-          <span class="sr-only">Loading...</span>
+
+    <div [hidden]="!submitted"> <!-- Se pincha en "Buscar" -->
+
+        <div class="alert alert-warning m-3 text-center" role="alert" *ngIf="!hay; else mostrarArboles">
+            No hay árboles con las características indicadas.
         </div>
-      </div>
-    
-      <ng-template #mostrarResultado>
-        <div class="alert alert-danger ml-5 mr-5 mt-1" role="alert" *ngIf="error">
-          <i class="fas fa-exclamation-circle"></i>
-          Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde
-        </div>
-        <!--<app-mapa [objSpecies]="objSpecies" [mapa]="true" ></app-mapa>-->
-      </ng-template>
+        <ng-template #mostrarArboles>
+            <app-lista [trees]="treesFinal" [SPECIES]="objSpecies"></app-lista>
+        </ng-template>
     </div>
-   
-  
 </div>

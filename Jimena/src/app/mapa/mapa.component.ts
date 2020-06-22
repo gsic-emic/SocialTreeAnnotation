@@ -102,7 +102,6 @@ export class MapaComponent implements OnInit {
           if (data != null){
             this.objTrees = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
             //console.log(data.response);
-            console.log("cargando árboles...")
             this.trees = this.TreeService.crearTrees(this.objTrees, this.objSpecies);
             //console.log(trees);
           }else{

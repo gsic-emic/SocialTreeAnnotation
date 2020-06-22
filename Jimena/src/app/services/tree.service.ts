@@ -45,6 +45,25 @@ export class TreeService {
     return trees;
   }
 
+  /**
+   * filtrarPorCreador
+   */
+  public filtrarPorCreador(username: string, trees: Tree[]): Tree[] {
+    let i = 0;
+    let j = 0;
+    let filterTrees = [];
+
+    for(i=0; i<trees.length; i++){
+      if (trees[i].creator == username){
+        filterTrees[j] = trees[i];
+        j++;
+      }
+    }
+    console.log(filterTrees);
+    return filterTrees;
+    
+  }
+
   
 
 

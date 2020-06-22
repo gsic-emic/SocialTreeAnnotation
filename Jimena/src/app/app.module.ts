@@ -27,7 +27,6 @@ import { ArbolComponent } from './arbol/arbol.component';
 import { BuscadorComponent } from './buscador/buscador.component';
 import { ContactoComponent } from './contacto/contacto.component';
 import { ListaComponent } from './lista/lista.component';
-import { ListaCompletaComponent } from './lista-completa/lista-completa.component';
 import { AddAnnotComponent } from './add-annot/add-annot.component';
 import { MilistaComponent } from './milista/milista.component';
 import { MilistaAnnotComponent } from './milista-annot/milista-annot.component';
@@ -78,7 +77,6 @@ const routes: Routes = [
     BuscadorComponent,
     ContactoComponent,
     ListaComponent,
-    ListaCompletaComponent,
     AddAnnotComponent,
     MilistaComponent,
     MilistaAnnotComponent,

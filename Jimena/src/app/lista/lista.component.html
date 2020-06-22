@@ -32,7 +32,7 @@
     <ng-template #mostrarResult>
       <div class="atras">
         <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
-        <div class="alert alert-warning m-1" role="alert">
+        <div class="alert alert-warning m-1" role="alert" [hidden]="registrado">
           Para poder colaborar en las anotaciones necesitas estar <a [routerLink]="['/inicio_sesion']" class="alert-link">registrado</a>. 
         </div>
       </div>

@@ -1,12 +1,15 @@
 /*                            BusquedaComponent
-     
+     Filtra por especie y usuario para dar la lista de árboles con esas características.
 */
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+//------------------------------------------------
+import {Tree} from '.././tree';
 //------------------- SERVICIOS -----------------------------
-import {APIService} from '../api.service';
+import { APIService } from '../api.service';
 import { SpeciesService } from '../services/species.service';
 import { UsersService } from './../services/users.service';
+import { TreeService } from '../services/tree.service';
 //-----------------------------
 
 @Component({
@@ -16,63 +19,77 @@ import { UsersService } from './../services/users.service';
 })
 export class BusquedaComponent implements OnInit {
 
-  // El componente búsqueda es padre de lista-completa -> creo vínculo entre ellos para ver la variable del filtro
-  //@ViewChild(ListaCompletaComponent) lista; 
   //---------------------------------------
   // variables de control
   public submitted: boolean = false;
-  public filtro: boolean = true;
+  public hay: boolean = true; // controla si hay árboles con los filtros selecionados
+  
   //---------------------------------------
   public error: boolean = false;
   public terminado_species: boolean = true;
   public objSpecies: object[]=[]; // Objeto JSON que almacena todas las especies/familias/generos existentes
   public ESPECIES: Array<string> = [];
+  public objTrees: object[]=[];
+  public trees: Tree[]=[]; // Array con todos los árboles del sistema con formato adecuado para visualización
+  public treesFinal: Tree[]=[];
+
   //-------------------------------------------------------------
   // Variables para el control de los filtros del formulario
-  public specie: string;
-  public creator: string;
-  public existen: boolean = false; //controla si hay algún árbol con los filtros introducidos
-  public activar_filtro: boolean = false;
+  public especie: string;
+  public creador: string;
+ 
 
   constructor(private api: APIService, private speciesServ: SpeciesService, private router: Router,
-    private UsersService: UsersService) { }
+    private UsersService: UsersService, private TreeService: TreeService) { }
 
   ngOnInit(): void {
-    /*
     // Compruebo si hay autenticación de usuario para que no se pueda acceder sin estar registrado
     if(!this.UsersService.comprobarLogIn()){
       this.router.navigate(['/inicio_sesion']); // el usuario no está loggeado, le mando a que inicie sesión
     } else{
       // El usuario si que está loggeado
       this.getSpecies(); // nada más cargarse que recoja las especies, dentro de esta funcion ya se llama a la de getTrees 
-    }*/
+    }
  }
   
   // --------------------------------
-  comprobarFiltro(filtro: boolean){
-    this.filtro = filtro;
-  }
-
+  
+  /**
+   * onSubmit
+   */
   public onSubmit() { 
+    // Antes de nada, borro las variables por si contenían datos de otra búsqueda
+    this.trees.splice(0, this.trees.length); 
+    this.treesFinal.splice(0, this.treesFinal.length);
+
     this.submitted = true;
-    //this.activar_filtro = true;
-    //this.filtrar();
-    //this.existen = false
-  }
-  public volver(){
-    location.reload(true);
+    let uriSpecie = this.speciesServ.buscarUri(this.objSpecies, this.especie);
+    let nombreSpecie = this.speciesServ.adaptarNombreSpecie(uriSpecie);
+    this.getTreeSpecies(nombreSpecie); // Filtro los árboles por especie
   }
 
-  public borrarDatos(){
-    this.specie = null;
-    this.creator = null;
+  /**
+   * borrarDatos
+   */
+  public borrarDatos() {
+    this.especie = null;
+    this.creador = null;
+    this.trees.splice(0, this.trees.length); // Borro los árboles
+    this.treesFinal.splice(0, this.treesFinal.length);
     this.recargar();
   }
-  public recargar(){
+
+  /**
+   * recargar
+   */
+  public recargar() {
     location.reload(true);
   }
-  // Cargo todas las especies disponibles del sistema
-  getSpecies(){
+  
+  /**
+   * getSpecies
+   */
+  public getSpecies() {
     this.api.getSpecies().subscribe(
       (data: any) =>{
         this.objSpecies = data.response;
@@ -89,5 +106,44 @@ export class BusquedaComponent implements OnInit {
       }
       );
   }
+
+  //-----------------------------
+  /**
+   * getTreeSpecies
+   */
+  public getTreeSpecies(species) {
+    this.api.getTreeSpecies(species).subscribe(
+      (data: any) =>{
+        if(data != null){
+          this.objTrees = data.response;
+          this.trees = this.TreeService.crearTrees(this.objTrees, this.objSpecies);
+          console.log(this.trees);
+          // Filtro por creador, si se ha introducido
+          if(this.creador != undefined){
+            this.treesFinal = this.TreeService.filtrarPorCreador(this.creador, this.trees);
+          }else{
+            this.treesFinal = this.trees;
+          }
+          //Compruebo si tras el filtrado hay árboles que mostrar
+          if(this.treesFinal.length == 0){
+            this.hay = false;
+          } else{
+            this.hay = true;
+          }
+        } else{
+          this.hay = false;
+          console.log("No hay árboles con esas características");
+        }
+        
+      },
+      (error) =>{
+        alert("Ha habido un error al intentar cargar los árboles filtrados");
+        this.hay = false;
+      },
+      () =>{
+      }
+      );
+  }
+  //----------------------------------------------------------
   
 }
