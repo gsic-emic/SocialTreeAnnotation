@@ -207,7 +207,13 @@ export class AddAnnotComponent implements OnInit {
         break;
       case 'Imagen': 
       this.isImage = true;
-        arrayAnot = {creator: this.urlUser, id: this.urlTree, type: "image", image: this.base64};
+       // creo el campo depics
+        if (this.depicts != null){
+          // Creo el campo de depics
+          this.depicts = this.imageServ.createUriDepicts(this.depicts);
+          //console.log(this.depicts);
+        }
+        arrayAnot = {creator: this.urlUser, id: this.urlTree, type: "image", image: this.base64, title: this.title, description: this.description, depicts: this.depicts};
         break;
     }   
 
