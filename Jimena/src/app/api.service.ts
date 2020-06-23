@@ -1,3 +1,7 @@
+/*********************** APIService *******************************/
+/*
+  Servicio que maneja todas las consultas HTTP con el servidor
+*/
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable} from 'rxjs';
@@ -8,72 +12,103 @@ import { Observable} from 'rxjs';
 })
 export class APIService {
 
- apiUrl = 'http://timber.gsic.uva.es/sta/';  // URL to web api
-//apiUrl = 'http://localhost:8888/sta/';  // URL to web api 
+ public apiUrl = 'http://timber.gsic.uva.es/sta/';  // URL to web api
                                       
 
   constructor( private http: HttpClient) { }
   
   /*********************** RECUPERACIÓN DE DATOS DEL SERVIDOR ******************************/
-  testConexion(): Observable<string>{
+  /**
+   * testConexion: comprueba que existe conexión con la api 
+   */
+  public testConexion(): Observable<string>{
     return this.http.get<string>(this.apiUrl); 
   }
 
-  /* GET all the trees storaged on the system */
-  getTrees(url: string): Observable<string>{
+  /**
+   * getTrees: recupera todos los árboles almacenados en el sistema
+   */
+  public  getTrees(url: string): Observable<string>{
     return this.http.get<string>(url); 
   }
-  // Me devuelve los arboles almacenados en una zona especificadas por 2 latitudes y 2 longitudes
-  getTreesZone(lat0: number, long0: number, lat1: number, long1: number): Observable<string>{
+  
+  /**
+   * getTreesZone: devuelve los arboles almacenados en una zona especificadas por 2 latitudes y 2 longitudes
+   */
+  public getTreesZone(lat0: number, long0: number, lat1: number, long1: number): Observable<string>{
     var urlComplete = "data/tree?lat0="+lat0+"&long0="+long0+"&lat1="+lat1+"&long1="+long1;
     //console.log(urlComplete);
     return this.http.get<string>(this.apiUrl+urlComplete); 
   }
-  
-  // Recuepera el árbol con el id que se le pase
-  getTree (id): Observable<any[]> {
+
+  /**
+   * getTree: recupera la información del árbol cuyo id se le pasa como parámetro de entrada
+   */
+  public getTree(id: string): Observable<any[]> {
     var urlComplete = "data/tree/"+id;
     return this.http.get<any[]>(this.apiUrl+urlComplete);
   }
 
-  // Recuepera el árbol con el id que se le pase
-  getTreeSpecies (specie: string): Observable<any[]> {
+  /**
+   * getTreeSpecies: recupera todos los árboles de la especie que se le pasa
+   */
+  public getTreeSpecies(specie: string): Observable<any[]> {
     var urlComplete = "data/tree?species="+specie;
     return this.http.get<any[]>(this.apiUrl+urlComplete);
   }
 
-  // Devuelve todas las FAMILIAS, GENEROS y ESPECIES  que hay en la ontologia
-  getSpecies(): Observable<any[]> {
+  /**
+   * getSpecies: devuelve todas las FAMILIAS, GENEROS y ESPECIES  que hay en la ontologia
+   */
+  public getSpecies(): Observable<any[]> {
     var urlComplete = "data/species";
     return this.http.get<any[]>(this.apiUrl+urlComplete);
   }
 
-  // Me devuelve todos los árboles creados por un usuario
-  getUserTrees (userId): Observable<any[]> {
+  
+  /**
+   * getUserTrees: devuelve todos los árboles creados por un usuario
+   */
+  public getUserTrees(userId): Observable<any[]> {
     var urlComplete = "data/tree?creator="+userId;
     return this.http.get<any[]>(this.apiUrl+urlComplete);
   }
 
-  getInfoTree (urlTree): Observable<any[]> {
+  /**
+   * getInfoTree
+   */
+  public getInfoTree(urlTree): Observable<any[]> {
     return this.http.get<any[]>(urlTree);
   }
 
-  getAnnotation(urlAnnot): Observable<object> {
+  /**
+   * getAnnotation
+   */
+  public getAnnotation(urlAnnot): Observable<object> {
     return this.http.get<object>(urlAnnot);
   }
 
-  getUserAnnotatios (userId): Observable<any[]> {
+  /**
+   * getUserAnnotatios
+   */
+  public getUserAnnotatios(userId): Observable<any[]> {
     var urlComplete = this.apiUrl+"data/annotation?creator="+userId;
     return this.http.get<any[]>(urlComplete);
   }
 
   /************** RECUPERAR ANOTACIÓN DE IMAGEN ************************/ 
+  /**
+   * getAnnotImage
+   */
   public getAnnotImage(url): Observable<any[]> {
     return this.http.get<any[]>(url);
   }
 
   /*********************** CREACIÓN DE DATOS EN EL SERVIDOR ******************************/
-  createTree(datos: string, basicAuth: string): Observable<string> {
+  /**
+   * createTree
+   */
+  public createTree(datos: string, basicAuth: string): Observable<string> {
     // Cabecera necesaria
     // Codifico en base64 la autenticacion del usuario
     let auth = btoa(basicAuth); 

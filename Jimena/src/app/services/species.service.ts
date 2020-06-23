@@ -1,3 +1,7 @@
+/*********************** SpeciesService *******************************/
+/*
+  Servicio que maneja funciones relacionadas con las especies
+*/
 import { Injectable } from '@angular/core';
 import { APIService } from '../api.service';
 
@@ -12,7 +16,10 @@ export class SpeciesService {
 
   constructor(private api: APIService) { }
 
-  getSpecies(){
+  /**
+   * getSpecies
+   */
+  public getSpecies(){
     this.api.getSpecies().subscribe(
       (data: any) =>{
         this.objSpecies = data.response;
@@ -24,6 +31,9 @@ export class SpeciesService {
   }
   
 
+  /**
+   * cargarEspecies
+   */
   public cargarEspecies(objSpecies: object[]){
     let i=0;
     let ESPECIES = [];
@@ -35,6 +45,7 @@ export class SpeciesService {
     }
     return ESPECIES;
   }
+
   /**
    * adaptarNombreVulgar
    */
@@ -49,8 +60,11 @@ export class SpeciesService {
     return especie;
   }
 
+  
+  /**
+   * buscarUri
+   */
   public buscarUri(objSpecies: object[], especie: string){
-
     // Compruebo la especie seleccionada y busco su uri
     for (let clave in objSpecies){
       if (objSpecies[clave]["nivel"]== 0){

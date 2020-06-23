@@ -50,7 +50,6 @@ export class IniciarSesionComponent implements OnInit {
 
     this.UsersService.login(json).subscribe(
       (data) =>{
-        console.log("Los datos de acceso son correctos");
         // Los datos de acceso son correctos
         sessionStorage.setItem('username', this.username);  // Guardo los datos de inicio en la sesión
         sessionStorage.setItem('password', this.password);
@@ -75,7 +74,7 @@ export class IniciarSesionComponent implements OnInit {
         this.password = null;
       },
       () =>{
-        console.log("Los datos de acceso son correctos");
+        //console.log("Los datos de acceso son correctos");
       }
       );
   }

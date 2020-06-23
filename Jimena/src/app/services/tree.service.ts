@@ -1,3 +1,7 @@
+/*********************** TreeService *******************************/
+/*
+  Servicio que maneja funciones relacionadas con los árboles
+*/
 import { Injectable } from '@angular/core';
 // ------------------------------------------
 import { Tree } from '../tree';
@@ -59,7 +63,6 @@ export class TreeService {
         j++;
       }
     }
-    console.log(filterTrees);
     return filterTrees;
     
   }

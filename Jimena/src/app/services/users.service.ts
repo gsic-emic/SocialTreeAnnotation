@@ -1,3 +1,7 @@
+/*********************** UsersService *******************************/
+/*
+  Servicio que maneja funciones relacionadas con los usuarios
+*/
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable} from 'rxjs';
@@ -8,12 +12,12 @@ import { User } from './../user';
 })
 export class UsersService {
 
-  userUrl = 'http://timber.gsic.uva.es/sta/data/user/';  // URL to web api
+  public userUrl = 'http://timber.gsic.uva.es/sta/data/user/';  // URL to web api
 
   // Buscadores para el filtrado de los datos devueltos por el servidor
-  buscadorNombre: string = "http://xmlns.com/foaf/0.1/name";
-  buscadorUsername: string = "http://xmlns.com/foaf/0.1/nick";
-  buscadorEmail: string = "http://xmlns.com/foaf/0.1/mbox";
+  public buscadorNombre: string = "http://xmlns.com/foaf/0.1/name";
+  public buscadorUsername: string = "http://xmlns.com/foaf/0.1/nick";
+  public buscadorEmail: string = "http://xmlns.com/foaf/0.1/mbox";
 
   constructor(private http: HttpClient) { }
 
@@ -66,7 +70,7 @@ export class UsersService {
       let username = sessionStorage.getItem('username');
       let password = sessionStorage.getItem('password');
       let autentication = username+":"+password;
-      console.log(autentication);
+      //console.log(autentication);
       return autentication;
     }
 
@@ -84,7 +88,7 @@ export class UsersService {
     let username = this.getSessionName();
       
     if(username == null){ // el usuario no está loggeado
-      console.log("No se ha iniciado sesión");
+      //console.log("No se ha iniciado sesión");
       return false;
     }else{
       return true;

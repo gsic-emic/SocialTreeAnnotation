@@ -219,7 +219,7 @@ export class MisAnotacionesComponent implements OnInit {
           this.objImage = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
           let image = this.ImagesService.crearImage(this.objImage, imageUrl);
           this.imageAnnotations.push(image);
-          console.log(this.imageAnnotations);
+          //console.log(this.imageAnnotations);
         },
         (error) =>{
           console.error(error); // si se ha producido algún error

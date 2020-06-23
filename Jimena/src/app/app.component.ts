@@ -1,3 +1,6 @@
+/*                            AppComponent 
+     Componente global: recoge toda la app
+*/
 import { Component, OnInit } from '@angular/core';
 
 @Component({

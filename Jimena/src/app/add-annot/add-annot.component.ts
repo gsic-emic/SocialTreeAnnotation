@@ -80,7 +80,7 @@ export class AddAnnotComponent implements OnInit {
 
       // Obtengo la url del árbol al que se va  a añadir la anotacion
       this.urlTree = sessionStorage.getItem('urlTree');
-      console.log(this.urlTree);
+      //console.log(this.urlTree);
 
       // Recojo el username para crear la url del usuario
       this.username = this.UsersService.getSessionName();

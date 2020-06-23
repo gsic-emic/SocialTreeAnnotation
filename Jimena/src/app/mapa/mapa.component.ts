@@ -126,7 +126,7 @@ export class MapaComponent implements OnInit {
         },
         () =>{
           this.terminado = true;
-          console.log("se han cargado todos los arboles");
+          //console.log("se han cargado todos los arboles");
           this.pintarArboles(this.trees);
         }
         );

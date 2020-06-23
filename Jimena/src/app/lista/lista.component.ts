@@ -135,7 +135,7 @@ url: string   */
       /********* POSITION *************/
       //si hay posicion validada, recupero los datos de la misma
       if(this.objInfoTree[clave][this.annot.AssertedPossition]){ 
-        console.log(this.objInfoTree[clave][this.annot.AssertedPossition].value);
+        //console.log(this.objInfoTree[clave][this.annot.AssertedPossition].value);
         this.getInfoAnnot(this.objInfoTree[clave][this.annot.AssertedPossition].value, true, false);
         this.IsPossitionAsserted = true;
         // Si existe anotación Asserted, entonces la primaria coindice, por lo que no compruebo la primaria
@@ -304,11 +304,15 @@ url: string   */
           this.objImage = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
           let image = this.imageService.crearImage(this.objImage, imageUrl);
           this.imageAnnotations.push(image);
-          console.log(this.imageAnnotations);
+          //console.log(this.imageAnnotations);
         },
         (error) =>{
           console.error(error); // si se ha producido algún error
-          alert("Ha habido un error al intentar cargar la información de las imágenes. Por favor, inténtelo de nuevo más tarde.");
+          if (error.status == 404){
+            alert("No se ha podido encontrar una de las imágenes del árbol");
+          }else{
+            alert("Ha habido un error al intentar cargar la información de las imágenes. Por favor, inténtelo de nuevo más tarde.");
+          }
         },
         () =>{ 
 

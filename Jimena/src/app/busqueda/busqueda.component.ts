@@ -121,7 +121,6 @@ export class BusquedaComponent implements OnInit {
         if(data != null){
           this.objTrees = data.response;
           this.trees = this.TreeService.crearTrees(this.objTrees, this.objSpecies);
-          console.log(this.trees);
           // Filtro por creador, si se ha introducido
           if(this.creador != undefined){
             this.treesFinal = this.TreeService.filtrarPorCreador(this.creador, this.trees);

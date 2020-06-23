@@ -1,3 +1,7 @@
+/*********************** UtilService *******************************/
+/*
+  Servicio con funciones utiles que se usan en varios componentes
+*/
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -14,8 +18,6 @@ export class UtilService {
   public borrarItemSesion(item: string) {
     sessionStorage.removeItem(item);
   }
-
-   /*******  Funciones utiles que se usan en varios componentes *********/
 
    // Método que contruye la fecha actual en formato: DD/MM/AAAA
   public construirFecha(): string{
