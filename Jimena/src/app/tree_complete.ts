@@ -1,4 +1,4 @@
-// Interfaz con los parámetros de un árbol para faciliatr la creación
+// Interfaz con los parámetros de un árbol para facilitar la creación y subida al servidor
 export interface Tree_complete {
     creator: string;
     lat: number;
