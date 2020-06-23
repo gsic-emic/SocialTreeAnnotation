@@ -31,7 +31,11 @@
                   </ol>
                   <div class="carousel-inner">
                     <div class="carousel-item" *ngFor="let img of imageAnnotations;let index = index;let isFirst = first" [ngClass]="{active:isFirst}">
-                      <img src="{{img}}" class="d-block w-100" alt="Imagen no disponible">
+                      <img src="{{img.jpeg}}" class="d-block w-100" alt="{{img.title}}">
+                      <div class="carousel-caption d-none d-md-block">
+                        <h5>{{img.date}}</h5>
+                        <p>{{img.description}}</p>
+                      </div>
                     </div>
                   </div>
                   <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">

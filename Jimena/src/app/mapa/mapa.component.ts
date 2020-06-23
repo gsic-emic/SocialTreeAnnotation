@@ -200,8 +200,8 @@ export class MapaComponent implements OnInit {
     L.marker([trees[clave].lat, trees[clave].long], {icon: treeIcon}).
     addTo(this.mymap).bindPopup(
       '<h5 class="card-title"><i class="fab fa-pagelines"></i> '+trees[clave].species + 
-      '</h5><h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> Creador: ' + trees[clave].creator +
-      '</p><button type="button" id="treeButton" (onclick)="verArbol('+ trees[clave] + ')"; class="btn btn-primary ml-4">Ver más</button>');
+      '</h5><h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> Creador: ' + trees[clave].creator 
+      /*+'</p><button type="button" id="treeButton" (onclick)="verArbol('+ trees[clave] + ')"; class="btn btn-primary ml-4">Ver más</button>'*/);
    }
   }
  
