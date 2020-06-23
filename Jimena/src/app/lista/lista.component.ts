@@ -9,6 +9,7 @@ import { Component, OnInit, Input } from '@angular/core';
 //-----------------------------------------------------
 import { Tree} from '.././tree';
 import { Annotation } from '.././Annotation';
+import { Image } from '../Image';
 //----------------- SERVICES ---------------------------
 import { APIService } from '../api.service';
 import { UtilService } from './../services/util.service';
@@ -34,7 +35,7 @@ export class ListaComponent implements OnInit {
   public objImage: object = [];
   public imageInfo: object = [];
   public annotations: Annotation[]=[];
-  public imageAnnotations: Array<string> = [];
+  public imageAnnotations: Image[] = [];
   public IsPossitionAsserted: boolean = false; // Estas dos variables controlan si los datos son oficiales
   public IsSpeciesAsserted: boolean = false;   // para que se muestre una indicación en la interfaz
 
@@ -301,14 +302,13 @@ url: string   */
       this.api.getAnnotImage(imageUrl).subscribe(
         (data: any) =>{
           this.objImage = data.response; // si la consulta se realiza con éxito, guardo los datos que me devuelve
-          //console.log(this.objAnnot);
-          this.buscarInfoImagen(this.objImage, imageUrl);
+          let image = this.imageService.crearImage(this.objImage, imageUrl);
+          this.imageAnnotations.push(image);
+          console.log(this.imageAnnotations);
         },
         (error) =>{
           console.error(error); // si se ha producido algún error
-          //this.error_anot = true;
           alert("Ha habido un error al intentar cargar la información de las imágenes. Por favor, inténtelo de nuevo más tarde.");
-          //this.terminado_anot = true;
         },
         () =>{ 
 
@@ -316,19 +316,4 @@ url: string   */
         );    
     }
 
-    /**
-     * buscarInfoImagen
-     */
-    public buscarInfoImagen(objImage: object, imageURL: string){
-      let title, description;
-      //console.log(imageURL);
-      if(objImage[imageURL]['http://purl.org/dc/elements/1.1/title']){
-        title = objImage[imageURL]['http://purl.org/dc/elements/1.1/title'].value;
-      }
-      if(objImage[imageURL]['http://purl.org/dc/elements/1.1/description']){
-        description = objImage[imageURL]['http://purl.org/dc/elements/1.1/description'].value;
-      }
-      this.imageAnnotations.push(objImage[imageURL]['http://timber.gsic.uva.es/sta/ontology/resource'].value);
-      //console.log(this.imageAnnotations);
-    }
   }

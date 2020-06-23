@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 //-----------------------------------------------------
 import {Tree} from '.././tree';
 import { Annotation } from '.././Annotation';
+import { Image } from '../Image';
 //----------------- SERVICES ---------------------------
 import { UsersService } from '../services/users.service';
 
@@ -23,7 +24,7 @@ export class InfoAnotacionComponent implements OnInit {
   @Input() annotations: Annotation[];
   @Input () IsPossitionAsserted: boolean;
   @Input() IsSpeciesAsserted: boolean;
-  @Input() imageAnnotations: Array<string>;
+  @Input() imageAnnotations: Image[];
 
   public imageUrl: string;
 
