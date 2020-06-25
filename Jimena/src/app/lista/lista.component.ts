@@ -148,9 +148,13 @@ url: string   */
 
       // Compruebo si hay otras anotaciones de posicion
       if(this.objInfoTree[clave][this.annot.Possition]){
+        if(this.objInfoTree[clave][this.annot.Possition].length == undefined){ // Solo hay una 
+          this.getInfoAnnot(this.objInfoTree[clave][this.annot.Possition].value, false, false);
+        } else{
         for (let j=0; j<this.objInfoTree[clave][this.annot.Possition].length;j++){
           this.getInfoAnnot(this.objInfoTree[clave][this.annot.Possition][j].value, false, false);
         }
+      }
       }
 
       /********* SPECIES *************/
