@@ -11,7 +11,8 @@ export class UtilService {
 
   constructor() { }
 
-  //*********** SESIONES *********/
+
+  /****************** SESIONES ******************/
   /**
    * borrarItemSesion
   */

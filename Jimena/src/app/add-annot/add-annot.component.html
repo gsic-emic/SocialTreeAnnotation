@@ -63,6 +63,7 @@
                         <label class="entrada" for="ubicacion"><i class="fas fa-map-marker-alt"></i> Ubicación </label>
                         <input type="number" class="form-control" id="lat" placeholder="Latitud" [(ngModel)]="lat" name="lat" required> 
                         <input type="number" class="form-control" id="long" placeholder="Longitud" [(ngModel)]="long" name="long" required>
+                        <button type="button" class="btn btn-success mt-2" (click)="getPosicion()"> <i class="far fa-compass"></i> Usar mi ubicación actual </button>
                     </div>
                     <!-- ANOTACIÓN DE ESPECIE -->
                     <div class="form-group" *ngIf="type == 'Especie'">
