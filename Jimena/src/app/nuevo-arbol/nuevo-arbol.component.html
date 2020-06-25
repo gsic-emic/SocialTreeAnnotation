@@ -21,6 +21,8 @@
                                 [(ngModel)]="lat" name="lat"> 
                         <input type="number" class="form-control m-1" id="long" placeholder="Longitud" required
                                 [(ngModel)]="long" name="long">
+                        <button type="button" class="btn btn-success" (click)="getPosicion()"> <i class="far fa-compass"></i> Usar mi ubicación actual </button>
+
                     </div>
                 </div>
 

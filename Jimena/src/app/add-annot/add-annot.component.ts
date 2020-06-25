@@ -73,22 +73,28 @@ export class AddAnnotComponent implements OnInit {
     } else{
       // El usuario si que está loggeado
 
-
-      // Cargo las especies
-      this.getSpecies(); // cargo las especies disponibles para ponerlas en el formulario
-      this.PARTES = this.imageServ.PARTES;
-
+      // Compruebo si está guardada en la sesión el id del árbol al que se le va a añadir anotacion
       // Obtengo la url del árbol al que se va  a añadir la anotacion
       this.urlTree = sessionStorage.getItem('urlTree');
-      //console.log(this.urlTree);
+      if (this.urlTree != null){
+        // Cargo las especies
+        this.getSpecies(); // cargo las especies disponibles para ponerlas en el formulario
+        this.PARTES = this.imageServ.PARTES;
 
-      // Recojo el username para crear la url del usuario
-      this.username = this.UsersService.getSessionName();
-      this.urlUser = this.urlUser+this.username; // url completa: http://timber.gsic.uva.es/sta/data/user/username
+        
 
-      // Guardo la autenticación del usuario
-      this.basicAuth = this.UsersService.getUserAutentication();
+        // Recojo el username para crear la url del usuario
+        this.username = this.UsersService.getSessionName();
+        this.urlUser = this.urlUser+this.username; // url completa: http://timber.gsic.uva.es/sta/data/user/username
+
+        // Guardo la autenticación del usuario
+        this.basicAuth = this.UsersService.getUserAutentication();
+
+      } else {
+        // Vuelvo a la página anterior
+        window.history.back();
       }
+    }
   }
 //--------------------------------------------------------------------
 
@@ -160,6 +166,23 @@ export class AddAnnotComponent implements OnInit {
     this.imageSrc = null;
     this.isImage = false;
     this.isSpecie = false;
+  }
+  /**
+   * getPosicion
+   */
+  public getPosicion() {
+    // Compruebo si el navegador dispone de la api de geolocalización
+    if (navigator.geolocation) {
+      // ¡Excelente, el API puede ser utilizado!
+      console.log("Todo correcto");
+      navigator.geolocation.getCurrentPosition((position)=>{ 
+        console.log("Found your location nLat : "+position.coords.latitude+" nLang :"+ position.coords.longitude);
+        this.lat = position.coords.latitude;
+        this.long = position.coords.longitude;
+    });
+   } else {
+      console.log("Tu navegador no permite obtener tu posición actual");
+    } 
   }
 
   /**
