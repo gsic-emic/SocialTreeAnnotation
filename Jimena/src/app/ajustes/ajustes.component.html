@@ -8,37 +8,49 @@
       <div class="card-header"> <i class="fas fa-user"></i>  Cuenta</div>
       <div class="card-body text-primary" *ngIf="!error; else mostrarError">
         <h5 class="card-title text-center">Modifica tus datos</h5>
-        <h5>SOBRE TI</h5>
-        <form (ngSubmit)="onSubmit()" #regForm="ngForm">
-          <div class="form-group">
-            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="{{user.nombre}}" 
-            [(ngModel)]="nombre" name="nombre" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)">
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="{{user.apellidos}}"
-            [(ngModel)]="apellidos" name="apellidos" pattern="(^[a-zA-Z\sñ]+$)">
-          </div>
-          <div class="form-group">
-          <br><h5>Nombre de Usuario</h5>
-            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="{{user.username}}" 
-            [(ngModel)]="username" name="username">
-          </div>
-  
-          <br><h5>TU CUENTA</h5>
-          <div class="form-group">
-              <input type="text" class="form-control" id="formGroupExampleInput" placeholder="{{user.email}}"
-              [(ngModel)]="email" name="email" pattern="^([0-9a-z]+)([0-9a-z\.-_]+)@([0-9a-z\.-_]+)\.([0-9a-z]+)$" >
-          </div>
-          <div class="form-group">
-              <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="{{user.password}}"
-              [(ngModel)]="password" name="password" pattern="(^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$)" >
-              <small id="emailHelp" class="form-text text-muted">La contraseña debe tener mínimo 8 caracteres, incluyendo una mayúscula y 2 números</small>
-          </div>
-          <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary btn-primary" [disabled]="!regForm.form.valid">Modificar datos</button>
-          </div>
-        </form>
+        <div class="spinner-grow  text-primary text-center" role="status" *ngIf="!terminado; else mostrarInfoUser">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <ng-template #mostrarInfoUser>
+          <h5>SOBRE TI</h5>
+          <form (ngSubmit)="onSubmit()" #regForm="ngForm">
+            <div class="form-group">
+              <input type="text" class="form-control" id="formGroupExampleInput" placeholder="{{user.nombre}}" 
+              [(ngModel)]="nombre" name="nombre" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="{{user.apellidos}}"
+              [(ngModel)]="apellidos" name="apellidos" pattern="(^[a-zA-Z\sñ]+$)">
+            </div>
+            <div class="form-group">
+            <br><h5>Nombre de Usuario</h5>
+              <input type="text" class="form-control" id="formGroupExampleInput" placeholder="{{user.username}}" 
+              [(ngModel)]="username" name="username">
+            </div>
+    
+            <br><h5>Correo electrónico</h5>
+            <div class="form-group">
+                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="{{user.email}}"
+                [(ngModel)]="email" name="email" pattern="^([0-9a-z]+)([0-9a-z\.-_]+)@([0-9a-z\.-_]+)\.([0-9a-z]+)$" >
+            </div>
+
+            <button type="button" class="btn btn-outline-primary mb-2" (click)="changePasswd=!changePasswd"> Cambiar contraseña </button>
+            <div class="form-group" *ngIf="changePasswd">
+              <input type="password" class="form-control mb-1" id="formGroupExampleInput2" placeholder="Contraseña actual"
+                [(ngModel)]="password" name="password" pattern="(^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$)" >
+                <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="Nueva contraseña"
+                 pattern="(^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$)" >
+                <small id="emailHelp" class="form-text text-muted">La contraseña debe tener mínimo 8 caracteres, incluyendo una mayúscula y 2 números</small>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn btn-primary btn-primary" [disabled]="!regForm.form.valid">Modificar datos</button>
+            </div>
+          </form>
+          -----------------------------------------------------------------------<br>
+          <p class="card-text"><small class="text-muted"><br><i class="fas fa-clock"></i> Usuario activo desde: {{user.created}}</small></p>
+        </ng-template>
       </div>
+
       <ng-template #mostrarError>
         <div class="card-body text-primary">
           <div class="alert alert-danger" role="alert">
@@ -53,6 +65,7 @@
           <div class="card-body text-success">
             <h5 class="card-title">Estado de la cuenta</h5>
             <p class="card-text">Apartado destinado a que el usuario pueda elegir si su cuenta es privada o publica</p>
+            <span class="badge badge-success"> No disponible </span>
           </div>
       </div>
 
@@ -60,12 +73,12 @@
           <div class="card-header"> <i class="far fa-question-circle"></i>  Ayuda</div>
           <div class="card-body text-warning">
             <h5 class="card-title"> Cualquier problema se puede consultar con:           </h5>
-            ---------------------------------------------------------------------------------
+            -----------------------------------------------------------------------<br>
             Jimena Andrade Hoz:
             <p class="card-text"><i class="far fa-envelope"></i> jimena.andrade@hotmail.com</p>
-            ---------------------------------------------------------------------------------
+            -----------------------------------------------------------------------
             Cristina Mayo Sarmiento: 
-            <p class="card-text"><i class="far fa-envelope"></i>                                         </p>
+            <p class="card-text"><i class="far fa-envelope"></i> cmayo@gsic.uva.es</p>
           </div>
       </div>
 
@@ -74,7 +87,10 @@
           <div class="card-body text-primary">
             <h5 class="card-title"> UNIVERSIDAD DE VALLADOLID </h5>
             <h5 class="card-title"> SocialTreeAnotation / 2019-2020 GSIC-EMIC </h5>
-            <p class="card-text"> Desarrollo de aplicación para anotación de árboles basada en web semántica.</p>
+            <p class="card-text"> Desarrollo de aplicación para anotación social de árboles basada en web semántica.</p>
+            <p class="card-text"> <i class="fas fa-angle-double-right"></i> Puede consultar nuestra documentación en <span class="badge badge-info">
+              <a href ="https://github.com/gsic-emic/SocialTreeAnnotation" target="_blank"> github </a> </span>
+            </p>
           </div>
       </div>
   </div>

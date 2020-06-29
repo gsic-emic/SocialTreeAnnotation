@@ -3,3 +3,10 @@
     display: flex;
     justify-content: space-between;
 }
+
+.arriba{
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}

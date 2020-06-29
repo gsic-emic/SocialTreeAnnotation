@@ -80,7 +80,7 @@ export class BusquedaComponent implements OnInit {
     this.creador = null;
     this.trees.splice(0, this.trees.length); // Borro los árboles
     this.treesFinal.splice(0, this.treesFinal.length);
-    this.recargar();
+    //this.recargar();
   }
 
   /**

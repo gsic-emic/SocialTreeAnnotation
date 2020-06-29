@@ -18,6 +18,8 @@ import { UsersService } from '../services/users.service';
 import { ImagesService } from '../services/images.service';
 import { TreeService } from '../services/tree.service';
 
+declare var $: any; 
+
 @Component({
   selector: 'app-lista',
   templateUrl: './lista.component.html',
@@ -56,6 +58,13 @@ export class ListaComponent implements OnInit {
     // Control de si el usuario está registrado para mostrar alertas de registro
     this.registrado = this.user.comprobarLogIn();
 
+    $(document).ready(function() {
+      $('#volver-arriba').click(function(){
+        $('html, body').animate({scrollTop:0}, 'slow');
+        return false;
+      });
+    });
+
   }
   
   //-------------------------------------------------------
@@ -73,6 +82,7 @@ tree: Tree   */
    */
   public onSubmit() {
     this.submitted = true;
+    console.log(this.trees.length);
   }
   /**
    * volver

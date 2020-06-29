@@ -4,6 +4,7 @@
 */
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+//import * as $ from 'jquery';
 //-----------------------------------------------------
 import { Tree} from '.././tree';
 import { Annotation } from '../Annotation';
@@ -17,7 +18,7 @@ import { UsersService } from './../services/users.service';
 import { SpeciesService } from '../services/species.service';
 import { ImagesService } from '../services/images.service';
 
-
+declare var $: any; 
 @Component({
   selector: 'app-mis-anotaciones',
   templateUrl: './mis-anotaciones.component.html',
@@ -63,6 +64,13 @@ export class MisAnotacionesComponent implements OnInit {
       this.getMyAnnotatios(this.user);
 
       }
+
+      $(document).ready(function() {
+        $('#volver-arriba').click(function(){
+          $('html, body').animate({scrollTop:0}, 'slow');
+          return false;
+        });
+      });
   }
    
   /****************************** SPECIES **************************/

@@ -19,8 +19,11 @@ export class AjustesComponent implements OnInit {
   constructor(private UsersService: UsersService, private UtilService: UtilService, private router: Router) { }
 
   public user: User; // Objeto con toda la info del usuario actual
+
+  // Variables de control
   public terminado: boolean = false;
   public error: boolean = false;
+  public changePasswd: boolean = false;
   public mensajeError: string;
 
   // Variables que recogen los datos si el usuario modifica su información personal
