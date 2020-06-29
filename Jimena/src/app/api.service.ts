@@ -12,7 +12,7 @@ import { Observable} from 'rxjs';
 })
 export class APIService {
 
- public apiUrl = 'http://timber.gsic.uva.es/sta/';  // URL to web api
+ public apiUrl = 'https://timber.gsic.uva.es/sta/';  // URL to web api
                                       
 
   constructor( private http: HttpClient) { }
@@ -78,14 +78,16 @@ export class APIService {
    * getInfoTree
    */
   public getInfoTree(urlTree): Observable<any[]> {
-    return this.http.get<any[]>(urlTree);
+    let url = urlTree.replace('http', 'https');
+    return this.http.get<any[]>(url);
   }
 
   /**
    * getAnnotation
    */
   public getAnnotation(urlAnnot): Observable<object> {
-    return this.http.get<object>(urlAnnot);
+    let url = urlAnnot.replace('http', 'https');
+    return this.http.get<object>(url);
   }
 
   /**
@@ -101,7 +103,8 @@ export class APIService {
    * getAnnotImage
    */
   public getAnnotImage(url): Observable<any[]> {
-    return this.http.get<any[]>(url);
+    let urlImg = url.replace('http', 'https');
+    return this.http.get<any[]>(urlImg);
   }
 
   /*********************** CREACIÓN DE DATOS EN EL SERVIDOR ******************************/

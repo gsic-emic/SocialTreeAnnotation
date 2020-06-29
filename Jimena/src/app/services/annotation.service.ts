@@ -11,7 +11,7 @@ import { Observable} from 'rxjs';
 })
 export class AnnotationService {
 
-  public urlAnnot: string = 'http://timber.gsic.uva.es/sta/data/annotation';
+  public urlAnnot: string = 'https://timber.gsic.uva.es/sta/data/annotation';
 
   // Variables para el filtrado de los tipos de anotaciones en la api
   public AssertedPossition: string = "http://timber.gsic.uva.es/sta/ontology/hasAssertedPosition"; //Anotacion validada por expertos
