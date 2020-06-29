@@ -176,12 +176,12 @@ export class AddAnnotComponent implements OnInit {
       // ¡Excelente, el API puede ser utilizado!
       console.log("Todo correcto");
       navigator.geolocation.getCurrentPosition((position)=>{ 
-        console.log("Found your location nLat : "+position.coords.latitude+" nLang :"+ position.coords.longitude);
+        //console.log("Found your location nLat : "+position.coords.latitude+" nLang :"+ position.coords.longitude);
         this.lat = position.coords.latitude;
         this.long = position.coords.longitude;
     });
    } else {
-      console.log("Tu navegador no permite obtener tu posición actual");
+      alert("Tu navegador no permite obtener tu posición actual");
     } 
   }
 

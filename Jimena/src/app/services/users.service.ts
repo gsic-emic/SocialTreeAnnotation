@@ -12,7 +12,7 @@ import { User } from './../user';
 })
 export class UsersService {
 
-  public userUrl = 'http://timber.gsic.uva.es/sta/data/user/';  // URL to web api
+  public userUrl = 'https://timber.gsic.uva.es/sta/data/user/';  // URL to web api
 
   // Buscadores para el filtrado de los datos devueltos por el servidor
   public buscadorNombre: string = "http://xmlns.com/foaf/0.1/name";
@@ -36,7 +36,7 @@ export class UsersService {
    */
   public login(datos: string): Observable<string> {
     let headers = new HttpHeaders().set('Content-Type','application/json'); // Cabecera necesaria
-    let url = 'http://timber.gsic.uva.es/sta/';
+    let url = 'https://timber.gsic.uva.es/sta/';
     return this.http.post<string>(url, datos, {headers: headers});
   }
 

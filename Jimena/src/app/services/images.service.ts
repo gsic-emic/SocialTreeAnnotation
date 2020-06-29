@@ -15,7 +15,7 @@ import { UtilService } from '../services/util.service';
 })
 export class ImagesService {
 
-  public apiUrl = 'http://timber.gsic.uva.es/sta/';  // URL to web api
+  public apiUrl = 'https://timber.gsic.uva.es/sta/';  // URL to web api
   public imageInfo: Observable<object>;
   public arrayInfo: object = [];
 
