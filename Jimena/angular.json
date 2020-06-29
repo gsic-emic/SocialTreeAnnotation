@@ -25,7 +25,9 @@
             ],
             "styles": [
             ],
-            "scripts": []
+            "scripts": [
+              
+            ]
           },
           "configurations": {
             "production": {

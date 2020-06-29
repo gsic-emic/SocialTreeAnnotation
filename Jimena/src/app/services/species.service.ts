@@ -40,6 +40,7 @@ export class SpeciesService {
     for (let clave in objSpecies){     
       if (objSpecies[clave]["nivel"]== 0){ // Las especies son de nivel 0
         ESPECIES[i] = objSpecies[clave][this.buscador_vulgarName]["lits"].es;
+        //console.log(ESPECIES[i]+" viene de "+clave);
         i++;
       }
     }

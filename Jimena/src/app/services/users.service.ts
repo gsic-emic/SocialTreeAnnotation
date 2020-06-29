@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable} from 'rxjs';
 import { User } from './../user';
+import { UtilService } from './util.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +19,9 @@ export class UsersService {
   public buscadorNombre: string = "http://xmlns.com/foaf/0.1/name";
   public buscadorUsername: string = "http://xmlns.com/foaf/0.1/nick";
   public buscadorEmail: string = "http://xmlns.com/foaf/0.1/mbox";
+  public buscadorFecha: string = "http://purl.org/dc/elements/1.1/created";
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private util: UtilService) { }
 
   /*********************** RECUPERAR DATOS UN USUARIO ******************************/
   /**
@@ -101,16 +103,26 @@ export class UsersService {
      */
     public createInfoUser(objUser: object): User{
       for (let clave in objUser){
+        let created;
         let nombreCompleto = objUser[clave][this.buscadorNombre].value;
         let username = objUser[clave][this.buscadorUsername].value;
         let email = objUser[clave][this.buscadorEmail].value;
-
+        if( objUser[clave][this.buscadorFecha]){
+          created = objUser[clave][this.buscadorFecha].value;
+          created = this.util.formatearFecha(created);
+        } else {
+          created = "No disponible";
+        }
+        
         // Separo el nombre y apellidos
         let cadena = nombreCompleto.split(" ");
         let name = cadena[0];
-        let apellido = cadena[1]+" "+cadena[2];
-    
-        let infoUSer = { nombre: name, apellidos: apellido, username: username, email: email};
+        let apellido = cadena[1];;
+        if (cadena[2] != undefined){
+          apellido = apellido+" "+cadena[2];
+        } 
+        
+        let infoUSer = { nombre: name, apellidos: apellido, username: username, email: email, created: created};
         return infoUSer;
       }
     }
