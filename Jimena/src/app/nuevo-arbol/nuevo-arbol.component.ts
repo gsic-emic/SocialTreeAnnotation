@@ -221,9 +221,8 @@ export class NuevoArbolComponent implements OnInit {
     // Compruebo si el navegador dispone de la api de geolocalización
     if (navigator.geolocation) {
       // ¡Excelente, el API puede ser utilizado!
-      console.log("Todo correcto");
       navigator.geolocation.getCurrentPosition((position)=>{ 
-        console.log("Found your location nLat : "+position.coords.latitude+" nLang :"+ position.coords.longitude);
+        //console.log("Found your location nLat : "+position.coords.latitude+" nLang :"+ position.coords.longitude);
         this.lat = position.coords.latitude;
         this.long = position.coords.longitude;
     });

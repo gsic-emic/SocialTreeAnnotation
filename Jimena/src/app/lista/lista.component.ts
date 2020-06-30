@@ -47,6 +47,7 @@ export class ListaComponent implements OnInit {
   public error: boolean = false;
   public terminado: boolean = false;
   public error_anot: boolean = false;
+  public errorImg: boolean = false;
   public terminado_anot: boolean = false;
   public i: number = 0; //controla el numero de anotaciones que tiene el árbol
   public registrado: boolean = false;
@@ -235,6 +236,7 @@ url: string   */
       let lat, long, especie;
       let creador;
       let imageURL;
+      let hayErrorImg = false;
   
       for (let clave in this.objAnnot){
         // Primero compruebo el tipo de anotacion que es
@@ -256,6 +258,7 @@ url: string   */
               tipo = "image";
               imageURL = this.objAnnot[clave][this.annot.buscador_image].value;
               this.getImageInfo(imageURL);
+              
               break;
           case "http://timber.gsic.uva.es/sta/ontology/PositionAnnotation":
               tipo = "location";
@@ -320,17 +323,17 @@ url: string   */
           //console.log(this.imageAnnotations);
         },
         (error) =>{
-          console.error(error); // si se ha producido algún error
+          //console.error(error); // si se ha producido algún error
           if (error.status == 404){
             alert("No se ha podido encontrar una de las imágenes del árbol");
           }else{
-            alert("Ha habido un error al intentar cargar la información de las imágenes. Por favor, inténtelo de nuevo más tarde.");
+            this.errorImg = true;
           }
         },
         () =>{ 
 
         }
-        );    
+        ); 
     }
 
   }
