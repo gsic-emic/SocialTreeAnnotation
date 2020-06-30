@@ -45,7 +45,7 @@ function uploadImage2SF(idTree, imageBlob) {
  */
 function decode_base64(base64str, filename) {
   let buf = Buffer.from(base64str, 'base64');
-  fs.writeFile(path.join(dirname, filename), buf, function (error) {
+  fs.writeFile(path.join(dirname, filename), buf, {mode: 0444}, function (error) {
     if (error) {
       throw error;
     } else {

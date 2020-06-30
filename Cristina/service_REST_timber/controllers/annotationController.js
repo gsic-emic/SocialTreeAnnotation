@@ -37,78 +37,91 @@ async function getAnnotations(queryParameters, fullUrl) {
             }
             else {
                 arg.uri_creator = (queryParameters.creator == "ifn") ? onturis.ifn_ontology : onturis.user + queryParameters.creator;
-
-                queryInterface.getData(nameQueries.annotationsUrisCreator, arg, sparqlClient)
+                var tipos = [];
+                queryInterface.getData(nameQueries.typesAnnotation, arg, sparqlClient)
                     .then((data) => {
-                        irisAnnotations = Object.keys(data);
-                        if (irisAnnotations.length == 0) {
-                            resolve(httpCodes.empty);
-                        }
-                        else {
-                            //Si hay más páginas las incluyo
-                            if (irisAnnotations.length == arg.limit) {
-                                nextPage = { "url": `${fullUrl}&page=${Number(queryParameters.page) + 1}` };
-                            }
-                            //COMPROBAR SI ESTÁN CACHEADAS
-                            irisAnnotations.forEach(annot => {
-                                if (cache.annotations[annot] != undefined) {
-                                    noCache = noCache.filter(e => e !== annot);
-                                    response[annot] = cache.annotations[annot];
+                        data.results.bindings.forEach((annType) => {
+                            tipos.push(annType.types.value);
+                        })
+                        //console.log(tipos);
+                        arg.types = tipos.toString().replace(/,/g, '>, <');
+
+                        queryInterface.getData(nameQueries.annotationsUrisCreator, arg, sparqlClient)
+                            .then((data) => {
+                                irisAnnotations = Object.keys(data);
+                                if (irisAnnotations.length == 0) {
+                                    resolve(httpCodes.empty);
                                 }
                                 else {
-                                    noCache.push(annot);
-                                }
-                            });
+                                    //Si hay más páginas las incluyo
+                                    if (irisAnnotations.length == arg.limit) {
+                                        nextPage = { "url": `${fullUrl}&page=${Number(queryParameters.page) + 1}` };
+                                    }
+                                    //COMPROBAR SI ESTÁN CACHEADAS
+                                    irisAnnotations.forEach(annot => {
+                                        if (cache.annotations[annot] != undefined) {
+                                            noCache = noCache.filter(e => e !== annot);
+                                            response[annot] = cache.annotations[annot];
+                                        }
+                                        else {
+                                            noCache.push(annot);
+                                        }
+                                    });
 
-                            // Si hay alguna anotación no cacheada consulto al virtuoso sobre él
-                            if (noCache.length != 0) {
-                                arg = {};
-                                arg.uri = noCache.toString().replace(/,/g, '>, <');
-                                queryInterface.getData(nameQueries.detailsAll, arg, sparqlClient)
-                                    .then((data) => {
-                                        data.results.bindings.forEach(element => {
-                                            id = element.iri.value;
-                                            cache.annotations[id] = cache.annotations[id] == undefined ? {} : cache.annotations[id];
-                                            response[id] = response[id] == undefined ? {} : response[id];
-                                            cache.annotations[id][element.prop.value] = element.value;
-                                            response[id][element.prop.value] = cache.annotations[id][element.prop.value];
-                                            noCache = noCache.filter(e => e !== id);
-                                        })
+                                    // Si hay alguna anotación no cacheada consulto al virtuoso sobre él
+                                    if (noCache.length != 0) {
+                                        arg = {};
+                                        arg.uri = noCache.toString().replace(/,/g, '>, <');
+                                        queryInterface.getData(nameQueries.detailsAll, arg, sparqlClient)
+                                            .then((data) => {
+                                                data.results.bindings.forEach(element => {
+                                                    id = element.iri.value;
+                                                    cache.annotations[id] = cache.annotations[id] == undefined ? {} : cache.annotations[id];
+                                                    response[id] = response[id] == undefined ? {} : response[id];
+                                                    cache.annotations[id][element.prop.value] = element.value;
+                                                    response[id][element.prop.value] = cache.annotations[id][element.prop.value];
+                                                    noCache = noCache.filter(e => e !== id);
+                                                })
+                                                finalResp.code = 200;
+                                                finalResp.msg = { response, nextPage };
+                                                resolve(finalResp);
+                                            }).catch((err) => {
+                                                console.log("Error en conexión con endpoint ", err);
+                                                /*if (err.statusCode != null && err.statusCode != undefined) {
+                                                    res.status(err.statusCode).send({ message: err });
+                                                }
+                                                else {
+                                                    err = err.message;
+                                                    res.status(500).send(err);
+                                                }*/
+                                                resolve(errorCodes.conexionVirtuoso);
+                                            });
+                                    }
+                                    else {
                                         finalResp.code = 200;
                                         finalResp.msg = { response, nextPage };
                                         resolve(finalResp);
-                                    }).catch((err) => {
-                                        console.log("Error en conexión con endpoint ", err);
-                                        /*if (err.statusCode != null && err.statusCode != undefined) {
-                                            res.status(err.statusCode).send({ message: err });
-                                        }
-                                        else {
-                                            err = err.message;
-                                            res.status(500).send(err);
-                                        }*/
-                                        resolve(errorCodes.conexionVirtuoso);
-                                    });
-                            }
-                            else {
-                                finalResp.code = 200;
-                                finalResp.msg = { response, nextPage };
-                                resolve(finalResp);
-                            }
-                        }
+                                    }
+                                }
+                            }).catch((err) => {
+                                console.log("Error en conexión con endpoint ", err);
+                                /*if (err.statusCode != null && err.statusCode != undefined) {
+                                    res.status(err.statusCode).send({ message: err });
+                                }
+                                else {
+                                    err = err.message;
+                                    res.status(500).send(err);
+                                }*/
+                                resolve(errorCodes.conexionVirtuoso);
+                            });
+
                     }).catch((err) => {
                         console.log("Error en conexión con endpoint ", err);
-                        /*if (err.statusCode != null && err.statusCode != undefined) {
-                            res.status(err.statusCode).send({ message: err });
-                        }
-                        else {
-                            err = err.message;
-                            res.status(500).send(err);
-                        }*/
                         resolve(errorCodes.conexionVirtuoso);
                     });
             }
         }
-        else{
+        else {
             resolve(errorCodes.badRequest);
         }
     });
@@ -203,20 +216,20 @@ function createAnnotation(url_Base_sta, bodyParameters, authorization) {
                                             resolve(validate);
                                         }
                                     }).catch((err) => {
-                                        console.log("Error recuperando árbol del virtuoso",err)
+                                        console.log("Error recuperando árbol del virtuoso", err)
                                         resolve(errorCodes.conexionVirtuoso);
                                     })
                                 }
                             });
 
                             promiseCheckData.then((validate) => {
-                                if (validate==true) {
+                                if (validate == true) {
                                     //Compruebo el tipo
                                     if (Object.values(typeEnum).includes(type)) {
                                         return createAnn(bodyParameters, typeEnum, cache.trees[uri_tree]);
                                     }
                                 }
-                                else{
+                                else {
                                     resolve(validate);
                                 }
                             }).then((response) => {

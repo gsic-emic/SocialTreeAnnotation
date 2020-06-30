@@ -45,6 +45,7 @@ var nameQueries = {
     'treesUrisCreator':'trees_uris_creator',
     'treesUrisSpecies': 'trees_uris_specie',
     'treesUrisZone': 'trees_uris_zone',
+    'typesAnnotation':'types_annotation',
     'updatePrimaryAnnotation':'update_primary_annotation'
 };
 
@@ -169,6 +170,15 @@ queriesArray.push({
 /**
  * Anotaciones
  */
+
+ // Recuperar todos los tipos de anotación
+queriesArray.push({
+    'name': nameQueries.typesAnnotation ,
+    'query': 'SELECT ?types \n \
+            WHERE { \n \
+                ?types rdfs:subClassOf* sta:Annotation .\n \
+            }'
+}); 
 // Recuperar iris de anotaciones creadas por un usuario concreto
 queriesArray.push({
     'name': nameQueries.annotationsUrisCreator,
@@ -176,10 +186,10 @@ queriesArray.push({
                 ?ann dc:creator ?creator .  \n \
         }  \n \
             WHERE { \n \
-                ?types rdfs:subClassOf* <' + onturis.annotation + '> . \n \
-                ?ann a ?types ; \n \
-                     dc:creator ?creator . \n \
-            FILTER ( ?creator IN ( <{{{uri_creator}}}> )). \n \
+                ?ann dc:creator ?creator . \n \
+                FILTER ( ?creator IN ( <{{{uri_creator}}}> )). \n \
+                ?ann a ?types . \n \
+            FILTER ( ?types IN ( <{{{types}}}> )). \n \
             } \n \
             LIMIT {{limit}} \n \
             OFFSET {{offset}}'
