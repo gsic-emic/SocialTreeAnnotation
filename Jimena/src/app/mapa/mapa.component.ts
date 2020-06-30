@@ -148,11 +148,17 @@ export class MapaComponent implements OnInit {
    * crearLayer_gray: Creación de las capas del mapa 
    */
   public crearLayer_gray() {
+    var grayscale = L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
+      maxZoom: 22,
+      minZoom: 12,
+      attribution: '<a href="https://www.google.es/maps/preview">Google Maps</a>'});
+
+    /*
     var grayscale = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
         maxZoom: 22,
         minZoom: 12,
 	      attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-      });
+      });*/
     return grayscale;
   }
 
