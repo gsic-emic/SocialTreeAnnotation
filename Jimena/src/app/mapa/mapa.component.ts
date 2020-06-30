@@ -48,7 +48,7 @@ export class MapaComponent implements OnInit {
   ngOnInit(): void { /*se ejecuta en cuanto angular tenga listo el componente*/
 
     /* Creación del objeto mapa y su capa de diseño */
-    this.mymap = this.crearMapa(41.69, -5.09, 13); // mapa centrado en españa 
+    this.mymap = this.crearMapa(41.6522966, -4.7285413, 13); // mapa centrado en españa 
     var layer = this.crearLayer_gray();
     layer.addTo(this.mymap);
 
@@ -148,13 +148,18 @@ export class MapaComponent implements OnInit {
    * crearLayer_gray: Creación de las capas del mapa 
    */
   public crearLayer_gray() {
-    var grayscale = L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
+    /*var grayscale = L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
       maxZoom: 22,
       minZoom: 12,
-      attribution: '<a href="https://www.google.es/maps/preview">Google Maps</a>'});
+      attribution: '<a href="https://www.google.es/maps/preview">Google Maps</a>'});*/
 
-    /*
-    var grayscale = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+      var grayscale = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 22,
+        minZoom: 12,
+	      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      });
+
+    /*var grayscale = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
         maxZoom: 22,
         minZoom: 12,
 	      attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'

@@ -44,6 +44,7 @@ export class SpeciesService {
         i++;
       }
     }
+    ESPECIES.sort();
     return ESPECIES;
   }
 
