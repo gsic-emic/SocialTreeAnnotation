@@ -77,11 +77,4 @@ export class AjustesComponent implements OnInit {
     
   }
 
-  /**
-   * borrarDatosSession
-   */
-  public borrarDatosSession() {
-    this.UsersService.clearSession();
-  }
-
 }

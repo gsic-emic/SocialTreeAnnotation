@@ -64,7 +64,6 @@ export class ListaComponent implements OnInit {
         return false;
       });
     });
-
   }
   
   //-------------------------------------------------------
@@ -82,7 +81,7 @@ tree: Tree   */
    */
   public onSubmit() {
     this.submitted = true;
-    console.log(this.trees.length);
+    //console.log(this.trees.length);
   }
   /**
    * volver

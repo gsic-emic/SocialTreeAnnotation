@@ -13,10 +13,11 @@ a:hover {
     flex-flow: row nowrap;
     margin: 3px;
     padding: 3px;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 .accion{
     font-size: 0,2vw;
+    margin-left: 2px;
     justify-content: center;
     text-align:center;
 }
