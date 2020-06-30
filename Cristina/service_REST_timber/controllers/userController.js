@@ -29,6 +29,7 @@ async function getUsers(queryParameters, fullUrl) {
         var id;
         var finalResp = {};
 
+
         arg.offset = config.offset; //por defecto
         arg.limit = config.limit; //por defecto
 
@@ -180,21 +181,15 @@ async function createUpdateUser(idUser, uri_user, bodyParameters, authorization)
                                 })//Cachear usuario
                                     .then((id) => {
                                         console.log("Usuario " + id + " cacheado");
-                                        let httpcode = httpCodes.userCreated;
-                                        httpcode.msg += ": " + id;
-                                        resolve(httpcode)
+                                        resolve(httpCodes.userCreated)
                                     })
                                     .catch((err) => {
                                         if (err.code == errorCodes.badRequest.code) {
-                                            let httpcode = httpCodes.badRequest;
-                                            httpcode.msg += ": " + "Error creando usuario en Virtuoso";
-                                            resolve(httpcode)
+                                            resolve(httpCodes.badRequest)
                                         }
                                         else {
                                             // Al frontend le da igual este error realmente. Es interno (quizá no debería mandarlo)
-                                            let httpcode = httpCodes.internalError;
-                                            httpcode.msg += ": " + "Error cacheando usuario";
-                                            resolve(httpcode)
+                                            resolve(httpCodes.internalError)
                                         }
                                     });
                             }
@@ -214,6 +209,7 @@ async function createUpdateUser(idUser, uri_user, bodyParameters, authorization)
 }
 
 async function checkLoginInFile(login, password) {
+    //console.log(login,password)
     return new Promise((resolve, reject) => {
         const fileStream = fs.createReadStream(path.resolve(config.filenamePasswd));
         var user;
