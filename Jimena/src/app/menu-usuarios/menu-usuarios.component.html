@@ -1,3 +1,37 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+  <div class="container">
+    <div class="accion">
+      <a [routerLink]="['/principal']" title="Inicio" class="text-white"><i class="fas fa-home"></i></a>
+    </div>
+    <div class="accion">
+        <a [routerLink]="['/nuevo_arbol']" title="Nuevo Árbol" class="text-white"><i class="fas fa-edit"></i></a>
+    </div>
+    <div class="accion">
+        <a [routerLink]="['/mis_anot']" title="Mis anotaciones" class="text-white"><i class="fas fa-list"></i></a>
+    </div>
+    <div class="accion">
+        <a [routerLink]="['/busqueda']" title="Búsqueda" class="text-white"><i class="fas fa-search"></i></a>
+    </div>
+    <div class="accion">
+        <a [routerLink]="['/comunidad']" title="Comunidad" class="text-white"><i class="fas fa-users"></i></a>
+    </div>
+    <div class="accion">
+        <a [routerLink]="['/ajustes']" title="Ajustes" class="text-white"><i class="fas fa-cog"></i></a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+ 
+  
+  <div class="collapse navbar-collapse" id="navbarText">
+    <p class="text-white mr-4 font-weight-bold">Hola, {{username}}</p><br>
+    <a [routerLink]="['/']" (click)="borrarDatosSession()" title="Cerrar sesión" class="text-white"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+
+  </div>
+</nav>
+
+<!--
 <nav class="navbar navbar-dark bg-secondary">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -29,7 +63,7 @@
           </li>
         </ul>
       </div>
-</nav>
+</nav>-->
 
 <!--<nav class="navbar">
     <div class="container">
