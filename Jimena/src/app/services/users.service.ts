@@ -114,15 +114,8 @@ export class UsersService {
           created = "No disponible";
         }
         
-        // Separo el nombre y apellidos
-        let cadena = nombreCompleto.split(" ");
-        let name = cadena[0];
-        let apellido = cadena[1];;
-        if (cadena[2] != undefined){
-          apellido = apellido+" "+cadena[2];
-        } 
         
-        let infoUSer = { nombre: name, apellidos: apellido, username: username, email: email, created: created};
+        let infoUSer = { nombre: nombreCompleto, username: username, email: email, created: created};
         return infoUSer;
       }
     }

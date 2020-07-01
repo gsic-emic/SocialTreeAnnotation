@@ -6,12 +6,8 @@
       <h5>SOBRE TI</h5>
       <form (ngSubmit)="onSubmit()" #regForm="ngForm">
         <div class="form-group">
-          <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Nombre" 
+          <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Nombre y apellidos" 
           [(ngModel)]="nombre" name="nombre" pattern="(^[a-zA-Z\sñÁÉÍÓÚáéíóú]+$)" required>
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Apellidos"
-          [(ngModel)]="apellidos" name="apellidos" pattern="(^[a-zA-Z\sñ]+$)" required>
         </div>
         <div class="form-group">
         <br><h5>Nombre de Usuario</h5>
