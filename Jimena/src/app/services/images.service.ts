@@ -45,7 +45,8 @@ export class ImagesService {
       description = objImage[imageURL][this.buscadorDescript].value;
     }
     let date = this.util.formatearFecha(objImage[imageURL][this.buscadorFecha].value);
-    let jpeg = objImage[imageURL][this.buscadorImagen].value;
+    let urljpeg = objImage[imageURL][this.buscadorImagen].value;
+    let jpeg = urljpeg.replace('http', 'https');
 
     image = {id: imageURL, jpeg: jpeg, date: date, title: title, description: description};    
     return image;
