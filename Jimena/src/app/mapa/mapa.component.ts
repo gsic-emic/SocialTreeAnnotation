@@ -75,16 +75,19 @@ export class MapaComponent implements OnInit {
     // DETECCIÓN DE CAMBIOS EN EL MAPA
     // Evento que detecta cuando el mapa ha dejado de moverse      
      this.mymap.on('moveend', () =>{
-      this.terminado = false;
-      this.nohay = false;
-      var bounds = this.mymap.getBounds(); // Obtengo las coordenadas del nuevo area que abarca el mapa
-      this.lat1 = bounds._northEast.lat;
-      this.long1 = bounds._northEast.lng;
-      this.lat0 = bounds._southWest.lat;
-      this.long0 = bounds._southWest.lng;
-      this.trees = []; // Borro los datos de los árboles que tenia guardados
-      this.actualizarTrees(this.lat0, this.long0, this.lat1, this.long1); // almaceno los nuevos
-      //console.log("Se ha movido el mapa");
+       // Que realice los cambios solo si está en la vista del mapa
+       if(this.mapa){
+        this.terminado = false;
+        this.nohay = false;
+        var bounds = this.mymap.getBounds(); // Obtengo las coordenadas del nuevo area que abarca el mapa
+        this.lat1 = bounds._northEast.lat;
+        this.long1 = bounds._northEast.lng;
+        this.lat0 = bounds._southWest.lat;
+        this.long0 = bounds._southWest.lng;
+        this.trees = []; // Borro los datos de los árboles que tenia guardados
+        this.actualizarTrees(this.lat0, this.long0, this.lat1, this.long1); // almaceno los nuevos
+        console.log("Se ha movido el mapa");
+       }
      });
 
       /* // Listener para el botón de cada árbol

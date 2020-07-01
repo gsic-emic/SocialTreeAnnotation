@@ -40,7 +40,6 @@ const routes: Routes = [
   { path: 'comunidad', component: ComunidadComponent },
   { path: 'ajustes', component: AjustesComponent },
   { path: 'busqueda', component: BusquedaComponent },
-  { path: 'mapa', component: MapaUsuariosComponent },
   { path: 'mis_anot', component: MisAnotacionesComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'principal', component: PrincipalComponent },

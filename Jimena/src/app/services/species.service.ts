@@ -44,7 +44,7 @@ export class SpeciesService {
         i++;
       }
     }
-    ESPECIES.sort();
+    ESPECIES.sort(Intl.Collator().compare);
     return ESPECIES;
   }
 
