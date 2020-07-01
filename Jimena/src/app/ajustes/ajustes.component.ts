@@ -29,7 +29,6 @@ export class AjustesComponent implements OnInit {
   // Variables que recogen los datos si el usuario modifica su información personal
   public nombre: string;
   public username: string;
-  public apellidos: string;
   public email: string;
   public password: string;
 

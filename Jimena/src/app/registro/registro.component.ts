@@ -24,7 +24,6 @@ export class RegistroComponent implements OnInit {
 
   // Variables de recogida en el formulario----------
   public nombre: string;
-  public apellidos:string;
   public username: string;
   public email: string;
   public password: string;
@@ -50,7 +49,7 @@ export class RegistroComponent implements OnInit {
    * onSubmit
    */
   public onSubmit() {
-    this.user = {nombre: this.nombre, apellidos: this.apellidos, email: this.email, password: this.password};
+    this.user = {nombre: this.nombre, email: this.email, password: this.password};
     //console.log(JSON.stringify(this.user));
 
     // Hago POST al servicio
@@ -93,7 +92,6 @@ export class RegistroComponent implements OnInit {
   public borrarDatos() {
     this.username = null;
     this.nombre = null;
-    this.apellidos = null;
     this.email = null;
     this.password = null;
     this.repetido = false;
