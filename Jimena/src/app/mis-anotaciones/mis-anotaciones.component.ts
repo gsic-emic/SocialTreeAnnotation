@@ -219,7 +219,6 @@ export class MisAnotacionesComponent implements OnInit {
       }
       i++;
     }
-    console.log(this.annotations);
   }
 
    /**

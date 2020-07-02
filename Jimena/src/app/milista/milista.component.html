@@ -1,4 +1,4 @@
-<!--<div [hidden]="submitted">-->
+<div [hidden]="submitted">
     <div class="d-flex flex-wrap justify-content-center p-2 m-2">
         <div class="card border-success m-3 flex-fill" style="max-width: 520px;" *ngFor="let tree of trees; index as i">
             <div class="card-header d-flex justify-content-around">
@@ -8,18 +8,40 @@
             <div class="row no-gutters">
                 <div class="col-md-8">
                 <div class="card-body">
-                    <h1 class="card-title">{{tree.species}}</h1>
+                    <h1 class="card-title"><i class="fab fa-pagelines"></i> {{tree.species}}</h1>
                     <h5 class="card-subtitle"><i class="far fa-user"></i> Creador: <small class="text-muted"> {{tree.creator}}</small></h5>
                     <p class="card-text"> <i class="fas fa-map-marker-alt"></i> [{{tree.lat}},  {{tree.long}}]</p>
                 </div>
                 </div>
                 <div class="col-md-4 d-flex justify-content-center align-items-center mb-2 mt-1">
                     <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
-                        <button type="submit" class="btn btn-success" (click)="obtenerIdSelecionado(tree)" [disabled]="!listaForm.form.valid" title="Crear nueva anotación">
+                        <button type="submit" class="btn btn-warning mb-1" (click)="obtenerInfoSelect(tree)" [disabled]="!listaForm.form.valid"><i class="fas fa-plus-circle"></i> Ver más</button>
+                        <button type="button" class="btn btn-success" (click)="obtenerIdSelecionado(tree)" [disabled]="!listaForm.form.valid" title="Crear nueva anotación">
                             <i class="fas fa-plus"></i> Completar</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<div [hidden]="!submitted">
+    <div class="d-flex justify-content-center mt-10" *ngIf="!terminado; else mostrarResult">
+      <div class="spinner-grow text-success" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+    <ng-template #mostrarResult>
+      <div class="atras">
+        <button class="btn btn-outline-success" (click)="volver()"><i class="fas fa-angle-left"></i></button>
+        <div class="alert alert-warning m-1" role="alert" [hidden]="registrado">
+          Para poder colaborar en las anotaciones necesitas estar <a [routerLink]="['/inicio_sesion']" class="alert-link">registrado</a>. 
+        </div>
+      </div>
+      <app-info-anotacion [tree]="tree_selected" [annotations]="annotations" [IsPossitionAsserted]="IsPossitionAsserted" [IsSpeciesAsserted]="IsSpeciesAsserted" [imageAnnotations]="imageAnnotations">
+        <!--Componente que muestra toda la informacion del arbol que se ha selecionado-->
+      </app-info-anotacion>
+    </ng-template>
+  </div>
 
