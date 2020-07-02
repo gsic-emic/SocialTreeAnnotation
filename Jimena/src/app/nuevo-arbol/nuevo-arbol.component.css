@@ -55,9 +55,9 @@ a{
     border-left: 5px solid #a94442; /* red */
   }
   .aviso{
-    width: 80%;
+    width: 99%;
     text-align: center;
-    margin: auto;
+    margin: 10px;
 }
 
 .image{

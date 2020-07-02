@@ -29,6 +29,7 @@ export class TreeService {
     let trees = [];
     let i=0;
     let username;
+    let especie;
     for (let clave in objTrees){
       if (objTrees[clave].creator == "http://crossforest.eu/ifn/ontology/"){ 
           username = "IFN"
@@ -37,13 +38,17 @@ export class TreeService {
       }
       // añado nombre vulgar a la especie
       for (let clav in objSpecies){
-        if(objTrees[clave].species == objSpecies[clav]["uri"]){
-          objTrees[clave].species = objSpecies[clav][this.buscadorSpecies]["lits"].es;
-          break;
+        if(objTrees[clave].species == undefined){
+          especie = "*sin especificar*";
+        }else{
+          if(objTrees[clave].species == objSpecies[clav]["uri"]){
+            especie = objSpecies[clav][this.buscadorSpecies]["lits"].es;
+            break;
+          }
         }
       }
       
-      trees[i] = { id: clave, lat: objTrees[clave].lat, long: objTrees[clave].long, species: objTrees[clave].species, creator:  username};
+      trees[i] = { id: clave, lat: objTrees[clave].lat, long: objTrees[clave].long, species: especie, creator:  username};
       i++;
     }
     return trees;
