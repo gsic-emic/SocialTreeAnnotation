@@ -177,6 +177,10 @@ export class MisAnotacionesComponent implements OnInit {
           tipo = "specie";
           especie = this.objAnnotations[clave][this.annot.buscador_taxon].value;
           break;
+        case "http://timber.gsic.uva.es/sta/ontology/PrimarySpecies":
+          tipo = "specie";
+          especie = this.objAnnotations[clave][this.annot.buscador_taxon].value;
+          break;
         case "http://timber.gsic.uva.es/sta/ontology/ImageAnnotation":
             tipo = "image";
             image = this.objAnnotations[clave][this.annot.buscador_image].value;
@@ -215,7 +219,7 @@ export class MisAnotacionesComponent implements OnInit {
       }
       i++;
     }
-    //console.log(this.annotations);
+    console.log(this.annotations);
   }
 
    /**
