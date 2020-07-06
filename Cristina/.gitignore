@@ -1,0 +1,5 @@
+.passwd
+
+node_modules/
+
+config/config.js
