@@ -5,6 +5,7 @@ const generateId = require('../helpers/helpers').generateId;
 const dirname = require('../config/config').directorySaveImages;
 const uri_images = require('../config/config').uri_images;
 var ExifImage = require('exif').ExifImage;
+<<<<<<< HEAD
 const helpers = require('../helpers/helpers')
 const queryInterface = require('../helpers/queryInterface');
 var cache = require('../models/cache');
@@ -66,6 +67,31 @@ function getImage(req, res) {
     }
 
   })
+=======
+const helpers = require('../helpers/helpers');
+const queryInterface = require('../helpers/queryInterface');
+var cache = require('../models/cache');
+const onturis = require('../config/onturis');
+const { nameQueries } = require('../config/queries');
+const errorCodes = require('../config/errorCodes');
+const { reject } = require('underscore');
+
+function getImage(uri, id,) {
+  //Devuelve info triplas
+  return new Promise((resolve, reject) => {
+    let finalResp = {};
+    queryInterface.getIndiv(uri, cache.images).then((data) => {
+      if (data == null) {
+        resolve(errorCodes.annotationNotFound);
+      }
+      else {
+        finalResp.code = 200;
+        finalResp.msg = data;
+        resolve(finalResp);
+      }
+    });
+  });
+>>>>>>> rest_service_nodeJS
 }
 
 /* Para crear una anotación de tipo imagen, 1º creo la imagen en el sistema de ficheros, así tengo la uri y posteriormente creo la anotación de tipo imagen en el Virtuoso
@@ -77,14 +103,21 @@ function uploadImage2SF(idTree, imageBlob) {
   return id_image;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> rest_service_nodeJS
 /**
  * @param  {string} base64str
  * @param  {string} filename
  */
 function decode_base64(base64str, filename) {
   let buf = Buffer.from(base64str, 'base64');
+<<<<<<< HEAD
   fs.writeFile(path.join(dirname, filename), buf, function (error) {
+=======
+  fs.writeFile(path.join(dirname, filename), buf, {mode: 0444}, function (error) {
+>>>>>>> rest_service_nodeJS
     if (error) {
       throw error;
     } else {
@@ -157,9 +190,15 @@ function setDataImage(idImage) {
       //Aqui va en forma de promise o callbak 
       resolve(exif);
     })
+<<<<<<< HEAD
     .catch((err) =>{
       reject(err);
     })
+=======
+      .catch((err) => {
+        reject(err);
+      })
+>>>>>>> rest_service_nodeJS
   });
 }
 function getExifData(image_path) {
@@ -178,10 +217,24 @@ function getExifData(image_path) {
           exif_metadata.width = (exifData.exif.ExifImageWidth != undefined) ? exifData.exif.ExifImageWidth : 0;
           exif_metadata.height = (exifData.exif.ExifImageHeight != undefined) ? exifData.exif.ExifImageHeight : 0;
           exif_metadata.date = (exifData.exif.DateTimeOriginal != undefined) ? exifData.exif.DateTimeOriginal : 0;
+<<<<<<< HEAD
           var parseDate = exif_metadata.date.split(' ')[0].replace(":", "-");
           var date = parseDate + "T" + exif_metadata.date.split(' ')[1] + "Z";
           parseDate = new Date(parseISOString(date));
           exif_metadata.date = parseDate.toISOString().slice(0, -1);
+=======
+
+          if (exif_metadata.date == 0) {
+            exif_metadata = helpers.getDateCreated();
+          }
+          else {
+            var parseDate = exif_metadata.date.split(' ')[0].replace(":", "-");
+            var date = parseDate + "T" + exif_metadata.date.split(' ')[1] + "Z";
+            parseDate = new Date(parseISOString(date));
+            exif_metadata.date = parseDate.toISOString().slice(0, -1);
+          }
+
+>>>>>>> rest_service_nodeJS
           exif_metadata.latImg = 0;
           exif_metadata.longImg = 0;
 
@@ -222,10 +275,97 @@ function parseISOString(s) {
   var b = s.split(/\D+/);
   return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
 }
+<<<<<<< HEAD
+=======
+
+function createImageVirtuoso(arg, imageBlob, idTree, title, description, depicts) {
+  return new Promise((resolve, reject) => {
+
+
+    //const annotationController = require('./annotationController'); // dependencia circular, si se coloca arriba no funciona
+    var idImage = uploadImage2SF(idTree, imageBlob);
+    arg.image = uri_images + idImage;
+    arg.imageId = onturis.data + "image/" + idImage.split('.')[0];//quito la extensión
+    arg.varTriplesImg = "";
+    if (title != undefined) {
+      arg.varTriplesImg = "dc:title \"" + title + "\";";
+    }
+    if (description != undefined) {
+      arg.varTriplesImg += "dc:description \"" + description + "\";";
+    }
+    if (depicts != undefined) {
+      arg.varTriplesImg += "rdf:type <" + depicts + ">;";
+    }
+
+    setDataImage(idImage, arg).then((exif) => {
+      Object.keys(exif).forEach((prop) => {
+        if (prop != undefined)
+          arg[prop] = exif[prop];
+      });
+      if (arg.width != 0 && arg.width != undefined) {
+        arg.varTriplesImg += "exif:imageWidth " + arg.width + ";";
+      }
+      if (arg.height != 0 && arg.width != undefined) {
+        arg.varTriplesImg += "exif:imageLength " + arg.height + ";";
+      }
+      if (arg.latImg != 0 && arg.width != undefined) {
+        arg.varTriplesImg += "geo:lat " + arg.latImg + ";";
+      }
+      if (arg.longImg != 0 && arg.width != undefined) {
+        arg.varTriplesImg += "geo:long " + arg.longImg + ";";
+      }
+
+      //Si la imagen no tiene fecha de creación en los metadatos le pongo la actual
+      if (arg.date == undefined) {
+        arg.date = helpers.getDateCreated();
+      }
+
+      //elimiar arg.varTriplesImg si esta vacio
+      //console.log(arg)
+      queryInterface.getData(nameQueries.createImage, arg, sparqlClient)
+        .then((data) => {
+          if (data.results.bindings.length > 0) {
+            //console.log("Imagen creada correctamente en Virtuoso")
+            //Falta cachear imágenes
+            //Cachéo la anotación recién creada
+            cache.putNewCreationInCache(idImage.split('.')[0], onturis.image, cache.images).then((id) => {
+              //console.log("Imagen " + id + " cacheada");
+              resolve(true);
+            }).catch((err) => {
+              console.log("Error cacheando imagen ", err);
+              /*if (err.statusCode != null && err.statusCode != undefined) {
+                  res.status(err.statusCode).send({ message: err });
+              }
+              else {
+                  err = err.message;
+                  res.status(500).send(err);
+              }*/
+              reject(errorCodes.errorCache)
+            });
+          }
+        }).catch((err) => {
+          console.log("Error creando imagen en virtuoso ", err);
+          /*if (err.statusCode != null && err.statusCode != undefined) {
+              res.status(err.statusCode).send({ message: err });
+          }
+          else {
+              err = err.message;
+              res.status(500).send(err);
+          }*/
+          reject(errorCodes.conexionVirtuoso);
+        });
+    });
+  });
+}
+>>>>>>> rest_service_nodeJS
 module.exports = {
   createImage,
   uploadImage2SF,
   setDataImage,
   getImage,
+<<<<<<< HEAD
+=======
+  createImageVirtuoso
+>>>>>>> rest_service_nodeJS
   //getExifData
 }

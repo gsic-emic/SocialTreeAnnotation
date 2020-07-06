@@ -1,6 +1,12 @@
 const onturis = require('../config/onturis');
 const queryInterface = require('../helpers/queryInterface');
 const errorCodes = require('../config/errorCodes');
+<<<<<<< HEAD
+=======
+var cacheTEST = require('memory-cache');
+var os = require('os');
+const config = require('../config/config');
+>>>>>>> rest_service_nodeJS
 
 var trees = {};
 var annotations = {};
@@ -8,6 +14,32 @@ var images = {};
 var species = {};
 var users = {};
 
+<<<<<<< HEAD
+=======
+// configure cache middleware. Solo para los GET. Ahora sí se crea un árbol o anotación tarda 30 segundos en actualizar pero el servicio funciona mucho más fluído. Se puede configurar a 5 segundos o un valor razonable para evitar hacer tantas request. Comentar en la reunión. Las especies o las partes del árbol que no van a cambiar se pueden dejar cacheadas 30 minutos por ejemplo ya que es "estático" (a menos por el momento).
+let memCache = new cacheTEST.Cache();
+
+var cacheMiddleware = (duration) => {
+    return (req, res, next) => {
+        let key =  req.originalUrl || req.url
+        let cacheContent = memCache.get(key);
+        res.setHeader('Content-Type', 'application/json');
+
+        if(cacheContent){
+            res.status(cacheContent.code).send( cacheContent.msg );
+            return
+        }else{
+            res.sendResponse = res.send
+            res.send = (body) => {
+                memCache.put(key,{"code":res.statusCode, "msg":body},duration);
+                res.sendResponse(body)
+            }
+            next()
+        }
+    }
+}
+
+>>>>>>> rest_service_nodeJS
 function putNewCreationInCache(id, type, object){
     var arg = {};
     var string_url="";
@@ -92,13 +124,28 @@ function putNewCreationInCache(id, type, object){
 
 function clearCache() {
     console.log("\n#################################################################################################\n")
+<<<<<<< HEAD
     console.log("Limpieza de la caché: \n", Object.keys(trees).length, " árboles" + "\n" , Object.keys(annotations).length, " anotaciones", Object.keys(images).length, " imágenes" , Object.keys(users).length, " usuarios", Object.keys(species).length, " especies");
+=======
+    console.log("Limpieza de la caché: \n", Object.keys(trees).length, " árboles" + "\n" , Object.keys(annotations).length, " anotaciones"+ "\n" , Object.keys(images).length, " imágenes" + "\n" , Object.keys(users).length, " usuarios"+ "\n" , Object.keys(species).length, " especies");
+>>>>>>> rest_service_nodeJS
     console.log("\n#################################################################################################\n")
     trees = {};
     annotations = {};
     images = {};
     users = {}; 
 }
+<<<<<<< HEAD
+=======
+
+function getFreeMemory(){
+    console.log("Free: ", os.freemem()/Math.pow(1024,3), "GB\n","Total: ",os.totalmem()/Math.pow(1024,3), "GB\n")
+    //En bytes
+    if(os.freemem() <= config.limitFreeMemory*1024*1024){
+        clearCache();
+    }
+}
+>>>>>>> rest_service_nodeJS
 module.exports = {
     trees,
     annotations,
@@ -106,5 +153,10 @@ module.exports = {
     species,
     users,
     putNewCreationInCache,
+<<<<<<< HEAD
     clearCache
+=======
+    getFreeMemory,
+    cacheMiddleware
+>>>>>>> rest_service_nodeJS
 }
