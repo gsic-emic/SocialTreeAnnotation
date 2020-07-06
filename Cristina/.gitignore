@@ -1,5 +1,8 @@
 auxiliares/
 complementos/
 curl/creaciones.sh
+data/annotations_example.ttl
+data/example.ttl
+data/trees_example.ttl
 service_REST_timber/models/.passwd
 service_REST_timber/config/config.js
