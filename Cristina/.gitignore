@@ -1,5 +1,1 @@
-.passwd
-
-node_modules/
-
-config/config.js
+service_REST_timber/models/.passwd
