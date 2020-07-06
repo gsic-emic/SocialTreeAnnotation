@@ -1,12 +1,9 @@
 const Mustache = require('mustache');
 const _ = require('underscore');
 const queries = require('../config/queries');
-<<<<<<< HEAD
-=======
 const { nameQueries } = require('../config/queries');
 const { response } = require('express');
 const onturis = require('../config/onturis');
->>>>>>> rest_service_nodeJS
 
 function getData(queryname, arg, sparqlClient) {
 	// get query object
@@ -16,11 +13,7 @@ function getData(queryname, arg, sparqlClient) {
 	// process prefixes
 	query = processPrefixes(query);
 	// log query
-<<<<<<< HEAD
-	console.log(query); 
-=======
 	console.log(query);
->>>>>>> rest_service_nodeJS
 	// query! //Devuelvo una promesa
 	return sparqlClient.query(query);
 }
@@ -55,17 +48,6 @@ function getPropsResources(provdatos, ruris, props, target, callback) {
 	var nrequests = 0;
 	var totalrequests = 0;
 	// chequeo los recursos implicados en cada propiedad
-<<<<<<< HEAD
-	_.each(props, function(prop) {
-		// lista de uris a obtener
-		var uris = [];
-		// analizo si existen los recursos y las propiedades
-		_.each(ruris, function(ruri) {
-			// creo el recurso si hace falta
-			if (target[ruri] == undefined)
-				target[ruri] = { "uri" : ruri };
-			if (target[ruri][prop] == undefined) 
-=======
 	_.each(props, function (prop) {
 		// lista de uris a obtener
 		var uris = [];
@@ -75,29 +57,12 @@ function getPropsResources(provdatos, ruris, props, target, callback) {
 			if (target[ruri] == undefined)
 				target[ruri] = { "uri": ruri };
 			if (target[ruri][prop] == undefined)
->>>>>>> rest_service_nodeJS
 				uris.push(ruri);
 		});
 
 		// preparo lotes de 100 uris
 		var lote = 100;
 		var urisets = [];
-<<<<<<< HEAD
-		for (var ind=0; uris.length > ind*lote; ind++) {
-			var begin = ind*lote;
-			var end = (ind + 1)*lote;
-			if (end > uris.length)
-				end = uris.length;		
-			urisets.push( uris.slice( begin, end ) );		
-		}
-		
-		// incremento peticiones
-		nrequests += urisets.length;
-		totalrequests += urisets.length;
-				
-		// solicito cada lote
-		_.each(urisets, function(uriset) {
-=======
 		for (var ind = 0; uris.length > ind * lote; ind++) {
 			var begin = ind * lote;
 			var end = (ind + 1) * lote;
@@ -112,26 +77,10 @@ function getPropsResources(provdatos, ruris, props, target, callback) {
 
 		// solicito cada lote
 		_.each(urisets, function (uriset) {
->>>>>>> rest_service_nodeJS
 			// preparo subconjunto de uris
 			var aux = {};
 			aux.propuri = prop;
 			aux.uris = [];
-<<<<<<< HEAD
-			aux.furis = []; 
-			_.each(uriset, function(uri) {
-				aux.uris.push(uri);
-				aux.furis.push("<"+uri+">");
-			});
-            provdatos.getData('propvalues', aux, sparqlClient).then((datos) => {
-				// creo los arrays de las propiedades aquí (ya que ha habido respuesta buena)
-				_.each(aux.uris, function(evuri) {
-					if (target[evuri][prop] == undefined)
-						target[evuri][prop] = {};
-				});						
-				// ahora proceso los resultados
-				_.each(datos.results.bindings, function(row) {
-=======
 			aux.furis = [];
 			_.each(uriset, function (uri) {
 				aux.uris.push(uri);
@@ -145,7 +94,6 @@ function getPropsResources(provdatos, ruris, props, target, callback) {
 				});
 				// ahora proceso los resultados
 				_.each(datos.results.bindings, function (row) {
->>>>>>> rest_service_nodeJS
 					// obtengo datos
 					var evuri = row.uri.value;
 					var value = row.value;
@@ -156,57 +104,24 @@ function getPropsResources(provdatos, ruris, props, target, callback) {
 							target[evuri][prop].ovals = [];
 						// guardo valor
 						target[evuri][prop].ovals.push(value.value);
-<<<<<<< HEAD
-					}					
-					// datatype property?
-					else if (value.type === "literal" || value.type === "typed-literal") {	
-=======
 					}
 					// datatype property?
 					else if (value.type === "literal" || value.type === "typed-literal") {
->>>>>>> rest_service_nodeJS
 						// inicializo objeto de literales si hace falta
 						if (target[evuri][prop].lits == undefined)
 							target[evuri][prop].lits = {};
 						// guardo valor
-<<<<<<< HEAD
-						var lang = value["xml:lang"] == undefined? "nolang" : value["xml:lang"];
-=======
 						var lang = value["xml:lang"] == undefined ? "nolang" : value["xml:lang"];
->>>>>>> rest_service_nodeJS
 						var val = value.value;
 						target[evuri][prop].lits[lang] = val;
 					}
 					// no incluyo blank nodes
-<<<<<<< HEAD
-				});				
-=======
 				});
->>>>>>> rest_service_nodeJS
 				// decremento peticiones
 				nrequests--;
 				// callback?
 				if (nrequests <= 0 && callback != undefined)
 					callback();
-<<<<<<< HEAD
-            })
-            .catch((err) => {
-                console.log("Error en conexión con endpoint");
-                if (err.statusCode != null && err.statusCode != undefined) {
-                    res.status(err.statusCode).send({ message: err });
-                }
-                else {
-                    err = err.message;
-                    res.status(500).send(err);
-                }
-            });
-		});
-	});	
-	// no requests, callback
-	if (nrequests == 0 && callback != undefined)
-		callback();
-	
-=======
 			})
 				.catch((err) => {
 					console.log("Error en conexión con endpoint");
@@ -224,16 +139,10 @@ function getPropsResources(provdatos, ruris, props, target, callback) {
 	if (nrequests == 0 && callback != undefined)
 		callback();
 
->>>>>>> rest_service_nodeJS
 	// devuelvo número de consultas hechas
 	return totalrequests;
 }
 
-<<<<<<< HEAD
-module.exports = {
-	getData,
-	getPropsResources
-=======
 function getIndiv(id, object) {
 	sparqlClient.setDefaultGraph();
 	var arg = {};
@@ -315,5 +224,4 @@ module.exports = {
 	getPropsResources,
 	getIndiv,
 	setQuerys
->>>>>>> rest_service_nodeJS
 }

@@ -5,69 +5,6 @@ const generateId = require('../helpers/helpers').generateId;
 const dirname = require('../config/config').directorySaveImages;
 const uri_images = require('../config/config').uri_images;
 var ExifImage = require('exif').ExifImage;
-<<<<<<< HEAD
-const helpers = require('../helpers/helpers')
-const queryInterface = require('../helpers/queryInterface');
-var cache = require('../models/cache');
-const onturis = require('../config/onturis');
-
-function getImage(req, res) {
-  var arg = {};
-  var id = req.params.imageId;
-  arg.uri = req.protocol + '://' + req.get('host').split(":")[0] + req.originalUrl;
-
-  var response = {};
-
-
-  res.format({
-    'application/json': function () {
-      //Devuelve info triplas
-      if (cache.images[arg.uri] != undefined && cache.images[arg.uri][onturis.dc_created] != undefined) {
-        response[arg.uri] = (response[arg.uri] == undefined) ? {} : response[arg.uri];
-        response[arg.uri] = cache.images[arg.uri];
-        res.status(200).send({ response });
-      }
-      else {
-        queryInterface.getData("details_allprop", arg, sparqlClient)
-          .then((data) => {
-            if (data.results.bindings.length == 0) {
-              res.status(404).send({ response: "La imagen no existe" });
-            }
-            else {
-              cache.images[arg.uri] == undefined ? cache.images[arg.uri] = {} : cache.images[arg.uri];
-              response[arg.uri] = {};
-
-              data.results.bindings.forEach(element => {
-                cache.images[arg.uri][element.prop.value] = element.value;
-                response[arg.uri][element.prop.value] = cache.images[arg.uri][element.prop.value];
-              });
-              res.status(200).send({ response });
-            }
-
-          })
-          .catch((err) => {
-            console.log("Error en conexión con endpoint");
-            if (err.statusCode != null && err.statusCode != undefined) {
-              res.status(err.statusCode).send({ message: err });
-            }
-            else {
-              err = err.message;
-              res.status(500).send(err);
-            }
-          });
-      }
-    },
-    'image/jpeg': function () {
-      res.redirect(uri_images + id + ".jpg");
-      //res.redirect(uri_images+id+".jpg");
-    },
-    default: function () {
-      // log the request and respond with 406
-      res.status(406).send('Not Acceptable')
-    }
-
-  })
-=======
 const helpers = require('../helpers/helpers');
 const queryInterface = require('../helpers/queryInterface');
 var cache = require('../models/cache');
@@ -91,7 +28,6 @@ function getImage(uri, id,) {
       }
     });
   });
->>>>>>> rest_service_nodeJS
 }
 
 /* Para crear una anotación de tipo imagen, 1º creo la imagen en el sistema de ficheros, así tengo la uri y posteriormente creo la anotación de tipo imagen en el Virtuoso
@@ -103,21 +39,13 @@ function uploadImage2SF(idTree, imageBlob) {
   return id_image;
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> rest_service_nodeJS
 /**
  * @param  {string} base64str
  * @param  {string} filename
  */
 function decode_base64(base64str, filename) {
   let buf = Buffer.from(base64str, 'base64');
-<<<<<<< HEAD
-  fs.writeFile(path.join(dirname, filename), buf, function (error) {
-=======
   fs.writeFile(path.join(dirname, filename), buf, {mode: 0444}, function (error) {
->>>>>>> rest_service_nodeJS
     if (error) {
       throw error;
     } else {
@@ -190,15 +118,9 @@ function setDataImage(idImage) {
       //Aqui va en forma de promise o callbak 
       resolve(exif);
     })
-<<<<<<< HEAD
-    .catch((err) =>{
-      reject(err);
-    })
-=======
       .catch((err) => {
         reject(err);
       })
->>>>>>> rest_service_nodeJS
   });
 }
 function getExifData(image_path) {
@@ -217,12 +139,6 @@ function getExifData(image_path) {
           exif_metadata.width = (exifData.exif.ExifImageWidth != undefined) ? exifData.exif.ExifImageWidth : 0;
           exif_metadata.height = (exifData.exif.ExifImageHeight != undefined) ? exifData.exif.ExifImageHeight : 0;
           exif_metadata.date = (exifData.exif.DateTimeOriginal != undefined) ? exifData.exif.DateTimeOriginal : 0;
-<<<<<<< HEAD
-          var parseDate = exif_metadata.date.split(' ')[0].replace(":", "-");
-          var date = parseDate + "T" + exif_metadata.date.split(' ')[1] + "Z";
-          parseDate = new Date(parseISOString(date));
-          exif_metadata.date = parseDate.toISOString().slice(0, -1);
-=======
 
           if (exif_metadata.date == 0) {
             exif_metadata = helpers.getDateCreated();
@@ -234,7 +150,6 @@ function getExifData(image_path) {
             exif_metadata.date = parseDate.toISOString().slice(0, -1);
           }
 
->>>>>>> rest_service_nodeJS
           exif_metadata.latImg = 0;
           exif_metadata.longImg = 0;
 
@@ -275,8 +190,6 @@ function parseISOString(s) {
   var b = s.split(/\D+/);
   return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
 }
-<<<<<<< HEAD
-=======
 
 function createImageVirtuoso(arg, imageBlob, idTree, title, description, depicts) {
   return new Promise((resolve, reject) => {
@@ -357,15 +270,11 @@ function createImageVirtuoso(arg, imageBlob, idTree, title, description, depicts
     });
   });
 }
->>>>>>> rest_service_nodeJS
 module.exports = {
   createImage,
   uploadImage2SF,
   setDataImage,
   getImage,
-<<<<<<< HEAD
-=======
   createImageVirtuoso
->>>>>>> rest_service_nodeJS
   //getExifData
 }

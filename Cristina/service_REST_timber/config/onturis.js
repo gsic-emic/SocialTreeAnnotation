@@ -1,33 +1,3 @@
-<<<<<<< HEAD
-#!/bin/env node
-
-var onturis = {
-	//CLASES
-    tree: 'http://timber.gsic.uva.es/sta/ontology/Tree',
-	treePartPhoto: 'http://timber.gsic.uva.es/sta/ontology/TreePartPhoto',
-	leaf: 'http://timber.gsic.uva.es/sta/ontology/Leaf',
-	fruit: 'http://timber.gsic.uva.es/sta/ontology/Fruit',
-	trunk: 'http://timber.gsic.uva.es/sta/ontology/Trunk',
-	branch: 'http://timber.gsic.uva.es/sta/ontology/Branch',
-	crown: 'http://timber.gsic.uva.es/sta/ontology/Crown',
-	generalView: 'http://timber.gsic.uva.es/sta/ontology/GeneralView',
-	flower: 'http://timber.gsic.uva.es/sta/ontology/Flower',
-	otherPart: 'http://timber.gsic.uva.es/sta/ontology/OtherPart',
-	image: 'http://timber.gsic.uva.es/sta/ontology/Image',
-    annotation: 'http://timber.gsic.uva.es/sta/ontology/Annotation',
-    speciesAnnotation: 'http://timber.gsic.uva.es/sta/ontology/SpeciesAnnotation',
-    positionAnnotation: 'http://timber.gsic.uva.es/sta/ontology/PositionAnnotation',
-    imageAnnotation: 'http://timber.gsic.uva.es/sta/ontology/ImageAnnotation',
-	assertedAnnotation: 'http://timber.gsic.uva.es/sta/ontology/AssertedAnnotation', 
-	primaryAnnotation: 'http://timber.gsic.uva.es/sta/ontology/PrimaryAnnotation',
-	primaryPosition: 'http://timber.gsic.uva.es/sta/ontology/PrimaryPosition',
-	primarySpecies: 'http://timber.gsic.uva.es/sta/ontology/PrimarySpecies',
-	assertedPosition: 'http://timber.gsic.uva.es/sta/ontology/AssertedPosition',
-	assertedSpecies: 'http://timber.gsic.uva.es/sta/ontology/AssertedSpecies',
-	user: "http://timber.gsic.uva.es/sta/data/user/",
-
-	//PROPIEDADES
-=======
 /**
  * Fichero que contiene las uris de las clases y propiedades de las ontologías utilizadas
  */
@@ -60,7 +30,6 @@ var onturis = {
 	/**
 	 * Propiedades de la ontología 
 	 */
->>>>>>> rest_service_nodeJS
 	prHasImage: 'http://timber.gsic.uva.es/sta/ontology/hasImage',
 	prHasTaxon: 'http://timber.gsic.uva.es/sta/ontology/hasTaxon',
 
@@ -69,35 +38,6 @@ var onturis = {
 	prResource: 'http://timber.gsic.uva.es/sta/ontology/resource',
 
 	//Árbol
-<<<<<<< HEAD
-	prHasAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasAnnotation',
-	prHasSpeciesAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasSpeciesAnnotation',
-	prHasPositionAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasPositionAnnotation',
-	prHasImageAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasImageAnnotation',
-	prHasPrimaryAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasPrimaryAnnotation',
-	prHasPrimaryPosition: 'http://timber.gsic.uva.es/sta/ontology/hasPrimaryPosition',
-	prHasPrimarySpecies: 'http://timber.gsic.uva.es/sta/ontology/hasPrimarySpecies',
-	prHasAssertedAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasAssertedAnnotation',
-	prHasAssertedSpecies: 'http://timber.gsic.uva.es/sta/ontology/hasAssertedSpecies',
-	prHasAssertedPosition: 'http://timber.gsic.uva.es/sta/ontology/hasAssertedPosition',
-
-	geo_lat: "http://www.w3.org/2003/01/geo/wgs84_pos#lat",
-	geo_long: "http://www.w3.org/2003/01/geo/wgs84_pos#long",
-	dc_creator: "http://purl.org/dc/elements/1.1/creator",
-	dc_created: "http://purl.org/dc/elements/1.1/created",
-	ifn_ontology: "http://crossforest.eu/ifn/ontology/",
-	ifn_species: "http://crossforest.eu/ifn/ontology/Species",
-	ifn_especiesTop: ['http://crossforest.eu/ifn/ontology/Class2', 'http://crossforest.eu/ifn/ontology/Class1'],
-	
-	// especies
-	prifnScientificName: 'http://crossforest.eu/ifn/ontology/hasAcceptedName>/<http://crossforest.eu/ifn/ontology/name',
-	prifnVulgarName: 'http://crossforest.eu/ifn/ontology/vulgarName',
-	prifnWikipediaPage: 'http://crossforest.eu/ifn/ontology/hasWikipediaPage',
-	prifnSameAs: 'http://schema.org/sameAs',
-	foafPerson: 'http://xmlns.com/foaf/0.1/Person',
-
-	data: "http://timber.gsic.uva.es/sta/data/"
-=======
     prHasAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasAnnotation',
     prHasAssertedAnnotation: 'http://timber.gsic.uva.es/sta/ontology/hasAssertedAnnotation',
     prHasAssertedPosition: 'http://timber.gsic.uva.es/sta/ontology/hasAssertedPosition',
@@ -131,7 +71,6 @@ var onturis = {
 	prifnSameAs: 'http://schema.org/sameAs',
 	user: "http://timber.gsic.uva.es/sta/data/user/"
 
->>>>>>> rest_service_nodeJS
 };
 
 module.exports = onturis;
