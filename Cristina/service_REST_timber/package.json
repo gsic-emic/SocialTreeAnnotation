@@ -19,7 +19,7 @@
     "memory-cache": "^0.2.0",
     "mustache": "^4.0.1",
     "underscore": "^1.9.2",
-    "uuidv4": "^6.0.8",
+    "uuidv4": "^6.1.1",
     "virtuoso-sparql-client": "^0.2.2"
   },
   "devDependencies": {
