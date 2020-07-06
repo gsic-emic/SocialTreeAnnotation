@@ -1,1 +1,11 @@
 service_REST_timber/models/.passwd
+service_REST_timber/config/config.js
+complementos/
+auxiliares/consultas_sparql.txt
+auxiliares/getFilesDir.sh
+auxiliares/notas.txt
+data/example.ttl
+service_REST_timber/node_modules/
+auxiliares/
+data/trees_example.ttl
+data/annotations_example.ttl
