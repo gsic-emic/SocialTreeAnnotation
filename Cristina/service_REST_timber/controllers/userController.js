@@ -13,8 +13,7 @@ const onturis = require('../config/onturis');
 
 /**
  * Usuarios: => foaf:Person
- *  - Nombre => nombre => foaf:firstName
- *  - Apellidos => apellidos => foaf:lastName
+ *  - Nombre => nombre => foaf:name
  *  - Nick => username o id => foaf:nick
  *  - Email => email => foaf:mbox
  *  - Password => password => NO ALMACENAR EN EL VIRTUOSO, YA QUE NO SE DEBERÍA PODER CONSULTAR
@@ -136,7 +135,7 @@ async function createUpdateUser(idUser, uri_user, bodyParameters, authorization)
             else {
                 //Creación. Usuario no autenticado
                 console.log("Creación de usuario");
-                if (password == undefined || bodyParameters.nombre == undefined || bodyParameters.apellidos == undefined || bodyParameters.email == undefined) {
+                if (password == undefined || bodyParameters.nombre == undefined || bodyParameters.email == undefined) {
                     resolve(errorCodes.emptyRequiredFields);
                 }
                 else {
@@ -171,7 +170,7 @@ async function createUpdateUser(idUser, uri_user, bodyParameters, authorization)
                                 var arg = {};
                                 arg.uri = uri_user;
                                 arg.id = idUser; // es igual al id
-                                arg.name = bodyParameters.nombre + " " + bodyParameters.apellidos;
+                                arg.name = bodyParameters.nombre;
                                 arg.email = bodyParameters.email;
                                 arg.date = helpers.getDateCreated();
                                 sparqlClient.setDefaultGraph(config.defaultGraph);
