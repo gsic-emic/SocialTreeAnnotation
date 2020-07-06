@@ -150,13 +150,8 @@ export class MapaComponent implements OnInit {
   /**
    * crearLayer_gray: Creación de las capas del mapa 
    */
-  public crearLayer_gray() {
-    /*var grayscale = L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
-      maxZoom: 22,
-      minZoom: 12,
-      attribution: '<a href="https://www.google.es/maps/preview">Google Maps</a>'});*/
-
-      var grayscale = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  public crearLayer_gray() {  
+    var grayscale = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 22,
         minZoom: 12,
 	      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',

@@ -323,9 +323,9 @@ url: string   */
           //console.log(this.imageAnnotations);
         },
         (error) =>{
-          //console.error(error); // si se ha producido algún error
+          console.error(error); // si se ha producido algún error
           if (error.status == 404){
-            alert("No se ha podido encontrar una de las imágenes del árbol");
+            //alert("No se ha podido encontrar una de las imágenes del árbol");
           }else{
             this.errorImg = true;
           }
