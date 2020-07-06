@@ -19,7 +19,27 @@
                       <i class="fas fa-certificate"></i> La localización de este árbol ha sido validada por expertos
                     </p>
                   </div>
-                  <!--<span class="badge badge-success">Ver en el mapa</span>-->
+                  
+                  <button type="button" class="btn btn-success" (click)="map.cargarMapa()" data-toggle="modal" data-target="#abrirMapa"> <i class="fas fa-map-marker-alt"></i> Ver en el mapa </button>
+                  <!-- Ventana flotante que abre el mapa-->
+                  <div class="modal fade" id="abrirMapa"  tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Vista del árbol en el mapa</h4>
+                        </div>
+                        <div class="modal-body">
+                          <app-minimapa [tree]="tree" #map></app-minimapa>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-success" data-dismiss="modal">Cerrar</button>
+                        </div>
+                      </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                  </div><!-- /.modal -->
+
+
+
                   <p class="card-text"><small class="text-muted"><br><i class="fas fa-clock"></i> Creación: {{tree.date}}</small></p>
                 </div>
                </div>

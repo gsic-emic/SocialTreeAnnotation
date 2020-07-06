@@ -13,6 +13,7 @@ import { Image } from '../Image';
 //----------------- SERVICES ---------------------------
 import { UsersService } from '../services/users.service';
 
+
 @Component({
   selector: 'app-info-anotacion',
   templateUrl: './info-anotacion.component.html',
@@ -29,6 +30,7 @@ export class InfoAnotacionComponent implements OnInit {
   public imageUrl: string;
 
   public registrado: boolean = false;
+  public mapa: boolean = false;
 
   constructor(private UsersService: UsersService, private router: Router) { }
 
@@ -53,4 +55,11 @@ export class InfoAnotacionComponent implements OnInit {
  
   }
   //---------------------------------------
+  /**
+   * activarMapa
+   */
+  public activarMapa() {
+    this.mapa = true;
+  }
+
 }

@@ -31,6 +31,7 @@ import { MilistaComponent } from './milista/milista.component';
 import { MilistaAnnotComponent } from './milista-annot/milista-annot.component';
 import { MapaUsuariosComponent } from './mapa-usuarios/mapa-usuarios.component';
 import { MapaListaComponent } from './mapa-lista/mapa-lista.component';
+import { MinimapaComponent } from './minimapa/minimapa.component';
 
 const routes: Routes = [ 
   { path: 'inicio_sesion', component: IniciarSesionComponent },
@@ -73,7 +74,8 @@ const routes: Routes = [
     MilistaComponent,
     MilistaAnnotComponent,
     MapaUsuariosComponent,
-    MapaListaComponent
+    MapaListaComponent,
+    MinimapaComponent
   ],
   imports: [
     BrowserModule,
