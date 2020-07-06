@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-md-4 d-flex justify-content-center align-items-center mb-2 mt-1">
                     <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
-                        <button type="submit" class="btn btn-warning mb-1" (click)="obtenerInfoSelect(tree)" [disabled]="!listaForm.form.valid"><i class="fas fa-plus-circle"></i> Ver más</button>
+                        <button type="submit" class="btn btn-warning m-1" (click)="obtenerInfoSelect(tree)" [disabled]="!listaForm.form.valid"><i class="fas fa-plus-circle"></i> Ver más</button>
                         <button type="button" class="btn btn-success" (click)="obtenerIdSelecionado(tree)" [disabled]="!listaForm.form.valid" title="Crear nueva anotación">
                             <i class="fas fa-plus"></i> Completar</button>
                     </form>

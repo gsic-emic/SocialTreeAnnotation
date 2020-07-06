@@ -22,9 +22,14 @@
             [(ngModel)]="email" name="email" pattern="^([0-9a-z]+)([0-9a-z\.-_]+)@([0-9a-z\.-_]+)\.([0-9a-z]+)$" required>
         </div>
         <div class="form-group">
+          <h5>Contraseña</h5>
+          <small id="emailHelp" class="form-text text-muted">La contraseña debe tener mínimo 8 caracteres, incluyendo una mayúscula y 1 número</small>
             <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="Crear contraseña"
             [(ngModel)]="password" name="password" pattern="(^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$)" required>
-            <small id="emailHelp" class="form-text text-muted">La contraseña debe tener mínimo 8 caracteres, incluyendo una mayúscula y 1 número</small>
+
+          <br>  <h5>Repita la contraseña</h5>
+            <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="Repita la contraseña"
+            [(ngModel)]="password2" name="password2" pattern="(^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$)" required>
         </div>
 
         <button type="button" class="btn btn-outline-danger mr-2" (click)="borrarDatos()"><i class="far fa-times-circle"></i> Borrar todo </button>
