@@ -1,5 +1,5 @@
 auxiliares/
 complementos/
-config/config.js
 curl/creaciones.sh
 service_REST_timber/models/.passwd
+service_REST_timber/config/config.js
