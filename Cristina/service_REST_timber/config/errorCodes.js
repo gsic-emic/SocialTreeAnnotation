@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-// Fichero para definir mensajes de error que se van a lanzar por el resto de la aplicación
-
-=======
 /**
  * Fichero para definir los códigos y mensajes de error que se van a lanzar
  */
->>>>>>> rest_service_nodeJS
 module.exports = {
     "notFound": " no encontrado",
     "notAllowed": "no permitido",
@@ -37,9 +32,6 @@ module.exports = {
         "code": 400,
         "msg":"El árbol no existe"
     },
-<<<<<<< HEAD
-
-=======
     "badPassword":{
         "code": 401,
         "msg":"Contraseña incorrecta"
@@ -97,6 +89,5 @@ module.exports = {
         "msg": "Error leyendo exif imagen"
 
     },
->>>>>>> rest_service_nodeJS
 
 }
