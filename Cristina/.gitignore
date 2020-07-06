@@ -7,5 +7,5 @@ auxiliares/notas.txt
 data/example.ttl
 service_REST_timber/node_modules/
 auxiliares/
-data/trees_example.ttl
 data/annotations_example.ttl
+data/trees_example.ttl
