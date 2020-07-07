@@ -23,7 +23,6 @@ import { MisAnotacionesComponent } from './mis-anotaciones/mis-anotaciones.compo
 import { BusquedaComponent } from './busqueda/busqueda.component';
 import { AjustesComponent } from './ajustes/ajustes.component';
 import { ComunidadComponent } from './comunidad/comunidad.component';
-import { BuscadorComponent } from './buscador/buscador.component';
 import { ContactoComponent } from './contacto/contacto.component';
 import { ListaComponent } from './lista/lista.component';
 import { AddAnnotComponent } from './add-annot/add-annot.component';
@@ -36,7 +35,6 @@ import { MinimapaComponent } from './minimapa/minimapa.component';
 const routes: Routes = [ 
   { path: 'inicio_sesion', component: IniciarSesionComponent },
   { path: 'contacto', component: ContactoComponent },
-  { path: 'buscador', component: BuscadorComponent },
   { path: 'nuevo_arbol', component: NuevoArbolComponent },
   { path: 'comunidad', component: ComunidadComponent },
   { path: 'ajustes', component: AjustesComponent },
@@ -67,7 +65,6 @@ const routes: Routes = [
     BusquedaComponent,
     AjustesComponent,
     ComunidadComponent,
-    BuscadorComponent,
     ContactoComponent,
     ListaComponent,
     AddAnnotComponent,
