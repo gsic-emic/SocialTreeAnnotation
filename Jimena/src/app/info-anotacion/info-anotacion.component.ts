@@ -39,7 +39,6 @@ export class InfoAnotacionComponent implements OnInit {
     this.registrado = this.UsersService.comprobarLogIn();
 
     //console.log(this.annotations);
-    //console.log(this.imageAnnotations);    
 
     document.getElementById("mas").addEventListener("click", ()=>{
       // Guardo la url del árbol al que quiere añadir una nueva anotación en la sesión

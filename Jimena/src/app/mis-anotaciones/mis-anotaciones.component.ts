@@ -115,7 +115,7 @@ export class MisAnotacionesComponent implements OnInit {
       (error) =>{
         console.error(error); // si se ha producido algún error
         this.error = true;
-        alert("Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde o recargue la página");
+        alert("Ha habido un error al intentar cargar tus árboles. Por favor, inténtelo de nuevo más tarde o recargue la página");
         this.terminado = true;
       },
       () =>{
@@ -141,7 +141,7 @@ export class MisAnotacionesComponent implements OnInit {
         (error) =>{
           console.error(error); // si se ha producido algún error
           this.error_anot = true;
-          alert("Ha habido un error al intentar cargar los árboles del sistema. Por favor, inténtelo de nuevo más tarde o recargue la página");
+          alert("Ha habido un error al intentar cargar tus anotaciones. Por favor, inténtelo de nuevo más tarde o recargue la página");
           this.terminado_anot = true;
         },
         () =>{
@@ -233,8 +233,9 @@ export class MisAnotacionesComponent implements OnInit {
           //console.log(this.imageAnnotations);
         },
         (error) =>{
-          console.error(error); // si se ha producido algún error
-          alert("Ha habido un error al intentar cargar la información de las imágenes.");
+          //console.error(error); // si se ha producido algún error
+          //alert("Ha habido un error al intentar cargar la información de las imágenes.");
+          console.log("Error al cargar la información de la imagen "+imageUrl);
         },
         () =>{ 
 

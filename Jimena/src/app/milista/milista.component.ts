@@ -330,7 +330,8 @@ public convertirAnnot(isAsserted: boolean, isPrimary: boolean) {
       (error) =>{
         //console.error(error); // si se ha producido algún error
         if (error.status == 404){
-          alert("No se ha podido encontrar una de las imágenes del árbol");
+          console.log("Error al cargar la información de la imagen "+imageUrl);
+          //alert("No se ha podido encontrar una de las imágenes del árbol");
         }else{
           this.errorImg = true;
         }
