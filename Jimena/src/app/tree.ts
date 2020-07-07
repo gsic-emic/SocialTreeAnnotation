@@ -6,6 +6,7 @@ export interface Tree {
       species?: string;
       creator?: string;
       date?: string;
+      identificador?: string;
   }
 
   

@@ -26,6 +26,7 @@ export class RegistroComponent implements OnInit {
   public nombre: string;
   public username: string;
   public email: string;
+  public email2: string;
   public password: string;
   public password2: string;
 
@@ -52,9 +53,16 @@ export class RegistroComponent implements OnInit {
    */
   public onSubmit() {
     // Compruebo que las 2 contraseñas introducidas son las mismas
-    if (this.password != this.password2){
-      alert("Las contraseñas no coinciden");
+    if (this.password != this.password2 && this.email != this.email2){
+      alert("La contraseña y el correo electrónico deben coincidir.");
       this.password2 = null;
+      this.email2 = null;
+    } else if (this.password != this.password2){
+      alert("La contraseña no coincide");
+      this.password2 = null;
+    } else if(this.email != this.email2){
+      alert("El correo electrónico no coincide");
+      this.email2 = null;
     } else{
       this.user = {nombre: this.nombre, email: this.email, password: this.password};
     //console.log(JSON.stringify(this.user));
@@ -105,6 +113,7 @@ export class RegistroComponent implements OnInit {
     this.password = null;
     this.repetido = false;
     this.password2 = null;
+    this.email2 = null;
   }
   
 

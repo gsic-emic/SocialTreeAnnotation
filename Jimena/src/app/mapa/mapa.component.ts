@@ -151,28 +151,22 @@ export class MapaComponent implements OnInit {
    * crearLayer_gray: Creación de las capas del mapa 
    */
   public crearLayer_gray() {  
+    // Mapa con el token del Forest Explorer
+    /*var grayscale = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      attribution: 'Forest explorer ©️ <a href="https://forestexplorer.gsic.uva.es/#linkedforest">LinkedForest</a> | Base map ©️ <a href="http://mapbox.com">Mapbox</a>',
+      minZoom: 12,
+      maxZoom: 22,
+      id: 'mapbox/light-v10',//'mapbox.light',
+      accessToken: 'pk.eyJ1IjoiZ3VpbGxldmVnYSIsImEiOiJjazE2bW1la2QwZDdrM2pvMjExN21zdHZ1In0.NUl8tlLgN8aZgTwASoH3lA'
+      });*/
+
     var grayscale = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 22,
         minZoom: 12,
 	      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       });
-
-    /*var grayscale = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-        maxZoom: 22,
-        minZoom: 12,
-	      attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-      });*/
     return grayscale;
   }
-
-  /*crearLayer_streets(){
-    var streets = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 20,
-      minZoom: 5,    
-      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
-    });
-    return streets;
-  }*/
 
   /* MARCADORES */
   /**
@@ -206,10 +200,12 @@ export class MapaComponent implements OnInit {
     var treeIcon = this.crearIcono();
     
    for (let clave in trees){
+    trees[clave].identificador = trees[clave]["id"].replace('http://timber.gsic.uva.es/sta/data/tree/', '');
     L.marker([trees[clave].lat, trees[clave].long], {icon: treeIcon}).
     addTo(this.mymap).bindPopup(
       '<h5 class="card-title"><i class="fab fa-pagelines"></i> '+trees[clave].species + 
       '</h5><h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> Creador: ' + trees[clave].creator 
+      +'<br><span class="badge badge-success mt-2 mr-2">Identificador: </span>'+trees[clave].identificador
       /*+'</p><button type="button" id="treeButton" (onclick)="verArbol('+ trees[clave] + ')"; class="btn btn-primary ml-4">Ver más</button>'*/);
    }
   }
