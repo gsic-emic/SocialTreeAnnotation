@@ -38,7 +38,7 @@
                 <small id="emailHelp" class="form-text text-muted">La contraseña debe tener mínimo 8 caracteres, incluyendo una mayúscula y 2 números</small>
             </div>
             <div class="d-flex justify-content-center">
-              <button type="submit" class="btn btn-primary btn-primary" [disabled]="!regForm.form.valid">Modificar datos</button>
+              <button type="submit" class="btn btn-primary btn-primary"  title="Acción no disponible" disabled>Modificar datos</button> <!--[disabled]="!regForm.form.valid"-->
             </div>
           </form>
           ------------------------------------------------------------------<br>
@@ -68,7 +68,7 @@
           </div>
       </div>
 
-      <div class="card border-primary m-2 align-self-start" style="max-width: 400px;">
+      <div class="card border-primary m-2 align-self-start flex-fill" style="max-width: 400px;">
           <div class="card-header"> <i class="fas fa-info-circle"></i>  Acerca de</div>
           <div class="card-body text-primary">
             <h5 class="card-title"> UNIVERSIDAD DE VALLADOLID </h5>
@@ -80,13 +80,36 @@
           </div>
       </div>
 
-      <div class="card border-success m-2 align-self-start mb-5" style="max-width: 400px;">
+      <div class="card border-success m-2 align-self-start mb-5 flex-fill" style="max-width: 400px;">
         <div class="card-header"> <i class="fas fa-lock"></i>  Privacidad</div>
         <div class="card-body text-success">
           <h5 class="card-title">Estado de la cuenta</h5>
           <p class="card-text">Apartado destinado a que el usuario pueda elegir si su cuenta es privada o publica</p>
           <span class="badge badge-success"> No disponible </span>
         </div>
+    </div>
+
+    <div class="card border-danger m-2 align-self-start mb-5 flex-fill" style="max-width: 400px;">
+      <div class="card-header"><i class="fas fa-trophy"></i> Tu puntuación</div>
+      <div class="card-body text-danger">
+        <h5 class="card-title"><i class="fas fa-medal"></i> Nivel actual: AFICIONADO</h5>
+        <p class="card-text"><i class="fas fa-star"></i> Puntos conseguidos: 5 pt.</p>
+        <p class="card-text"><i class="fas fa-star-half-alt"></i> Puntos necesarios para subir de nivel: 30 pt.</p>
+        <span class="badge badge-danger"> No disponible </span>
+      </div>
+    </div>
+
+
+    <div class="card border-secondary m-2 align-self-start mb-5 flex-fill" style="max-width: 400px;">
+      <div class="card-header"><i class="fas fa-user-times"></i> Eliminar cuenta</div>
+      <div class="card-body text-secondary">
+        <h5 class="card-title">¿Quieres darte de baja de Timber?</h5>
+        <p class="card-text">No podrás volver a acceder al sistema con tus datos personales.</p>
+        <div class="d-flex justify-content-center">
+          <button type="button" class="btn btn-secondary" disabled title="Acción no disponible">Darme de baja</button>
+        </div>
+        <span class="badge badge-secondary"> No disponible </span>
+      </div>
     </div>
   </div>
 </div>

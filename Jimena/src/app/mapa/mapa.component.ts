@@ -205,7 +205,7 @@ export class MapaComponent implements OnInit {
     addTo(this.mymap).bindPopup(
       '<h5 class="card-title"><i class="fab fa-pagelines"></i> '+trees[clave].species + 
       '</h5><h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> Creador: ' + trees[clave].creator 
-      +'<br><span class="badge badge-success mt-2 mr-2">Identificador: </span>'+trees[clave].identificador
+      +'<br><span class="badge badge-warning mt-2 mr-2">Identificador: </span>'+trees[clave].identificador
       /*+'</p><button type="button" id="treeButton" (onclick)="verArbol('+ trees[clave] + ')"; class="btn btn-primary ml-4">Ver más</button>'*/);
    }
   }
